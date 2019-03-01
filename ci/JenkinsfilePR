@@ -5,7 +5,7 @@ pipeline {
   }
 
   environment {
-    SERVICE_NAME = 'cennznet-spotx'
+    SERVICE_NAME = 'cennznet-js-spotx'
     IMAGE_NAME = "centrality/${SERVICE_NAME}:1.0.${BUILD_NUMBER}"
     GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
   }
