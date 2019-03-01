@@ -5,7 +5,7 @@ pipeline {
     }
 
     environment {
-        SERVICE_NAME = 'cennznet-spotx'
+        SERVICE_NAME = 'cennznet-js-spotx'
         IMAGE_NAME = "centrality/${SERVICE_NAME}-build:1.0.${BUILD_NUMBER}"
         GIT_NAME = 'Jenkins'
         GIT_EMAIL = 'jenkins@centrality.ai'
