@@ -32,6 +32,7 @@ describe('SpotX APIs', () => {
         await wallet.addKeyring(simpleKeyring);
         api.setSigner(wallet);
         spotX = new SpotX(api);
+        console.log(spotX);
     }) 
 
     afterAll(async () => {
@@ -39,7 +40,7 @@ describe('SpotX APIs', () => {
         ((api as any)._rpc._provider as any).websocket.close();
     })
 
-    it('example', async (done) => {
+    it('example', () => {
         expect(spotX).toBeDefined();
     })
 })
