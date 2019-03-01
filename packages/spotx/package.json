@@ -1,0 +1,47 @@
+{
+  "name": "@cennznet/crml-cennzx-spot",
+  "version": "0.5.0",
+  "description": "the javascript sdk for cennznet runtime module: CennzxSpot. also a plugin of @cennznet/api",
+  "engines": {
+    "node": "^10.13.0",
+    "yarn": "^1.12.3"
+  },
+  "author": "Ian He <ian.he@centrality.ai>",
+  "maintainers": [
+    "Centrality Development Team"
+  ],
+  "homepage": "https://github.com/cennznet/crml-cennzx-spot.js/tree/master/packages/spotx",
+  "license": "Apache-2.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bgithub.com/cennznet/crml-cennzx-spot.js.git"
+  },
+  "scripts": {
+    "build": "rimraf build && tsc -b",
+    "test:unitBackup": "jest --coverage -c ../../jest/jest.config.js spec",
+    "test:unitDebug": "node --inspect-brk ./node_modules/.bin/jest -c ../../jest/jest.config.js spec",
+    "test:e2e": "jest --silent --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e",
+    "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
+  },
+  "peerDependencies": {
+    "@cennznet/api": ">= 0.12.3",
+    "@cennznet/types": ">= 0.12.3",
+    "@cennznet/util": ">= 0.12.3"
+  },
+  "devDependencies": {
+    "@cennznet/api": "^0.12.3",
+    "@cennznet/types": "^0.12.3",
+    "@cennznet/util": "^0.12.3",
+    "@cennznet/wallet": "^0.12.3",
+    "@types/jest": "^23.3.10",
+    "bn.js": "4.11.8",
+    "jest": "24.1.0",
+    "rimraf": "^2.6.2",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {
+    "@cennznet/crml-generic-asset": "^0.7.2"
+  }
+}
