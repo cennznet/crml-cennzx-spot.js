@@ -1,2 +1,1 @@
 export {SpotX} from './SpotX';
-
