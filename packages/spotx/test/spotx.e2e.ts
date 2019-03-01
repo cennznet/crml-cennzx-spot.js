@@ -34,6 +34,7 @@ describe('SpotX APIs', () => {
         spotX = new SpotX(api);
         console.log(spotX);
     }) 
+    
 
     afterAll(async () => {
         ((api as any)._rpc._provider as any).websocket.onclose = null;
