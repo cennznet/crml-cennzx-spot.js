@@ -1,14 +1,17 @@
 /**
  * Get more fund from https://cennznet-faucet-ui.centrality.me/ if the sender account does not have enough fund
  */
+import {Tuple, typeRegistry} from '@polkadot/types';
 import {stringToU8a} from '@polkadot/util';
 import {Api} from 'cennznet-api';
+import {AssetId} from 'cennznet-runtime-types';
 import {SimpleKeyring, Wallet} from 'cennznet-wallet';
 import {GenericAsset} from 'cennznet-generic-asset';
 import WsProvider from '@polkadot/rpc-provider/ws';
 import {SpotX} from '../src/SpotX';
 import BN from 'bn.js';
 import {Null} from '@polkadot/types/index.types';
+import {generateExchangeAddress} from '../src/utils/utils';
 
 const assetOwner = {
     address: '5GoKvZWG5ZPYL1WUovuHW3zJBWBP5eT8CbqjdRY4Q6iMaDtZ',
@@ -80,16 +83,24 @@ describe('SpotX APIs', () => {
                     done();
                 }
             });
+        });
+        it('query', async (done) => {
+            const totalAmount: number = 1000;
+            const assetId = 0;
+            const balance = await spotX.getLiquidityBalance(assetId, assetOwner.address);
+            const coreAssetId = await spotX.getCoreAssetId();
+            const AssetId = typeRegistry.get('AssetId');
+            typeRegistry.register({ExchangeKey: Tuple.with([AssetId, AssetId])});
+
+            const exchangeKey = new Tuple([AssetId, AssetId], [coreAssetId, assetId]);
+            const exchangeAddress = await spotX.getExchangeAddress(assetId);
+            const total = await spotX.getTotalLiquidity(assetId);
+            // expect(balance.toString(10)).toEqual(totalAmount.toString(10))
+            const coreBalance = await ga.getFreeBalance(coreAssetId.toString(), exchangeAddress);
+            const assetBalance = await ga.getFreeBalance(assetId, exchangeAddress);
+            console.log();
+
         })
-        // it.only('query', async (done) => {
-        //     const totalAmount: number = 1000;
-        //     const assetId = 0;
-        //     expect(((await ga.getFreeBalance(0, assetOwner.address)) as BN).gtn(1000)).toBeTruthy();
-        //     expect(((await ga.getFreeBalance(10, assetOwner.address)) as BN).gtn(1000)).toBeTruthy();
-        //     const balance = await spotX.getLiquidityBalance(assetId, assetOwner.address);
-        //     const total = await spotX.getT
-        //     expect(balance.toString(10)).toEqual(totalAmount.toString(10))
-        // })
     })
 //CoreAssetPurchase
     /*assert_ok!(CennzXSpot::add_liquidity(
