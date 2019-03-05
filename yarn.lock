@@ -1816,29 +1816,38 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-cennznet-api@^0.7.4:
-  version "0.7.4"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/cennznet-api/cennznet-api-0.7.4#985e816978b2b86c6d1866f93e0ceeb74c869f32"
-  integrity sha1-mF6BaXiyuGxtGGb5Pgzut0yGnzI=
+cennznet-api@^0.7.6:
+  version "0.7.6"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/cennznet-api/cennznet-api-0.7.6#f44a9d0fe3f5aac35aacba067af0067016900e71"
+  integrity sha1-9EqdD+P1qsNarLoGevAGcBaQDnE=
   dependencies:
-    cennznet-runtime-types "^0.7.4"
-    cennznet-types "^0.7.4"
+    cennznet-runtime-types "^0.7.6"
+    cennznet-types "^0.7.6"
     eventemitter3 "^3.1.0"
 
-cennznet-runtime-types@^0.7.4:
-  version "0.7.4"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/cennznet-runtime-types/cennznet-runtime-types-0.7.4#f84133b1dccff97ca154d6097e8de50c64135ad3"
-  integrity sha1-+EEzsdzP+XyhVNYJfo3lDGQTWtM=
+cennznet-generic-asset@^0.1.10:
+  version "0.1.10"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/cennznet-generic-asset/cennznet-generic-asset-0.1.10#b3fc01fbbc4f8f3a200ba7fd18f010270445b17e"
+  integrity sha1-s/wB+7xPjzogC6f9GPAQJwRFsX4=
+  dependencies:
+    "@polkadot/keyring" "^0.34.23"
+    "@polkadot/util" "^0.34.23"
+    "@polkadot/util-crypto" "^0.34.23"
 
-cennznet-types@^0.7.4:
-  version "0.7.4"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/cennznet-types/cennznet-types-0.7.4#e02149e784a4c0638904204b8007bb9cf4a88e7a"
-  integrity sha1-4CFJ54SkwGOJBCBLgAe7nPSojno=
+cennznet-runtime-types@^0.7.6:
+  version "0.7.6"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/cennznet-runtime-types/cennznet-runtime-types-0.7.6#f047bd164b903e66acbad7a29616f2d85309875c"
+  integrity sha1-8Ee9FkuQPmasuteilhby2FMJh1w=
 
-cennznet-wallet@^0.7.4:
-  version "0.7.4"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/cennznet-wallet/cennznet-wallet-0.7.4#a22f0b83f963da2a8c8f027fe5a133925783e1e4"
-  integrity sha1-oi8Lg/lj2iqMjwJ/5aEzkleD4eQ=
+cennznet-types@^0.7.6:
+  version "0.7.6"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/cennznet-types/cennznet-types-0.7.6#e88c23587573b14bcbcd287bcb06240e49015176"
+  integrity sha1-6IwjWHVzsUvLzSh7ywYkDkkBUXY=
+
+cennznet-wallet@^0.7.6:
+  version "0.7.6"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/cennznet-wallet/cennznet-wallet-0.7.6#af36ad6763aff057f5bf913eae6a99d2f700201c"
+  integrity sha1-rzatZ2Ov8Ff1v5E+rmqZ0vcAIBw=
   dependencies:
     "@polkadot/keyring" "^0.34.23"
     hdkey "^1.1.0"

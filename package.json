@@ -30,13 +30,5 @@
         "hooks": {
             "pre-commit": "prettier --write 'packages/**/src/**/*'"
         }
-    },
-    "dependencies": {
-        "@polkadot/api": "^0.46.3",
-        "@polkadot/extrinsics": "^0.46.3",
-        "@polkadot/rpc-core": "^0.46.3",
-        "@polkadot/rpc-provider": "^0.46.3",
-        "@polkadot/storage": "^0.46.3",
-        "@polkadot/types": "^0.46.3"
     }
 }

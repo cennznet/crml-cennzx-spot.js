@@ -1,10 +1,10 @@
-import {Api} from 'cennznet-api';
-import {AnyAddress, QueryableGenerateExchangeAddress, QueryableGetLiquidityBalance} from './types';
-import BN from 'bn.js';
 import SubmittableExtrinsic from '@polkadot/api/SubmittableExtrinsic';
 import {QueryableStorageFunction} from '@polkadot/api/types';
-import {AccountId, Balance, Data, Hash, Option} from '@polkadot/types';
+import {AccountId, Balance, Data, Hash, Option, Tuple, typeRegistry} from '@polkadot/types';
 import {AnyNumber, Codec} from '@polkadot/types/types';
+import BN from 'bn.js';
+import {Api} from 'cennznet-api';
+import {AnyAddress, QueryableGenerateExchangeAddress, QueryableGetLiquidityBalance} from './types';
 import {generateStorageDoubleMapKey} from './utils/utils';
 // (core_asset_id, asset_id)
 //pub type ExchangeKey<T> = (<T as generic_asset::Trait>::AssetId, <T as generic_asset::Trait>::AssetId);
@@ -31,7 +31,7 @@ export class SpotX {
         coreAmount: AnyNumber,
         expire: AnyNumber
                   ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
-        return this.api.tx.CennzX.add_liquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
+        return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
 
     /**
@@ -45,7 +45,7 @@ export class SpotX {
         amount_bought: AnyNumber,
         max_amount_sold: AnyNumber
     ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
-        return this.api.tx.CennzX.asset_to_core_swap_output(assetId, amount_bought, max_amount_sold);
+        return this.api.tx.cennzX.asset_to_core_swap_output(assetId, amount_bought, max_amount_sold);
     }
 
 
@@ -60,21 +60,21 @@ export class SpotX {
         amount_bought: AnyNumber,
         max_amount_sold: AnyNumber
     ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
-        return this.api.tx.CennzX.core_to_asset_swap_output(assetId, amount_bought, max_amount_sold);
+        return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amount_bought, max_amount_sold);
     }
 
     /**
      * Query the total liquidity of an exchange pool
      */
     get getTotalLiquidityOfExchangePool(): QueryableStorageFunction<Promise<Codec>, Promise<() => any>> {
-        return this.api.query.CennzX.totalSupply;
+        return this.api.query.cennzX.totalSupply;
     }
 
     /**
      * Query the core asset idit
      */
     get getCoreAssetId(): QueryableStorageFunction<Promise<Codec>, Promise<() => any>> {
-        return this.api.query.CennzX.CoreAssetId;
+        return this.api.query.cennzX.coreAssetId;
     }
 
     // tslint:disable:member-ordering
@@ -84,8 +84,11 @@ export class SpotX {
      * @param {AnyAddress} address The address of the account
      */
     getLiquidityBalance: QueryableGetLiquidityBalance = (() => {
-        const _fn: any = async ([coreAssetId: AnyNumber, assetId: AnyNumber], address: AnyAddress, cb?: any): Promise<BN | (() => any)> => {
-            const key: string = generateStorageDoubleMapKey('cennz-x-spot:liquidity', [coreAssetId, assetId], address);
+        const _fn: any = async (assetId: AnyNumber, address: AnyAddress, cb?: any): Promise<BN | (() => any)> => {
+            const coreAssetId = await this.getCoreAssetId();
+            const AssetId = typeRegistry.get('AssetId');
+            const exchangeKey = new Tuple([AssetId, AssetId], [coreAssetId, assetId]);
+            const key: string = generateStorageDoubleMapKey('cennz-x-spot:liquidity', exchangeKey, address);
             if (cb) {
                 return this.api.rpc.state.subscribeStorage([key], (...args: Array<any>) => {
                     const balance = new Balance(args[0][0].unwrapOr(undefined));
@@ -96,7 +99,8 @@ export class SpotX {
 
             return new Balance(balanceOptional.unwrapOr(undefined));
         };
-        _fn.at = async ([coreAssetId: AnyNumber, assetId: AnyNumber], address: AnyAddress, hash: Hash): Promise<BN> => {
+        _fn.at = async (assetId: AnyNumber, address: AnyAddress, hash: Hash): Promise<BN> => {
+            const coreAssetId = await this.getCoreAssetId();
             const key: string = generateStorageDoubleMapKey('ga:free:', [coreAssetId, assetId], address);
 
             const balanceOptional = ((await this.api.rpc.state.getStorage(key, hash)) as unknown) as Option<Data>;
