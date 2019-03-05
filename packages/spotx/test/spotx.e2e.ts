@@ -1,26 +1,25 @@
 /**
  * Get more fund from https://cennznet-faucet-ui.centrality.me/ if the sender account does not have enough fund
  */
-import {Tuple, typeRegistry} from '@polkadot/types';
+import {Event, EventRecord, Tuple, typeRegistry, Vector} from '@polkadot/types';
 import {stringToU8a} from '@polkadot/util';
 import {Api} from 'cennznet-api';
-import {AssetId} from 'cennznet-runtime-types';
 import {SimpleKeyring, Wallet} from 'cennznet-wallet';
 import {GenericAsset} from 'cennznet-generic-asset';
 import WsProvider from '@polkadot/rpc-provider/ws';
-import {SpotX} from '../src/SpotX';
-import BN from 'bn.js';
 import {Null} from '@polkadot/types/index.types';
-import {generateExchangeAddress} from '../src/utils/utils';
+import BN from 'bn.js';
+import {SpotX} from '../src/SpotX';
 
 const assetOwner = {
     address: '5GoKvZWG5ZPYL1WUovuHW3zJBWBP5eT8CbqjdRY4Q6iMaDtZ',
     seed: stringToU8a(('Alice' as any).padEnd(32, ' '))
-}
-const receiver = {
-    address: '5EfqejHV2xUUTdmUVBH7PrQL3edtMm1NQVtvCgoYd8RumaP3',
-    seed: stringToU8a(('Andrea' as any).padEnd(32, ' '))
-}
+};
+
+const trader = {
+    address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
+    seed: stringToU8a(('Bob' as any).padEnd(32, ' '))
+};
 
 const passphrase = 'passphrase';
 // const url = 'wss://cennznet-node-0.centrality.me:9944';
@@ -30,6 +29,8 @@ const types = {
     PermissionOptions: Null
 }
 
+const coreAssetId = 10;
+const tradeAssetId = 0;
 const testAsset = {
     id: 1
     // ownerAccount: '5FPCjwLUkeg48EDYcW5i4b45HLzmCn4aUbx5rsCsdtPbTsKT',
@@ -45,6 +46,7 @@ describe('SpotX APIs', () => {
         api = await Api.create({provider: websocket, types});
         const simpleKeyring: SimpleKeyring = new SimpleKeyring();
         simpleKeyring.addFromSeed(assetOwner.seed);
+        simpleKeyring.addFromSeed(trader.seed);
         const wallet = new Wallet();
         await wallet.createNewVault(passphrase);
         await wallet.addKeyring(simpleKeyring);
@@ -98,10 +100,53 @@ describe('SpotX APIs', () => {
             // expect(balance.toString(10)).toEqual(totalAmount.toString(10))
             const coreBalance = await ga.getFreeBalance(coreAssetId.toString(), exchangeAddress);
             const assetBalance = await ga.getFreeBalance(assetId, exchangeAddress);
+            const feeRate = await spotX.getFeeRate();
+            const expectPay = await spotX.getAssetToCoreOutputPrice(tradeAssetId, 50);
+
             console.log();
 
         })
     })
+    it('can transfer ', async (done) => {
+        const amountBought = 50;
+        const tradeAssetBalanceBefore = await ga.getFreeBalance(tradeAssetId, trader.address) as BN;
+        const coreAssetBalanceBefore = await ga.getFreeBalance(coreAssetId, trader.address) as BN;
+        console.log(spotX)
+        await ga.transfer(tradeAssetId, assetOwner.address, amountBought).signAndSend(trader.address, async (status) => {
+            if (status.type === 'Finalised') {
+                const tradeAssetBalanceAfter = await ga.getFreeBalance(tradeAssetId, trader.address) as BN;
+                const coreAssetBalanceAfter = await ga.getFreeBalance(coreAssetId, trader.address) as BN;
+                const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
+                const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
+                const blockHash = status.status.asFinalised;
+                const events = await api.query.system.events.at(blockHash);
+                done();
+            }
+        });
+
+    });
+    it('can Trade ', async (done) => {
+        const amountBought = 1000;
+        const tradeAssetBalanceBefore = await ga.getFreeBalance(tradeAssetId, trader.address) as BN;
+        const coreAssetBalanceBefore = await ga.getFreeBalance(coreAssetId, trader.address) as BN;
+        const expectPay = await spotX.getAssetToCoreOutputPrice(tradeAssetId, amountBought);
+        console.log(expectPay);
+        await spotX.assetToCoreSwapOutput(tradeAssetId, amountBought, 50000).signAndSend(trader.address, async (status) => {
+            if (status.type === 'Finalised') {
+                const tradeAssetBalanceAfter = await ga.getFreeBalance(tradeAssetId, trader.address) as BN;
+                const coreAssetBalanceAfter = await ga.getFreeBalance(coreAssetId, trader.address) as BN;
+                const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
+                const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
+                const blockHash = status.status.asFinalised;
+                const events = await api.query.system.events.at(blockHash) as Vector<EventRecord>;
+                const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
+                const gas = feeChargeEvent.event.data[1];
+                console.log(expectPay, );
+                done();
+            }
+        });
+
+    });
 //CoreAssetPurchase
     /*assert_ok!(CennzXSpot::add_liquidity(
 				Origin::signed(H256::from_low_u64_be(1)),
