@@ -42,18 +42,15 @@ export class SpotX {
         return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
 
-    async getAssetToCoreOutputPrice(
-        assetId: AnyNumber,
-        amountBought: AnyNumber,
-    ): Promise<BN> {
+    async getAssetToCoreOutputPrice(assetId: AnyNumber, amountBought: AnyNumber): Promise<BN> {
         const [exchangeAddress, coreAssetId, feeRate] = [
             await this.getExchangeAddress(assetId),
             await this.getCoreAssetId(),
-            await this.getFeeRate() as Permill
+            (await this.getFeeRate()) as Permill,
         ];
         const [tradeAssetReserve, coreAssetReserve] = [
-            await this.ga.getFreeBalance(assetId, exchangeAddress) as BN,
-            await this.ga.getFreeBalance(coreAssetId, exchangeAddress) as BN,
+            (await this.ga.getFreeBalance(assetId, exchangeAddress)) as BN,
+            (await this.ga.getFreeBalance(coreAssetId, exchangeAddress)) as BN,
         ];
         return this.getOutputPrice(new u128(amountBought), tradeAssetReserve, coreAssetReserve, feeRate);
     }
@@ -162,10 +159,16 @@ export class SpotX {
     }
 
     private getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-        if (inputReserve.isZero() || outputReserve.isZero()){
+        if (inputReserve.isZero() || outputReserve.isZero()) {
             return new BN(0);
         }
-        const output = inputReserve.mul(outputAmount).div(outputReserve.sub(outputAmount)).addn(1);
-        return feeRate.mul(output).divn(PERMILL_BASE).add(output);
+        const output = inputReserve
+            .mul(outputAmount)
+            .div(outputReserve.sub(outputAmount))
+            .addn(1);
+        return feeRate
+            .mul(output)
+            .divn(PERMILL_BASE)
+            .add(output);
     }
 }
