@@ -30,7 +30,7 @@ export class SpotX {
         maxAssetAmount: AnyNumber,
         coreAmount: AnyNumber,
         expire: AnyNumber
-                  ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
+    ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
         return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
 
@@ -47,7 +47,6 @@ export class SpotX {
     ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
         return this.api.tx.cennzX.asset_to_core_swap_output(assetId, amount_bought, max_amount_sold);
     }
-
 
     /**
      * Asset to core swap output
@@ -101,7 +100,9 @@ export class SpotX {
         };
         _fn.at = async (assetId: AnyNumber, address: AnyAddress, hash: Hash): Promise<BN> => {
             const coreAssetId = await this.getCoreAssetId();
-            const key: string = generateStorageDoubleMapKey('ga:free:', [coreAssetId, assetId], address);
+            const AssetId = typeRegistry.get('AssetId');
+            const exchangeKey = new Tuple([AssetId, AssetId], [coreAssetId, assetId]);
+            const key: string = generateStorageDoubleMapKey('ga:free:', exchangeKey, address);
 
             const balanceOptional = ((await this.api.rpc.state.getStorage(key, hash)) as unknown) as Option<Data>;
 
@@ -110,5 +111,4 @@ export class SpotX {
 
         return _fn;
     })();
-
 }

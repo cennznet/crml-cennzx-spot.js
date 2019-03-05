@@ -81,6 +81,15 @@ describe('SpotX APIs', () => {
                 }
             });
         })
+        // it.only('query', async (done) => {
+        //     const totalAmount: number = 1000;
+        //     const assetId = 0;
+        //     expect(((await ga.getFreeBalance(0, assetOwner.address)) as BN).gtn(1000)).toBeTruthy();
+        //     expect(((await ga.getFreeBalance(10, assetOwner.address)) as BN).gtn(1000)).toBeTruthy();
+        //     const balance = await spotX.getLiquidityBalance(assetId, assetOwner.address);
+        //     const total = await spotX.getT
+        //     expect(balance.toString(10)).toEqual(totalAmount.toString(10))
+        // })
     })
 //CoreAssetPurchase
     /*assert_ok!(CennzXSpot::add_liquidity(
