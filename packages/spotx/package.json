@@ -1,6 +1,6 @@
 {
   "name": "cennznet-spotx",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "",
   "private": true,
   "engines": {
@@ -49,9 +49,9 @@
     "@polkadot/types": "^0.45.13",
     "@types/jest": "^23.3.10",
     "bn.js": "4.11.8",
-    "cennznet-api": "^0.7.4",
-    "cennznet-runtime-types": "^0.7.4",
-    "cennznet-wallet": "^0.7.4",
+    "cennznet-api": "^0.7.6",
+    "cennznet-runtime-types": "^0.7.6",
+    "cennznet-wallet": "^0.7.6",
     "jest": "24.1.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.66.6",
@@ -65,6 +65,7 @@
   "dependencies": {
     "@polkadot/keyring": "^0.34.23",
     "@polkadot/util": "^0.34.23",
-    "@polkadot/util-crypto": "^0.34.23"
+    "@polkadot/util-crypto": "^0.34.23",
+    "cennznet-generic-asset": "^0.1.10"
   }
 }
