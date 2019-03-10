@@ -1,5 +1,5 @@
-import {AccountId, AccountIndex, Address, Hash} from '@polkadot/types';
-import {AnyNumber} from '@polkadot/types/types';
+import {AccountId, AccountIndex, Address, Hash} from '@cennznet/types/polkadot';
+import {AnyNumber} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
 
 export type AnyAddress = BN | Address | AccountId | AccountIndex | Array<number> | Uint8Array | number | string;

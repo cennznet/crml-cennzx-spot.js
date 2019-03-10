@@ -1,6 +1,6 @@
 {
-  "name": "cennznet-spotx",
-  "version": "0.1.12",
+  "name": "@cennznet/spotx",
+  "version": "0.1.13",
   "description": "",
   "private": true,
   "engines": {
@@ -31,27 +31,17 @@
     "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
   },
   "peerDependencies": {
-    "@polkadot/api": ">= 0.45.13 < 1",
-    "@polkadot/extrinsics": ">= 0.45.13 < 1",
-    "@polkadot/rpc-core": ">= 0.45.13 < 1",
-    "@polkadot/rpc-provider": ">= 0.45.13 < 1",
-    "@polkadot/storage": ">= 0.45.13 < 1",
-    "@polkadot/types": ">= 0.45.13 < 1",
-    "cennznet-api": ">= 0.7.4",
-    "cennznet-runtime-types": ">= 0.7.4"
+    "@cennznet/api": ">= 0.8.2",
+    "@cennznet/types": ">= 0.8.2",
+    "@cennznet/util": ">= 0.8.2"
   },
   "devDependencies": {
-    "@polkadot/api": "^0.45.13",
-    "@polkadot/extrinsics": "^0.45.13",
-    "@polkadot/rpc-core": "^0.45.13",
-    "@polkadot/rpc-provider": "^0.45.13",
-    "@polkadot/storage": "^0.45.13",
-    "@polkadot/types": "^0.45.13",
+    "@cennznet/api": "^0.8.2",
+    "@cennznet/types": "^0.8.2",
+    "@cennznet/util": "^0.8.2",
+    "@cennznet/wallet": "^0.8.2",
     "@types/jest": "^23.3.10",
     "bn.js": "4.11.8",
-    "cennznet-api": "^0.7.6",
-    "cennznet-runtime-types": "^0.7.6",
-    "cennznet-wallet": "^0.7.6",
     "jest": "24.1.0",
     "rimraf": "^2.6.2",
     "rollup": "^0.66.6",
@@ -63,9 +53,6 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@polkadot/keyring": "^0.34.23",
-    "@polkadot/util": "^0.34.23",
-    "@polkadot/util-crypto": "^0.34.23",
-    "cennznet-generic-asset": "^0.1.10"
+    "@cennznet/generic-asset": "^0.2.0"
   }
 }

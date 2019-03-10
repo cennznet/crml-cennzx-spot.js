@@ -40,9 +40,8 @@ RUN \
     -- \
       "\
         PUSH_URL=\"https://${GEMFURY_TOKEN}@push.fury.io/centrality/\" && \
-        PACKAGE_NAME=\$(node -p \"try {require('./package.json').name} catch(e){'0.0.0'}\") && \
-        PACKAGE_VERSION=\$(node -p \"try {require('./package.json').version} catch(e){'0.0.0'}\") && \
-        TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}-\${PACKAGE_VERSION}.tgz\" && \
+        PACKAGE_NAME=\$(ls *.tgz) && \
+        TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}\" && \
         if [ ! -f TAR_PATH ]; then continue; fi && \
         echo \" - Pushing package: \$PACKAGE_NAME\" && \
         ( \
@@ -62,9 +61,8 @@ RUN \
     -- \
       "\
         PUSH_URL=\"https://${GEMFURY_EXTERNAL_TOKEN}@push.fury.io/centralityexternals/\" && \
-        PACKAGE_NAME=\$(node -p \"try {require('./package.json').name} catch(e){'0.0.0'}\") && \
-        PACKAGE_VERSION=\$(node -p \"try {require('./package.json').version} catch(e){'0.0.0'}\") && \
-        TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}-\${PACKAGE_VERSION}.tgz\" && \
+        PACKAGE_NAME=\$(ls *.tgz) && \
+        TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}\" && \
         if [ ! -f TAR_PATH ]; then continue; fi && \
         echo \" - Pushing package: \$PACKAGE_NAME\" && \
         ( \

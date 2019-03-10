@@ -1,11 +1,10 @@
-import SubmittableExtrinsic from '@polkadot/api/SubmittableExtrinsic';
-import {QueryableStorageFunction} from '@polkadot/api/types';
-import {Address, Balance, Data, Hash, Option, Permill, Tuple, u128} from '@polkadot/types';
-import {AnyNumber, Codec} from '@polkadot/types/types';
+import {Api} from '@cennznet/api';
+import {QueryableStorageFunction, SubmittableExtrinsic} from '@cennznet/api/polkadot.types';
+import {GenericAsset} from '@cennznet/generic-asset';
+import {AssetId} from '@cennznet/types';
+import {Address, Balance, Data, Hash, Option, Permill, Tuple, u128} from '@cennznet/types/polkadot';
+import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
-import {Api} from 'cennznet-api';
-import {GenericAsset} from 'cennznet-generic-asset';
-import {AssetId} from 'cennznet-runtime-types';
 import {AnyAddress, QueryableGetLiquidityBalance} from './types';
 import {generateExchangeAddress, generateStorageDoubleMapKey} from './utils/utils';
 

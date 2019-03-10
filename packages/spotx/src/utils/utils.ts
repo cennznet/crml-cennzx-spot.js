@@ -1,10 +1,7 @@
-import {decodeAddress} from '@polkadot/keyring';
-import {AccountId, Address, Hash, typeRegistry, u32, u64} from '@polkadot/types';
-import {AnyNumber, Codec} from '@polkadot/types/types';
-import {stringToU8a, u8aConcat, u8aToHex} from '@polkadot/util';
-import {blake2AsU8a, xxhashAsHex} from '@polkadot/util-crypto';
-import {AssetId} from 'cennznet-runtime-types';
-import {AnyAddress} from '../types';
+import {AssetId} from '@cennznet/types';
+import {Address, u64} from '@cennznet/types/polkadot';
+import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
+import {blake2AsU8a, stringToU8a, u8aConcat, u8aToHex, xxhashAsHex} from '@cennznet/util';
 
 /**
  * Generate the key of the balance storage
