@@ -30,13 +30,13 @@ export class SpotX {
     /**
      * add liquidity
      * @param {IAssetOptions} options Initialization options of an asset
+     *
      */
     addLiquidity(
         assetId: AnyNumber,
         minLiquidity: AnyNumber,
         maxAssetAmount: AnyNumber,
-        coreAmount: AnyNumber,
-        expire: AnyNumber
+        coreAmount: AnyNumber
     ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
         return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
@@ -80,6 +80,52 @@ export class SpotX {
         max_amount_sold: AnyNumber
     ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
         return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amount_bought, max_amount_sold);
+    }
+
+    /**
+     * Asset to core transfer output
+     * @param assetId The asset to sell
+     * @param amountBought amount of core asset to buy
+     * @param maxAmountSold maximum amount of asset allowed to sell
+     */
+    assetToCoreTransferOutput(
+        recipient: AnyAddress,
+        assetId: AnyNumber,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToCoreTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+    }
+
+    /**
+     * Asset to core transfer output
+     * @param assetId The asset to sell
+     * @param amountBought amount of core asset to buy
+     * @param maxAmountSold maximum amount of asset allowed to sell
+     */
+    coreToAssetTransferOutput(
+        recipient: AnyAddress,
+        assetId: AnyNumber,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
+        return this.api.tx.cennzX.coreToAssetTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+    }
+
+    /**
+     * remove liquidity
+     * @param assetId - The asset to remove
+     * @param assetAmount - Amount of exchange asset to burn
+     * @param `min_asset_withdraw` - The minimum trade asset withdrawn
+     * @param `min_asset_withdraw` - The minimum trade asset withdrawn
+     */
+    removeLiquidity(
+        assetId: AnyNumber,
+        assetAmount: AnyNumber,
+        minAssetWithdraw: AnyNumber,
+        minCoreAssetWithdraw: AnyNumber
+    ): SubmittableExtrinsic<Promise<Codec>, Promise<() => any>> {
+        return this.api.tx.cennzX.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
     }
 
     /**
