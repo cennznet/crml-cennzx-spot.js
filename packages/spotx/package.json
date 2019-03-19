@@ -12,10 +12,6 @@
   "license": "ISC",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "directories": {
-    "lib": "lib",
-    "test": "__tests__"
-  },
   "files": [
     "dist"
   ],
@@ -31,15 +27,15 @@
     "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
   },
   "peerDependencies": {
-    "@cennznet/api": ">= 0.8.2",
-    "@cennznet/types": ">= 0.8.2",
-    "@cennznet/util": ">= 0.8.2"
+    "@cennznet/api": ">= 0.9.1",
+    "@cennznet/types": ">= 0.9.1",
+    "@cennznet/util": ">= 0.9.1"
   },
   "devDependencies": {
-    "@cennznet/api": "^0.8.2",
-    "@cennznet/types": "^0.8.2",
-    "@cennznet/util": "^0.8.2",
-    "@cennznet/wallet": "^0.8.2",
+    "@cennznet/api": "^0.9.1",
+    "@cennznet/types": "^0.9.1",
+    "@cennznet/util": "^0.9.1",
+    "@cennznet/wallet": "^0.9.1",
     "@types/jest": "^23.3.10",
     "bn.js": "4.11.8",
     "jest": "24.1.0",
@@ -53,6 +49,6 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@cennznet/generic-asset": "^0.2.0"
+    "@cennznet/generic-asset": "^0.4.0"
   }
 }

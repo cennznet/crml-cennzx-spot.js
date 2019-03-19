@@ -1,55 +1,60 @@
-import {Api} from '@cennznet/api';
+import {ApiRx} from '@cennznet/api';
+import {SubmittableResult} from '@cennznet/api/polkadot';
 import {QueryableStorageFunction, SubmittableExtrinsic} from '@cennznet/api/polkadot.types';
-import {GenericAsset} from '@cennznet/generic-asset';
+import {GenericAssetRx} from '@cennznet/generic-asset';
 import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
 import {AssetId} from '@cennznet/types';
-import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
+import {AnyNumber} from '@cennznet/types/polkadot.types';
+import {from, Observable} from 'rxjs';
+import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
 import {
     AnyAddress,
-    QueryableAssetToCoreOutputPrice,
-    QueryableExchangeAddress,
-    QueryableGetLiquidityBalance,
-    QueryableTotalLiquidityBalance,
+    QueryableAssetToCoreOutputPriceRx,
+    QueryableExchangeAddressRx,
+    QueryableGetLiquidityBalanceRx,
+    QueryableTotalLiquidityBalanceRx,
 } from './types';
 
-export class SpotX {
-    static async create(api: Api): Promise<SpotX> {
-        const ga = await GenericAsset.create(api);
-        const spotX = new SpotX(api, ga);
-        (api as any)._options.derives = {...(api as any)._options.derives, spotX: derives};
-        await (api as any).loadMeta();
-        return spotX;
+export class SpotXRx {
+    static create(api: ApiRx): Observable<SpotXRx> {
+        return GenericAssetRx.create(api).pipe(
+            switchMap(ga => {
+                const spotX = new SpotXRx(api, ga);
+                (api as any)._options.derives = {...(api as any)._options.derives, sportX: derives};
+                return from((api as any).loadMeta()).pipe(mapTo(spotX));
+            })
+        );
     }
 
-    private _api: Api;
-    private _ga: GenericAsset;
+    private readonly _api: ApiRx;
+    private readonly _ga: GenericAssetRx;
 
-    protected constructor(api: Api, ga: GenericAsset) {
+    protected constructor(api: ApiRx, ga: GenericAssetRx) {
         this._api = api;
         this._ga = ga;
     }
 
-    get api(): Api {
+    get api(): ApiRx {
         return this._api;
     }
 
-    get ga(): GenericAsset {
+    get ga(): GenericAssetRx {
         return this._ga;
     }
 
     /**
      * add liquidity
      * @param {IAssetOptions} options Initialization options of an asset
-     *
      */
     addLiquidity(
-        assetId: AnyAssetId,
+        assetId: AnyNumber,
         minLiquidity: AnyNumber,
         maxAssetAmount: AnyNumber,
-        coreAmount: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
+        coreAmount: AnyNumber,
+        expire: AnyNumber
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount) as any;
     }
 
     /**
@@ -57,21 +62,9 @@ export class SpotX {
      * @param assetId assetId of target exchange pool
      * @param amountBought amount of core asset to buy
      */
-    get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPrice {
+    get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPriceRx {
         const _fn = this.api.derive.spotX.assetToCoreOutputPrice as any;
         _fn.at = this.api.derive.spotX.assetToCoreOutputPriceAt as any;
-
-        return _fn;
-    }
-
-    /**
-     * query the cost of core asset to buy amountBought target asset
-     * @param assetId assetId of target exchange pool
-     * @param amountBought amount of target asset to buy
-     */
-    get getCoreToAssetOutputPrice(): QueryableAssetToCoreOutputPrice {
-        const _fn = this.api.derive.spotX.coreToAssetOutputPrice as any;
-        _fn.at = this.api.derive.spotX.coreToAssetOutputPriceAt as any;
 
         return _fn;
     }
@@ -83,11 +76,11 @@ export class SpotX {
      * @param maxAmountSold maximum amount of asset allowed to sell
      */
     assetToCoreSwapOutput(
-        assetId: AnyAssetId,
+        assetId: AnyNumber,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.assetToCoreSwapOutput(assetId, amountBought, maxAmountSold);
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToCoreSwapOutput(assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -97,11 +90,11 @@ export class SpotX {
      * @param {AnyNumber} amount The amount to be transferred
      */
     coreToAssetSwapOutput(
-        assetId: AnyAssetId,
+        assetId: AnyNumber,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amountBought, maxAmountSold);
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -115,8 +108,8 @@ export class SpotX {
         assetId: AnyAssetId,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.assetToCoreTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToCoreTransferOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -130,8 +123,8 @@ export class SpotX {
         assetId: AnyAssetId,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.coreToAssetTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.coreToAssetTransferOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -146,35 +139,35 @@ export class SpotX {
         assetAmount: AnyNumber,
         minAssetWithdraw: AnyNumber,
         minCoreAssetWithdraw: AnyNumber
-    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw) as any;
     }
 
     /**
      * Query the total liquidity of an exchange pool
      */
-    get getTotalLiquidity(): QueryableTotalLiquidityBalance {
+    get getTotalLiquidity(): QueryableTotalLiquidityBalanceRx {
         const _fn = this.api.derive.spotX.totalLiquidity as any;
         _fn.at = this.api.derive.spotX.totalLiquidityAt as any;
 
         return _fn;
     }
 
-    get getExchangeAddress(): QueryableExchangeAddress {
+    get getExchangeAddress(): QueryableExchangeAddressRx {
         return this.api.derive.spotX.exchangeAddress as any;
     }
 
     /**
      * Query the core asset idit
      */
-    get getCoreAssetId(): QueryableStorageFunction<Promise<AssetId>, Promise<() => any>> {
+    get getCoreAssetId(): QueryableStorageFunction<Observable<AssetId>, {}> {
         return this.api.query.cennzX.coreAssetId as any;
     }
 
     /**
      * Query the core asset idit
      */
-    get getFeeRate(): QueryableStorageFunction<Promise<AssetId>, Promise<() => any>> {
+    get getFeeRate(): QueryableStorageFunction<Observable<AssetId>, {}> {
         return this.api.query.cennzX.feeRate as any;
     }
 
@@ -184,7 +177,7 @@ export class SpotX {
      * @param {(AnyNumber,AnyNumber)} coreAssetIs, assetId The id of the asset
      * @param {AnyAddress} address The address of the account
      */
-    get getLiquidityBalance(): QueryableGetLiquidityBalance {
+    get getLiquidityBalance(): QueryableGetLiquidityBalanceRx {
         const _fn = this.api.derive.spotX.liquidityBalance as any;
         _fn.at = this.api.derive.spotX.liquidityBalanceAt as any;
 

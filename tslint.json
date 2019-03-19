@@ -20,7 +20,7 @@
     "no-console": true,
     "no-duplicate-imports": true,
     "no-magic-numbers": true,
-    "no-implicit-dependencies": [true, "dev"],
+    "no-implicit-dependencies": false,
     "no-parameter-reassignment": true,
     "no-return-await": true,
     "no-string-literal": true,
