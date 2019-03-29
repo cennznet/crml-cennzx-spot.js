@@ -10,7 +10,11 @@ import {exchangeAddress} from './exchangeAddress';
 
 export function coreToAssetOutputPrice(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, amountBought: AnyNumber): Observable<BN> =>
-        combineLatest(api.query.cennzX.coreAssetId(), exchangeAddress(api)(assetId), api.query.cennzX.feeRate()).pipe(
+        combineLatest(
+            api.query.cennzX.coreAssetId(),
+            exchangeAddress(api)(assetId),
+            api.query.cennzX.defaultFeeRate()
+        ).pipe(
             switchMap(([coreAssetId, exchangeAddress, feeRate]) =>
                 combineLatest(
                     api.derive.genericAsset.freeBalance(assetId, exchangeAddress),
@@ -33,7 +37,7 @@ export function coreToAssetOutputPriceAt(api: ApiInterface$Rx) {
         combineLatest(
             api.query.cennzX.coreAssetId.at(hash),
             exchangeAddress(api)(assetId),
-            api.query.cennzX.feeRate.at(hash)
+            api.query.cennzX.defaultFeeRate.at(hash)
         ).pipe(
             switchMap(([coreAssetId, exchangeAddress, feeRate]) =>
                 combineLatest(

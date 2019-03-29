@@ -91,7 +91,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.assetToCoreSwapOutput(assetId, amountBought, maxAmountSold);
+        return this.api.tx.cennzX.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -105,7 +105,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amountBought, maxAmountSold);
+        return this.api.tx.cennzX.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -121,7 +121,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.assetToCoreTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+        return this.api.tx.cennzX.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -137,9 +137,68 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.api.tx.cennzX.coreToAssetTransferOutput(recipient, assetId, amountBought, maxAmountSold);
+        return this.api.tx.cennzX.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold);
     }
 
+    /**
+     * Asset to core swap input
+     * @param assetId - The asset to trade
+     * @param sellAmount amount of trade asset to sell
+     * @param minSale Min core asset to receive from sale (output)
+     */
+    assetToCoreSwapInput(
+        assetId: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToCoreSwapInput(null, assetId, sellAmount, minSale);
+    }
+
+    /**
+     * Asset to core swap input
+     * @param {AnyNumber} assetId - The asset to trade
+     * @param {AnyAddress} sellAmount Exact amount of core asset to be sold
+     * @param {AnyNumber} minSale - The min. trade asset to receive from sale
+     */
+    coreToAssetSwapInput(
+        assetId: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.coreToAssetSwapInput(null, assetId, sellAmount, minSale);
+    }
+
+    /**
+     * Asset to core transfer input
+     * @param recipient - The address that receives the output asset
+     * @param assetId The asset to trade
+     * @param sellAmount amount of trade asset to sell
+     * @param minSale Min core asset to receive from sale (output)
+     */
+    assetToCoreTransferInput(
+        recipient: AnyAddress,
+        assetId: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToCoreSwapInput(recipient, assetId, sellAmount, minSale);
+    }
+
+    /**
+     * Asset to core transfer output
+     * @param recipient - The address that receives the output asset
+     * @param assetId The asset to trade
+     * @param sellAmount amount of trade asset to sell
+     * @param minSale - The min. trade asset to receive from sale
+     */
+    coreToAssetTransferInput(
+        recipient: AnyAddress,
+        assetId: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.coreToAssetSwapInput(recipient, assetId, sellAmount, minSale);
+    }
     /**
      * remove liquidity
      * @param assetId - The asset to remove
@@ -154,6 +213,80 @@ export class SpotX {
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
         return this.api.tx.cennzX.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
+    }
+
+    /**
+     * Asset 1 to asset 2 swap output
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to Buy
+     * @param amountBought amount of asset 2 to buy
+     * @param maxAmountSold maximum amount of asset 1 allowed to sell
+     */
+    assetToAssetSwapOutput(
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold);
+    }
+
+    /**
+     * Asset 1 to asset 2 transfer output
+     * @param recipient - The address that receives the output asset
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param amountBought amount of asset 2 to buy
+     * @param maxAmountSold maximum amount of asset allowed to sell
+     */
+    assetToAssetTransferOutput(
+        recipient: AnyAddress,
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToAssetSwapOutput(
+            recipient,
+            assetSold,
+            assetBought,
+            amountBought,
+            maxAmountSold
+        );
+    }
+
+    /**
+     * Asset 1 to asset 2 swap input
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param sellAmount amount of trade asset 1 to sell
+     * @param minSale Min trade asset 2 to receive from sale (output)
+     */
+    assetToAssetSwapInput(
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale);
+    }
+
+    /**
+     * Asset 1 to asset 2 transfer input
+     * @param recipient - The address that receives the output asset
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param sellAmount amount of trade asset to sell
+     * @param minSale Min core asset to receive from sale (output)
+     */
+    assetToAssetTransferInput(
+        recipient: AnyAddress,
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
+        return this.api.tx.cennzX.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale);
     }
 
     /**
@@ -181,7 +314,7 @@ export class SpotX {
      * Query the fee rate
      */
     get getFeeRate(): QueryableStorageFunction<Promise<AssetId>, Promise<() => any>> {
-        return this.api.query.cennzX.feeRate as any;
+        return this.api.query.cennzX.defaultFeeRate as any;
     }
 
     // tslint:disable:member-ordering

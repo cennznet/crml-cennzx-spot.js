@@ -21,6 +21,9 @@
         "tslint": "^5.11.0",
         "tslint-microsoft-contrib": "^5.2.1"
     },
+    "resolutions": {
+        "js-yaml": "^3.13.0"
+    },
     "config": {
         "commitizen": {
             "path": "./node_modules/cz-lerna-changelog"

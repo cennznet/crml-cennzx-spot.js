@@ -64,7 +64,6 @@ export class SpotXRx {
      * query the cost of target asset to buy amountBought core asset
      * @param assetId assetId of target exchange pool
      * @param amountBought amount of core asset to buy
-     * @param feeRate - The % of exchange fees for the trade
      */
     get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPriceRx {
         const _fn = this.api.derive.spotX.assetToCoreOutputPrice as any;
@@ -84,7 +83,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.api.tx.cennzX.assetToCoreSwapOutput(assetId, amountBought, maxAmountSold) as any;
+        return this.api.tx.cennzX.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -98,7 +97,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.api.tx.cennzX.coreToAssetSwapOutput(assetId, amountBought, maxAmountSold) as any;
+        return this.api.tx.cennzX.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -114,7 +113,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.api.tx.cennzX.assetToCoreTransferOutput(recipient, assetId, amountBought, maxAmountSold) as any;
+        return this.api.tx.cennzX.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -130,7 +129,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.api.tx.cennzX.coreToAssetTransferOutput(recipient, assetId, amountBought, maxAmountSold) as any;
+        return this.api.tx.cennzX.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -147,6 +146,86 @@ export class SpotXRx {
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
         return this.api.tx.cennzX.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw) as any;
+    }
+
+    /**
+     * Asset 1 to asset 2 swap output
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to Buy
+     * @param amountBought amount of asset 2 to buy
+     * @param maxAmountSold maximum amount of asset 1 allowed to sell
+     */
+    assetToAssetSwapOutput(
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToAssetSwapOutput(
+            null,
+            assetSold,
+            assetBought,
+            amountBought,
+            maxAmountSold
+        ) as any;
+    }
+
+    /**
+     * Asset 1 to asset 2 transfer output
+     * @param recipient - The address that receives the output asset
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param amountBought amount of asset 2 to buy
+     * @param maxAmountSold maximum amount of asset allowed to sell
+     */
+    assetToAssetTransferOutput(
+        recipient: AnyAddress,
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        amountBought: AnyNumber,
+        maxAmountSold: AnyNumber
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToAssetSwapOutput(
+            recipient,
+            assetSold,
+            assetBought,
+            amountBought,
+            maxAmountSold
+        ) as any;
+    }
+
+    /**
+     * Asset 1 to asset 2 swap input
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param sellAmount amount of trade asset 1 to sell
+     * @param minSale Min trade asset 2 to receive from sale (output)
+     */
+    assetToAssetSwapInput(
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale) as any;
+    }
+
+    /**
+     * Asset 1 to asset 2 transfer input
+     * @param recipient - The address that receives the output asset
+     * @param assetSold The asset to sell
+     * @param assetBuy The asset to buy
+     * @param sellAmount amount of trade asset to sell
+     * @param minSale Min core asset to receive from sale (output)
+     */
+    assetToAssetTransferInput(
+        recipient: AnyAddress,
+        assetSold: AnyAssetId,
+        assetBought: AnyAssetId,
+        sellAmount: AnyNumber,
+        minSale: AnyNumber
+    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
+        return this.api.tx.cennzX.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**
@@ -174,7 +253,7 @@ export class SpotXRx {
      * Query the fee rate
      */
     get getFeeRate(): QueryableStorageFunction<Observable<AssetId>, {}> {
-        return this.api.query.cennzX.feeRate as any;
+        return this.api.query.cennzX.defaultFeeRate as any;
     }
 
     // tslint:disable:member-ordering
