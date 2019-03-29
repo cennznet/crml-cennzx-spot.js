@@ -45,7 +45,10 @@ export class SpotXRx {
 
     /**
      * add liquidity
-     * @param {IAssetOptions} options Initialization options of an asset
+     * @param {assetId} - The trade asset ID
+     * @param {minLiquidity} - The minimum liquidity to add
+     * @param {maxAssetAmount} - Amount of trade asset to add
+     * @param {coreAmount} - Amount of core asset to add
      */
     addLiquidity(
         assetId: AnyNumber,
@@ -61,6 +64,7 @@ export class SpotXRx {
      * query the cost of target asset to buy amountBought core asset
      * @param assetId assetId of target exchange pool
      * @param amountBought amount of core asset to buy
+     * @param feeRate - The % of exchange fees for the trade
      */
     get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPriceRx {
         const _fn = this.api.derive.spotX.assetToCoreOutputPrice as any;
@@ -85,9 +89,9 @@ export class SpotXRx {
 
     /**
      * Asset to core swap output
-     * @param {AnyNumber} assetId The id of the transferred asset
-     * @param {AnyAddress} dest The address of the destination account
-     * @param {AnyNumber} amount The amount to be transferred
+     * @param assetId The id of the transferred asset
+     * @param amountBought amount of trade asset to buy
+     * @param maxAmountSold maximum amount of core asset allowed to sell
      */
     coreToAssetSwapOutput(
         assetId: AnyNumber,
@@ -99,6 +103,7 @@ export class SpotXRx {
 
     /**
      * Asset to core transfer output
+     * @param recipient - Receiver of core asset
      * @param assetId The asset to sell
      * @param amountBought amount of core asset to buy
      * @param maxAmountSold maximum amount of asset allowed to sell
@@ -114,8 +119,9 @@ export class SpotXRx {
 
     /**
      * Asset to core transfer output
+     * @param recipient - Receiver of trade asset
      * @param assetId The asset to sell
-     * @param amountBought amount of core asset to buy
+     * @param amountBought amount of trade asset to buy
      * @param maxAmountSold maximum amount of asset allowed to sell
      */
     coreToAssetTransferOutput(
@@ -131,8 +137,8 @@ export class SpotXRx {
      * remove liquidity
      * @param assetId - The asset to remove
      * @param assetAmount - Amount of exchange asset to burn
-     * @param `min_asset_withdraw` - The minimum trade asset withdrawn
-     * @param `min_asset_withdraw` - The minimum trade asset withdrawn
+     * @param minAssetWithdraw - The minimum trade asset withdrawn
+     * @param minCoreWithdraw - The minimum core asset withdrawn
      */
     removeLiquidity(
         assetId: AnyAssetId,
@@ -158,14 +164,14 @@ export class SpotXRx {
     }
 
     /**
-     * Query the core asset idit
+     * Query the core asset id
      */
     get getCoreAssetId(): QueryableStorageFunction<Observable<AssetId>, {}> {
         return this.api.query.cennzX.coreAssetId as any;
     }
 
     /**
-     * Query the core asset idit
+     * Query the fee rate
      */
     get getFeeRate(): QueryableStorageFunction<Observable<AssetId>, {}> {
         return this.api.query.cennzX.feeRate as any;
