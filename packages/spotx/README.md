@@ -1,6 +1,6 @@
 # `cennznet-js/spotx`
 
-> The Cennznet JavaScript API library for supporting Cennzx Spot (Exchange).
+> The CENNZnet JavaScript API library for supporting Cennzx Spot (Exchange).
 
 
 
