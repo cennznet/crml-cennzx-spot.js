@@ -1,4 +1,4 @@
-# `cennznet-js/spotx`
+# `@cennznet/spotx`
 
 > The CENNZnet JavaScript API library for supporting Cennzx Spot (Exchange).
 
