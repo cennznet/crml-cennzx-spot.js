@@ -6,7 +6,7 @@ import {generateExchangeAddress} from '../utils/utils';
 
 export function exchangeAddress(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<string> =>
-        api.query.cennzX.coreAssetId().pipe(
+        api.query.cennzxSpot.coreAssetId().pipe(
             map(coreAssetId => generateExchangeAddress(coreAssetId as any, assetId)),
             first()
         );
