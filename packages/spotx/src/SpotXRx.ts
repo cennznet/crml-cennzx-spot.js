@@ -20,9 +20,9 @@ export class SpotXRx {
     static create(api: ApiRx): Observable<SpotXRx> {
         return GenericAssetRx.create(api).pipe(
             switchMap(ga => {
-                const spotX = new SpotXRx(api, ga);
-                (api as any)._options.derives = {...(api as any)._options.derives, sportX: derives};
-                return from((api as any).loadMeta()).pipe(mapTo(spotX));
+                const cennzxSpot = new SpotXRx(api, ga);
+                (api as any)._options.derives = {...(api as any)._options.derives, cennzxSpot: derives};
+                return from((api as any).loadMeta()).pipe(mapTo(cennzxSpot));
             })
         );
     }
@@ -66,8 +66,8 @@ export class SpotXRx {
      * @param amountBought amount of core asset to buy
      */
     get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPriceRx {
-        const _fn = this.api.derive.spotX.assetToCoreOutputPrice as any;
-        _fn.at = this.api.derive.spotX.assetToCoreOutputPriceAt as any;
+        const _fn = this.api.derive.cennzxSpot.assetToCoreOutputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.assetToCoreOutputPriceAt as any;
 
         return _fn;
     }
@@ -243,14 +243,14 @@ export class SpotXRx {
      * Query the total liquidity of an exchange pool
      */
     get getTotalLiquidity(): QueryableTotalLiquidityBalanceRx {
-        const _fn = this.api.derive.spotX.totalLiquidity as any;
-        _fn.at = this.api.derive.spotX.totalLiquidityAt as any;
+        const _fn = this.api.derive.cennzxSpot.totalLiquidity as any;
+        _fn.at = this.api.derive.cennzxSpot.totalLiquidityAt as any;
 
         return _fn;
     }
 
     get getExchangeAddress(): QueryableExchangeAddressRx {
-        return this.api.derive.spotX.exchangeAddress as any;
+        return this.api.derive.cennzxSpot.exchangeAddress as any;
     }
 
     /**
@@ -274,8 +274,8 @@ export class SpotXRx {
      * @param {AnyAddress} address The address of the account
      */
     get getLiquidityBalance(): QueryableGetLiquidityBalanceRx {
-        const _fn = this.api.derive.spotX.liquidityBalance as any;
-        _fn.at = this.api.derive.spotX.liquidityBalanceAt as any;
+        const _fn = this.api.derive.cennzxSpot.liquidityBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.liquidityBalanceAt as any;
 
         return _fn;
     }

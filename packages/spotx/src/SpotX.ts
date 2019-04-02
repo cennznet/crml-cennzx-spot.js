@@ -16,10 +16,10 @@ import {
 export class SpotX {
     static async create(api: Api): Promise<SpotX> {
         const ga = await GenericAsset.create(api);
-        const spotX = new SpotX(api, ga);
-        (api as any)._options.derives = {...(api as any)._options.derives, spotX: derives};
+        const cennzxSpot = new SpotX(api, ga);
+        (api as any)._options.derives = {...(api as any)._options.derives, cennzxSpot: derives};
         await (api as any).loadMeta();
-        return spotX;
+        return cennzxSpot;
     }
 
     private _api: Api;
@@ -61,8 +61,8 @@ export class SpotX {
      * @param feeRate - The % of exchange fees for the trade
      */
     get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPrice {
-        const _fn = this.api.derive.spotX.assetToCoreOutputPrice as any;
-        _fn.at = this.api.derive.spotX.assetToCoreOutputPriceAt as any;
+        const _fn = this.api.derive.cennzxSpot.assetToCoreOutputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.assetToCoreOutputPriceAt as any;
 
         return _fn;
     }
@@ -74,8 +74,8 @@ export class SpotX {
      * @param feeRate - The % of exchange fees for the trade
      */
     get getCoreToAssetOutputPrice(): QueryableAssetToCoreOutputPrice {
-        const _fn = this.api.derive.spotX.coreToAssetOutputPrice as any;
-        _fn.at = this.api.derive.spotX.coreToAssetOutputPriceAt as any;
+        const _fn = this.api.derive.cennzxSpot.coreToAssetOutputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.coreToAssetOutputPriceAt as any;
 
         return _fn;
     }
@@ -324,8 +324,8 @@ export class SpotX {
      * @param {AnyAddress} address The address of the account
      */
     get getLiquidityBalance(): QueryableGetLiquidityBalance {
-        const _fn = this.api.derive.spotX.liquidityBalance as any;
-        _fn.at = this.api.derive.spotX.liquidityBalanceAt as any;
+        const _fn = this.api.derive.cennzxSpot.liquidityBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.liquidityBalanceAt as any;
 
         return _fn;
     }
