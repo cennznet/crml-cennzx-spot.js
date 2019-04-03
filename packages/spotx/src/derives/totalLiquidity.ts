@@ -8,10 +8,10 @@ import {getExchangeKey} from '../utils/utils';
 
 export function totalLiquidity(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<BN> =>
-        api.query.cennzX.coreAssetId().pipe(
+        api.query.cennzxSpot.coreAssetId().pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzX.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
+                return (api.query.cennzxSpot.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
                     Observable<BN>,
                     {}
                 >;
@@ -21,10 +21,10 @@ export function totalLiquidity(api: ApiInterface$Rx) {
 
 export function totalLiquidityAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<BN> =>
-        api.query.cennzX.coreAssetId.at(hash).pipe(
+        api.query.cennzxSpot.coreAssetId.at(hash).pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzX.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
+                return (api.query.cennzxSpot.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
                     Observable<BN>,
                     {}
                 >;

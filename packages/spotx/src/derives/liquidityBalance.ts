@@ -13,7 +13,7 @@ const PREFIX = 'cennz-x-spot:liquidity';
 
 export function liquidityBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, address: AnyAddress): Observable<BN> =>
-        api.query.cennzX.coreAssetId().pipe(
+        api.query.cennzxSpot.coreAssetId().pipe(
             map(coreAssetId =>
                 generateStorageDoubleMapKey(PREFIX, getExchangeKey(coreAssetId as any, assetId), new Address(address))
             ),
@@ -25,7 +25,7 @@ export function liquidityBalance(api: ApiInterface$Rx) {
 
 export function liquidityBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId, address: AnyAddress): Observable<BN> =>
-        api.query.cennzX.coreAssetId.at(hash).pipe(
+        api.query.cennzxSpot.coreAssetId.at(hash).pipe(
             map(coreAssetId =>
                 generateStorageDoubleMapKey(PREFIX, getExchangeKey(coreAssetId as any, assetId), new Address(address))
             ),
