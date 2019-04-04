@@ -1,19 +1,31 @@
 import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
 import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
 import {Hash, Permill, u128} from '@cennznet/types/polkadot';
-import {AnyNumber} from '@cennznet/types/polkadot.types';
+import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
 import {combineLatest, Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {getOutputPrice} from '../utils/utils';
 import {exchangeAddress} from './exchangeAddress';
 
+export function getSpotXQuery(api): any {
+    try {
+        api.query.cennzxSpot.defaultFeeRate();
+        return api.query.cennzxSpot;
+    } catch (e) {
+        api.query.cennzX.defaultFeeRate();
+        return api.query.cennzX;
+    }
+}
+
 export function assetToCoreOutputPrice(api: ApiInterface$Rx) {
+    const spotXQuery = getSpotXQuery(api);
+    const coreAssetId : Codec = spotXQuery.coreAssetId();
     return (assetId: AnyAssetId, amountBought: AnyNumber): Observable<BN> =>
         combineLatest(
-            api.query.cennzxSpot.coreAssetId(),
+            coreAssetId,
             exchangeAddress(api)(assetId),
-            api.query.cennzxSpot.defaultFeeRate()
+            spotXQuery.defaultFeeRate()
         ).pipe(
             switchMap(([coreAssetId, exchangeAddress, feeRate]) =>
                 combineLatest(
@@ -33,11 +45,13 @@ export function assetToCoreOutputPrice(api: ApiInterface$Rx) {
 }
 
 export function assetToCoreOutputPriceAt(api: ApiInterface$Rx) {
-    return (hash: Hash, assetId: AnyAssetId, amountBought: AnyNumber): Observable<BN> =>
-        combineLatest(
-            api.query.cennzxSpot.coreAssetId.at(hash),
+    const spotXQuery = getSpotXQuery(api);
+    return (hash: Hash, assetId: AnyAssetId, amountBought: AnyNumber): Observable<BN> => {
+        const coreAssetId : Codec = spotXQuery.coreAssetId.at(hash);
+        return combineLatest(
+            coreAssetId,
             exchangeAddress(api)(assetId),
-            api.query.cennzxSpot.defaultFeeRate.at(hash)
+            spotXQuery.defaultFeeRate.at(hash)
         ).pipe(
             switchMap(([coreAssetId, exchangeAddress, feeRate]) =>
                 combineLatest(
@@ -54,4 +68,5 @@ export function assetToCoreOutputPriceAt(api: ApiInterface$Rx) {
                 )
             )
         );
+    }
 }

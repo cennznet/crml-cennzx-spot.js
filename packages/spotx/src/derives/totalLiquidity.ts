@@ -5,13 +5,15 @@ import BN from 'bn.js';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {getExchangeKey} from '../utils/utils';
+import {getSpotXQuery} from './assetToCoreOutputPrice';
 
 export function totalLiquidity(api: ApiInterface$Rx) {
+    const spotXQuery = getSpotXQuery(api);
     return (assetId: AnyAssetId): Observable<BN> =>
-        api.query.cennzxSpot.coreAssetId().pipe(
+        spotXQuery.coreAssetId().pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzxSpot.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
+                return (spotXQuery.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
                     Observable<BN>,
                     {}
                 >;
@@ -20,11 +22,12 @@ export function totalLiquidity(api: ApiInterface$Rx) {
 }
 
 export function totalLiquidityAt(api: ApiInterface$Rx) {
+    const spotXQuery = getSpotXQuery(api);
     return (hash: Hash, assetId: AnyAssetId): Observable<BN> =>
-        api.query.cennzxSpot.coreAssetId.at(hash).pipe(
+        spotXQuery.coreAssetId.at(hash).pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzxSpot.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
+                return (spotXQuery.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
                     Observable<BN>,
                     {}
                 >;

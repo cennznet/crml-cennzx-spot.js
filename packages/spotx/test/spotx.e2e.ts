@@ -10,12 +10,12 @@ import {WsProvider} from '@cennznet/api/polkadot';
 import BN from 'bn.js';
 import {SpotX} from '../src/SpotX';
 
-const investor = {
-    address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
-    seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
-};
+// const investor = {
+//     address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
+//     seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
+// };
 
-const investorOnLocalDev = {
+const investor = {
     address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
     seed: stringToU8a('Bob'.padEnd(32, ' '))
 }
@@ -28,11 +28,11 @@ const recipient = {
 };
 
 const passphrase = '';
-const url = 'wss://cennznet-node-0.centrality.me:9944';
-//const url = undefined;
+//const url = 'wss://cennznet-node-0.centrality.me:9944';
+const url = undefined;
 
-const coreAssetId = 10;
-const tradeAssetA = 0;
+const coreAssetId = 16001;
+const tradeAssetA = 16000;
 const tradeAssetB = 101;
 
 describe('SpotX APIs', () => {
@@ -166,24 +166,24 @@ describe('SpotX APIs', () => {
             done();
         });
     });
-    it('can transfer ', async done => {
-        const amountBought = 200;
-        const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-        const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-        await ga.transfer(tradeAssetA, investor.address, amountBought).signAndSend(trader.address, async status => {
-            if (status.type === 'Finalised') {
-                const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
-                const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                const blockHash = status.status.asFinalised;
-                const events = await api.query.system.events.at(blockHash);
-                console.log('Events:' + events);
-
-                done();
-            }
-        });
-    });
+    // it('can transfer ', async done => {
+    //     const amountBought = 200;
+    //     const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
+    //     const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+    //     await ga.transfer(tradeAssetA, investor.address, amountBought).signAndSend(trader.address, async status => {
+    //         if (status.type === 'Finalised') {
+    //             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
+    //             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+    //             const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
+    //             const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
+    //             const blockHash = status.status.asFinalised;
+    //             const events = await api.query.system.events.at(blockHash);
+    //             console.log('Events:' + events);
+    //
+    //             done();
+    //         }
+    //     });
+    // });
     it('can trade from asset to core for exact core asset amount', async done => {
         const amountBought = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
