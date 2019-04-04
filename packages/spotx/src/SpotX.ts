@@ -38,7 +38,7 @@ export class SpotX {
         return this._ga;
     }
 
-    private get _spotXTx(): any {
+    private get spotXTx(): any {
         return this.api.query.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
     }
 
@@ -55,7 +55,7 @@ export class SpotX {
         maxAssetAmount: AnyNumber,
         coreAmount: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
+        return this.spotXTx.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
 
     /**
@@ -95,7 +95,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold);
+        return this.spotXTx.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -109,7 +109,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold);
+        return this.spotXTx.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -125,7 +125,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold);
+        return this.spotXTx.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -141,7 +141,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold);
+        return this.spotXTx.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold);
     }
 
     /**
@@ -155,7 +155,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToCoreSwapInput(null, assetId, sellAmount, minSale);
+        return this.spotXTx.assetToCoreSwapInput(null, assetId, sellAmount, minSale);
     }
 
     /**
@@ -169,7 +169,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.coreToAssetSwapInput(null, assetId, sellAmount, minSale);
+        return this.spotXTx.coreToAssetSwapInput(null, assetId, sellAmount, minSale);
     }
 
     /**
@@ -185,7 +185,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToCoreSwapInput(recipient, assetId, sellAmount, minSale);
+        return this.spotXTx.assetToCoreSwapInput(recipient, assetId, sellAmount, minSale);
     }
 
     /**
@@ -201,7 +201,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.coreToAssetSwapInput(recipient, assetId, sellAmount, minSale);
+        return this.spotXTx.coreToAssetSwapInput(recipient, assetId, sellAmount, minSale);
     }
     /**
      * remove liquidity
@@ -216,7 +216,7 @@ export class SpotX {
         minAssetWithdraw: AnyNumber,
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
+        return this.spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
     }
 
     /**
@@ -232,7 +232,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold);
+        return this.spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold);
     }
 
     /**
@@ -250,7 +250,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToAssetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold);
+        return this.spotXTx.assetToAssetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold);
     }
 
     /**
@@ -266,7 +266,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale);
+        return this.spotXTx.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale);
     }
 
     /**
@@ -284,7 +284,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale);
+        return this.spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale);
     }
 
     /**
