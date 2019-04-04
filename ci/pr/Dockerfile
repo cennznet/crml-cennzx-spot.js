@@ -1,12 +1,12 @@
 FROM node:10.13.0
 WORKDIR /workdir
-#ARG GEMFURY_TOKEN
+ARG GEMFURY_TOKEN
 
 COPY lerna.json package.json yarn.lock tslint.json .prettierignore .prettierrc ./
 
 # set registry
-#Run npm config set registry https://npm-proxy.fury.io/${GEMFURY_TOKEN}/centrality/
-#Run npm config set always-auth true
+Run npm config set registry https://npm-proxy.fury.io/${GEMFURY_TOKEN}/centrality/
+Run npm config set always-auth true
 
 RUN npm install -g yarn
 RUN yarn install -q
@@ -15,8 +15,6 @@ RUN yarn install -q
 COPY ./packages/spotx/package.json ./packages/spotx/
 RUN npx lerna bootstrap
 
-# copy source code
-COPY ./packages/spotx/package.json ./packages/spotx/
 COPY CHANGELOG.md ./
 COPY . .
 # build
