@@ -39,7 +39,7 @@ export class SpotX {
     }
 
     private get spotXTx(): any {
-        return this.api.query.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
+        return this.api.tx.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
     }
 
     /**
