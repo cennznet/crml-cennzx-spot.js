@@ -5,12 +5,11 @@ ARG GEMFURY_TOKEN
 COPY lerna.json package.json yarn.lock tslint.json .prettierignore .prettierrc ./
 
 RUN npm install -g yarn@1.15.2
+RUN yarn install -q
 
 # set registry
 Run npm config set registry https://npm-proxy.fury.io/${GEMFURY_TOKEN}/centrality/
 Run npm config set always-auth true
-
-RUN yarn install -q
 
 # install dependecies for packages
 COPY ./packages/spotx/package.json ./packages/spotx/
