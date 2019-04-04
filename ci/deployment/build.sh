@@ -27,4 +27,5 @@ docker build \
   -t "$IMAGE_NAME" \
   --build-arg GIT_NAME="$GIT_NAME" \
   --build-arg GIT_EMAIL="$GIT_EMAIL" \
+  --build-arg GEMFURY_TOKEN="${GEMFURY_TOKEN}" \
   -f $DIR/../pr/Dockerfile .
