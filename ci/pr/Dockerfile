@@ -18,5 +18,4 @@ RUN npx lerna bootstrap
 COPY CHANGELOG.md ./
 COPY . .
 # build
-# RUN npx lerna run build
-RUN yarn build
+RUN npx lerna run build
