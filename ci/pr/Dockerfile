@@ -8,7 +8,7 @@ COPY lerna.json package.json yarn.lock tslint.json .prettierignore .prettierrc .
 Run npm config set registry https://npm-proxy.fury.io/${GEMFURY_TOKEN}/centrality/
 Run npm config set always-auth true
 
-RUN npm install -g yarn
+RUN npm install -g yarn@1.15.2
 RUN yarn install -q
 
 # install dependecies for packages
