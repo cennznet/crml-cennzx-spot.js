@@ -24,12 +24,10 @@ export class SpotX {
 
     private _api: Api;
     private _ga: GenericAsset;
-    private _spotXTx: any;
 
     protected constructor(api: Api, ga: GenericAsset) {
         this._api = api;
         this._ga = ga;
-        this._spotXTx = this.spotXTxInstance;
     }
 
     get api(): Api {
@@ -40,14 +38,8 @@ export class SpotX {
         return this._ga;
     }
 
-    get spotXTxInstance(): any {
-        try {
-            this.api.query.cennzxSpot.defaultFeeRate();
-            return this.api.tx.cennzxSpot;
-        } catch (e) {
-            this.api.query.cennzX.defaultFeeRate();
-            return this.api.tx.cennzX;
-        }
+    private get _spotXTx(): any {
+        return this.api.query.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
     }
 
     /**
