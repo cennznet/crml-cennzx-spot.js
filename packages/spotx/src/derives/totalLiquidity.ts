@@ -13,10 +13,7 @@ export function totalLiquidity(api: ApiInterface$Rx) {
         spotXQuery.coreAssetId().pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (spotXQuery.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
-                    Observable<BN>,
-                    {}
-                >;
+                return (spotXQuery.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<Observable<BN>, {}>;
             })
         );
 }

@@ -24,7 +24,7 @@ export class SpotX {
 
     private _api: Api;
     private _ga: GenericAsset;
-    private  _spotXTx: any;
+    private _spotXTx: any;
 
     protected constructor(api: Api, ga: GenericAsset) {
         this._api = api;
@@ -258,13 +258,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this._spotXTx.assetToAssetSwapOutput(
-            recipient,
-            assetSold,
-            assetBought,
-            amountBought,
-            maxAmountSold
-        );
+        return this._spotXTx.assetToAssetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold);
     }
 
     /**

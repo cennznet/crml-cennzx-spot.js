@@ -157,12 +157,7 @@ export class SpotXRx {
         minAssetWithdraw: AnyNumber,
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.removeLiquidity(
-            assetId,
-            assetAmount,
-            minAssetWithdraw,
-            minCoreAssetWithdraw
-        ) as any;
+        return this._spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw) as any;
     }
 
     /**
@@ -178,13 +173,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapOutput(
-            null,
-            assetSold,
-            assetBought,
-            amountBought,
-            maxAmountSold
-        ) as any;
+        return this._spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -242,13 +231,7 @@ export class SpotXRx {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapInput(
-            recipient,
-            assetSold,
-            assetBought,
-            sellAmount,
-            minSale
-        ) as any;
+        return this._spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**
