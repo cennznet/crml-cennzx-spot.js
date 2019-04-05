@@ -9,13 +9,8 @@ import {getOutputPrice} from '../utils/utils';
 import {exchangeAddress} from './exchangeAddress';
 
 export function getSpotXQuery(api): any {
-    try {
-        api.query.cennzxSpot.defaultFeeRate();
-        return api.query.cennzxSpot;
-    } catch (e) {
-        api.query.cennzX.defaultFeeRate();
-        return api.query.cennzX;
-    }
+    // TODO: This code can be removed once the rename (cennzX ~ cennzxSpot) is applied on all blockchain networks.
+    return this.api.query.cennzX ? this.api.query.cennzX : this.api.query.cennzxSpot;
 }
 
 export function assetToCoreOutputPrice(api: ApiInterface$Rx) {

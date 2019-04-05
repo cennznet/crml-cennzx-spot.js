@@ -10,15 +10,15 @@ import {WsProvider} from '@cennznet/api/polkadot';
 import BN from 'bn.js';
 import {SpotX} from '../src/SpotX';
 
-// const investor = {
-//     address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
-//     seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
-// };
-
 const investor = {
-    address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
-    seed: stringToU8a('Bob'.padEnd(32, ' '))
-}
+    address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
+    seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
+};
+
+// const investorForLocal = {
+//     address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
+//     seed: stringToU8a('Bob'.padEnd(32, ' '))
+// }
 
 const trader = investor;
 
@@ -28,8 +28,8 @@ const recipient = {
 };
 
 const passphrase = '';
-//const url = 'wss://cennznet-node-0.centrality.me:9944';
-const url = undefined;
+const url = 'wss://cennznet-node-0.centrality.me:9944';
+//const url = undefined;
 
 const coreAssetId = 16001;
 const tradeAssetA = 16000;
@@ -45,7 +45,6 @@ describe('SpotX APIs', () => {
         const simpleKeyring: SimpleKeyring = new SimpleKeyring();
         simpleKeyring.addFromSeed(investor.seed);
         const wallet = new Wallet();
-        await wallet.createNewVault(passphrase);
         await wallet.addKeyring(simpleKeyring);
         api.setSigner(wallet);
         cennzxSpot = await SpotX.create(api);

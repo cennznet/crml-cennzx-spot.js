@@ -34,7 +34,6 @@ export class SpotXRx {
     protected constructor(api: ApiRx, ga: GenericAssetRx) {
         this._api = api;
         this._ga = ga;
-        this._spotXTx = this.spotXTxInstance;
     }
 
     get api(): ApiRx {
@@ -45,14 +44,8 @@ export class SpotXRx {
         return this._ga;
     }
 
-    get spotXTxInstance(): any {
-        try {
-            this.api.query.cennzxSpot.defaultFeeRate();
-            return this.api.tx.cennzxSpot;
-        } catch (e) {
-            this.api.query.cennzX.defaultFeeRate();
-            return this.api.tx.cennzX;
-        }
+    private get spotXTx(): any {
+        return this.api.tx.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
     }
 
     /**
@@ -69,7 +62,7 @@ export class SpotXRx {
         coreAmount: AnyNumber,
         expire: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount) as any;
+        return this.spotXTx.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount) as any;
     }
 
     /**
@@ -95,7 +88,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
+        return this.spotXTx.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -109,7 +102,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
+        return this.spotXTx.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -125,7 +118,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
+        return this.spotXTx.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -141,7 +134,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
+        return this.spotXTx.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -157,7 +150,7 @@ export class SpotXRx {
         minAssetWithdraw: AnyNumber,
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw) as any;
+        return this.spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw) as any;
     }
 
     /**
@@ -173,7 +166,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold) as any;
+        return this.spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -191,7 +184,7 @@ export class SpotXRx {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapOutput(
+        return this.spotXTx.assetToAssetSwapOutput(
             recipient,
             assetSold,
             assetBought,
@@ -213,7 +206,7 @@ export class SpotXRx {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale) as any;
+        return this.spotXTx.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**
@@ -231,7 +224,7 @@ export class SpotXRx {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this._spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
+        return this.spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**
