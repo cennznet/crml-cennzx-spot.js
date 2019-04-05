@@ -38,6 +38,7 @@ export class SpotX {
         return this._ga;
     }
 
+    // TODO: This code can be removed once the rename (cennzX ~ cennzxSpot) is applied on all blockchain networks.
     private get spotXTx(): any {
         return this.api.tx.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
     }
