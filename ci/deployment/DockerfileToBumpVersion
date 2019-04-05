@@ -41,4 +41,4 @@ RUN npx lerna version ${RELEASE_SCOPE} --yes --no-commit-hooks --force-publish=*
 #      fi\
 #    ";
 RUN npm install -g conventional-changelog-cli
-RUN conventional-changelog -p angular -i ../CHANGELOG.md -s -r1 && git add ../CHANGELOG.md && git commit -m 'Change log' && git push --set-upstream origin backwardCompatibleWithBlockchain
+RUN conventional-changelog -p angular -i ../CHANGELOG.md -k ../package.json -l ../lerna.json -s -r1 && git add ../CHANGELOG.md && git commit -m 'Change log' && git push --set-upstream origin backwardCompatibleWithBlockchain
