@@ -23,6 +23,9 @@ pipeline {
                 GEMFURY_EXTERNAL_TOKEN = credentials('GEMFURY_EXTERNAL_TOKEN')
                 SSH_RSA_FILE_PATH = credentials('jenkins-ssh-key')
             }
+            when {
+                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+            }
             steps {
                 sh './ci/deployment/buildToPublish.sh'
             }
