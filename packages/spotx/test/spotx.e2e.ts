@@ -165,24 +165,24 @@ describe('SpotX APIs', () => {
             done();
         });
     });
-    // it('can transfer ', async done => {
-    //     const amountBought = 200;
-    //     const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-    //     const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-    //     await ga.transfer(tradeAssetA, investor.address, amountBought).signAndSend(trader.address, async status => {
-    //         if (status.type === 'Finalised') {
-    //             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-    //             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-    //             const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
-    //             const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-    //             const blockHash = status.status.asFinalised;
-    //             const events = await api.query.system.events.at(blockHash);
-    //             console.log('Events:' + events);
-    //
-    //             done();
-    //         }
-    //     });
-    // });
+    it('can transfer ', async done => {
+        const amountBought = 200;
+        const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
+        const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+        await ga.transfer(tradeAssetA, investor.address, amountBought).signAndSend(trader.address, async status => {
+            if (status.type === 'Finalised') {
+                const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
+                const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+                const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
+                const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
+                const blockHash = status.status.asFinalised;
+                const events = await api.query.system.events.at(blockHash);
+                console.log('Events:' + events);
+
+                done();
+            }
+        });
+    });
     it('can trade from asset to core for exact core asset amount', async done => {
         const amountBought = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
