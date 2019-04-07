@@ -23,6 +23,8 @@ fi
 set -ex
 
 cp $NEW_SSH_RSA_FILE_PATH ./git-ssh-key
+branch=$(git symbolic-ref --short HEAD)
+echo $branch
 
 docker build \
   -t "$IMAGE_NAME" \
@@ -30,4 +32,5 @@ docker build \
   --build-arg GIT_EMAIL="$GIT_EMAIL" \
   --build-arg IMAGE_NAME="$IMAGE_NAME" \
   --build-arg RELEASE_SCOPE="$RELEASE_SCOPE" \
+  --build-arg GIT_BRANCH="$branch" \
   -f $DIR/DockerfileToBumpVersion .
