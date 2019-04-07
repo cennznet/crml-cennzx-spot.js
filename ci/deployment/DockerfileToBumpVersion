@@ -16,7 +16,6 @@ RUN echo 'IdentityFile /root/.ssh/id_rsa' > ~/.ssh/config
 # make sure your domain is accepted
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
-git
 # configure git
 RUN git --version
 RUN git config user.name ${GIT_NAME}
@@ -43,4 +42,4 @@ RUN npx lerna version ${RELEASE_SCOPE} --yes --no-commit-hooks --force-publish=*
 
 RUN echo "Building change log for ${GIT_BRANCH}"
 RUN npm install -g conventional-changelog-cli
-RUN conventional-changelog -p angular -i ../CHANGELOG.md -k ../package.json -l ../lerna.json -s -r1 && git add ../CHANGELOG.md && git commit -m 'Change log' && git push --set-upstream origin ${GIT_BRANCH}
+RUN conventional-changelog -p angular -i ../CHANGELOG.md -k ../package.json -l ../lerna.json -s -r 1 && git add ../CHANGELOG.md && git commit -m 'Change log' && git push --set-upstream origin ${GIT_BRANCH}
