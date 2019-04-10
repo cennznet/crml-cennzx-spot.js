@@ -15,10 +15,10 @@ const investor = {
     seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
 };
 
-const investorOnLocalDev = {
-    address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
-    seed: stringToU8a('Bob'.padEnd(32, ' '))
-}
+// const investorForLocal = {
+//     address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
+//     seed: stringToU8a('Bob'.padEnd(32, ' '))
+// }
 
 const trader = investor;
 
@@ -31,8 +31,8 @@ const passphrase = '';
 const url = 'wss://cennznet-node-0.centrality.me:9944';
 //const url = undefined;
 
-const coreAssetId = 10;
-const tradeAssetA = 0;
+const coreAssetId = 16001;
+const tradeAssetA = 16000;
 const tradeAssetB = 101;
 
 describe('SpotX APIs', () => {

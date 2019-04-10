@@ -1,0 +1,41 @@
+#!groovy
+pipeline {
+    agent {
+        label 'linux'
+    }
+
+    environment {
+        SERVICE_NAME = 'cennznet-js-spotx'
+        IMAGE_NAME = "centrality/${SERVICE_NAME}-build:1.0.${BUILD_NUMBER}"
+        GIT_NAME = 'Jenkins'
+        GIT_EMAIL = 'jenkins@centrality.ai'
+        PUBLISH_IMAGE_NAME = "centrality/${SERVICE_NAME}:1.0.${BUILD_NUMBER}"
+        LAST_COMMIT_AUTHOR = sh(script: "git log -1 --pretty=format:'%an'", returnStdout: true).trim()
+        AWS_ACCESS_KEY = credentials('TF_AWS_ACCESS_KEY')
+        AWS_SECRET_KEY = credentials('TF_AWS_SECRET_KEY')
+        GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
+    }
+
+    stages {
+        stage('Publish to Gemfury') {
+            environment {
+                GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
+                GEMFURY_EXTERNAL_TOKEN = credentials('GEMFURY_EXTERNAL_TOKEN')
+                SSH_RSA_FILE_PATH = credentials('jenkins-ssh-key')
+            }
+            when {
+                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+            }
+            steps {
+                sh './ci/deployment/buildToPublish.sh'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "pipeline post always"
+            sh 'bash /mnt/jenkins/script/cleanup.sh'
+        }
+    }
+}

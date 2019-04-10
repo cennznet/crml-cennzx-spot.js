@@ -7,6 +7,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 : "${IMAGE_NAME:?IMAGE_NAME environment variable is required}"
 : "${GIT_NAME:?GIT_NAME environment variable is required}"
 : "${GIT_EMAIL:?GIT_EMAIL environment variable is required}"
+: "${RELEASE_SCOPE:?RELEASE_SCOPE is required}"
 
 NEW_SSH_RSA_FILE_PATH=~/.ssh/id_rsa
 
@@ -22,10 +23,14 @@ fi
 set -ex
 
 cp $NEW_SSH_RSA_FILE_PATH ./git-ssh-key
+branch=$(git symbolic-ref --short HEAD)
+echo $branch
 
 docker build \
   -t "$IMAGE_NAME" \
   --build-arg GIT_NAME="$GIT_NAME" \
   --build-arg GIT_EMAIL="$GIT_EMAIL" \
-  --build-arg GEMFURY_TOKEN="${GEMFURY_TOKEN}" \
-  -f $DIR/../pr/Dockerfile .
+  --build-arg IMAGE_NAME="$IMAGE_NAME" \
+  --build-arg RELEASE_SCOPE="$RELEASE_SCOPE" \
+  --build-arg GIT_BRANCH="$branch" \
+  -f $DIR/DockerfileToBumpVersion .

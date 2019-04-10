@@ -38,40 +38,34 @@ pipeline {
             }
         }
 
-        stage('Confirm Publish') {
-            when {
-                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
-            }
-            steps {
+        stage('Integration testing') {
+          when {
+            expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+          }
+          steps {
+            script {
                 timeout(time: 30, unit: 'MINUTES') {
-                    input "Confirm publish?"
-                }
+                  input "Please confirm integration testing completed on all blockchain version?"
+              }
             }
+          }
         }
-
-        stage('Publish to Gemfury') {
-            when {
-                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
-            }
-            environment {
-                GEMFURY_EXTERNAL_TOKEN = credentials('GEMFURY_EXTERNAL_TOKEN')
-            }
-            steps {
-                script {
-                    timeout(time: 30, unit: 'MINUTES') {
+        stage('Bump version and commit change log') {
+           environment {
+              SSH_RSA_FILE_PATH = credentials('jenkins-ssh-key')
+           }
+           when {
+             expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+           }
+           steps {
+              script {
+                  timeout(time: 30, unit: 'MINUTES') {
                         env.RELEASE_SCOPE = input message: 'User input required',
-                                parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
-                    }
-                }
-                sh './ci/deployment/publish.sh'
-            }
-        }
-    }
-
-    post {
-        always {
-            echo "pipeline post always"
-            sh 'bash /mnt/jenkins/script/cleanup.sh'
+                        parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
+                  }
+              }
+              sh './ci/deployment/bumpVersion.sh'
+           }
         }
     }
 }
