@@ -78,66 +78,6 @@ export class SpotXRx {
     }
 
     /**
-     * Asset to core swap output
-     * @param assetId The asset to sell
-     * @param amountBought amount of core asset to buy
-     * @param maxAmountSold maximum amount of asset allowed to sell
-     */
-    assetToCoreSwapOutput(
-        assetId: AnyNumber,
-        amountBought: AnyNumber,
-        maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToCoreSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
-    }
-
-    /**
-     * Asset to core swap output
-     * @param assetId The id of the transferred asset
-     * @param amountBought amount of trade asset to buy
-     * @param maxAmountSold maximum amount of core asset allowed to sell
-     */
-    coreToAssetSwapOutput(
-        assetId: AnyNumber,
-        amountBought: AnyNumber,
-        maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.coreToAssetSwapOutput(null, assetId, amountBought, maxAmountSold) as any;
-    }
-
-    /**
-     * Asset to core transfer output
-     * @param recipient - Receiver of core asset
-     * @param assetId The asset to sell
-     * @param amountBought amount of core asset to buy
-     * @param maxAmountSold maximum amount of asset allowed to sell
-     */
-    assetToCoreTransferOutput(
-        recipient: AnyAddress,
-        assetId: AnyAssetId,
-        amountBought: AnyNumber,
-        maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToCoreSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
-    }
-
-    /**
-     * Asset to core transfer output
-     * @param recipient - Receiver of trade asset
-     * @param assetId The asset to sell
-     * @param amountBought amount of trade asset to buy
-     * @param maxAmountSold maximum amount of asset allowed to sell
-     */
-    coreToAssetTransferOutput(
-        recipient: AnyAddress,
-        assetId: AnyAssetId,
-        amountBought: AnyNumber,
-        maxAmountSold: AnyNumber
-    ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.coreToAssetSwapOutput(recipient, assetId, amountBought, maxAmountSold) as any;
-    }
-
-    /**
      * remove liquidity
      * @param assetId - The asset to remove
      * @param assetAmount - Amount of exchange asset to burn
@@ -160,13 +100,13 @@ export class SpotXRx {
      * @param amountBought amount of asset 2 to buy
      * @param maxAmountSold maximum amount of asset 1 allowed to sell
      */
-    assetToAssetSwapOutput(
+    assetSwapOutput(
         assetSold: AnyAssetId,
         assetBought: AnyAssetId,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToAssetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold) as any;
+        return this.spotXTx.assetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -177,20 +117,14 @@ export class SpotXRx {
      * @param amountBought amount of asset 2 to buy
      * @param maxAmountSold maximum amount of asset allowed to sell
      */
-    assetToAssetTransferOutput(
+    assetTransferOutput(
         recipient: AnyAddress,
         assetSold: AnyAssetId,
         assetBought: AnyAssetId,
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToAssetSwapOutput(
-            recipient,
-            assetSold,
-            assetBought,
-            amountBought,
-            maxAmountSold
-        ) as any;
+        return this.spotXTx.assetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold) as any;
     }
 
     /**
@@ -200,13 +134,13 @@ export class SpotXRx {
      * @param sellAmount amount of trade asset 1 to sell
      * @param minSale Min trade asset 2 to receive from sale (output)
      */
-    assetToAssetSwapInput(
+    assetSwapInput(
         assetSold: AnyAssetId,
         assetBought: AnyAssetId,
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToAssetSwapInput(null, assetSold, assetBought, sellAmount, minSale) as any;
+        return this.spotXTx.assetSwapInput(null, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**
@@ -217,14 +151,14 @@ export class SpotXRx {
      * @param sellAmount amount of trade asset to sell
      * @param minSale Min core asset to receive from sale (output)
      */
-    assetToAssetTransferInput(
+    assetTransferInput(
         recipient: AnyAddress,
         assetSold: AnyAssetId,
         assetBought: AnyAssetId,
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
-        return this.spotXTx.assetToAssetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
+        return this.spotXTx.assetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale) as any;
     }
 
     /**

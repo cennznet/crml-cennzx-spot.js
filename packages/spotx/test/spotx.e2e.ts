@@ -33,7 +33,7 @@ const url = 'wss://cennznet-node-0.centrality.me:9944';
 
 const coreAssetId = 16001;
 const tradeAssetA = 16000;
-const tradeAssetB = 101;
+const tradeAssetB = 16002;
 
 describe('SpotX APIs', () => {
     let api: Api;
@@ -191,13 +191,13 @@ describe('SpotX APIs', () => {
         const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, amountBought);
         console.log(expectPay);
         await cennzxSpot
-            .assetToCoreSwapOutput(tradeAssetA, amountBought, 50000)
+            .assetSwapOutput(tradeAssetA, coreAssetId,  amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'CoreAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -220,13 +220,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
-            .coreToAssetSwapOutput(tradeAssetA, amountBought, 50000)
+            .assetSwapOutput(coreAssetId, tradeAssetA, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'TradeAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -249,13 +249,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
-            .coreToAssetSwapInput(tradeAssetA, sellAmount, 30)
+            .assetSwapInput(coreAssetId, tradeAssetA, sellAmount, 30)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'TradeAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -278,13 +278,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, recipient.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
-            .coreToAssetTransferInput(recipient.address, tradeAssetA, sellAmount, 30)
+            .assetTransferInput(recipient.address, coreAssetId, tradeAssetA, sellAmount, 30)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'TradeAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, recipient.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -303,19 +303,19 @@ describe('SpotX APIs', () => {
     });
 
     it('can trade from asset to core for exact trade asset amount', async done => {
-        const amountBought = 50;
+        const sellAmount = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-        const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, amountBought);
+        const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, sellAmount);
         console.log(expectPay);
         await cennzxSpot
-            .assetToCoreSwapInput(tradeAssetA, amountBought, 30)
+            .assetSwapInput(tradeAssetA, coreAssetId, sellAmount, 30)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'CoreAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -338,13 +338,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
-            .assetToCoreTransferInput(recipient.address, tradeAssetA, sellAmount, 30)
+            .assetTransferInput(recipient.address, tradeAssetA, coreAssetId, sellAmount, 30)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'CoreAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
@@ -368,13 +368,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
-            .assetToCoreTransferOutput(recipient.address, tradeAssetA, amountBought, 50000)
+            .assetTransferOutput(recipient.address, tradeAssetA, coreAssetId, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'CoreAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
@@ -397,13 +397,13 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
-            .coreToAssetTransferOutput(recipient.address, tradeAssetA, amountBought, 50000)
+            .assetTransferOutput(recipient.address, coreAssetId, tradeAssetA, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'TradeAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
@@ -426,13 +426,13 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetToAssetSwapOutput(tradeAssetA, tradeAssetB, amountBought, 50000)
+            .assetSwapOutput(tradeAssetA, tradeAssetB, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetToAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
@@ -455,13 +455,13 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetToAssetTransferOutput(recipient.address, tradeAssetA, tradeAssetB, amountBought, 50000)
+            .assetTransferOutput(recipient.address, tradeAssetA, tradeAssetB, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetToAssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
@@ -484,13 +484,13 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetToAssetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 10)
+            .assetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 10)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetToAssetPurchase') { //ExtrinsicFailed
+                        if (event.event.method === 'AssetPurchase') { //ExtrinsicFailed
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
@@ -513,13 +513,13 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetToAssetTransferInput(recipient.address, tradeAssetA, tradeAssetB, sellAmount, 10)
+            .assetTransferInput(recipient.address, tradeAssetA, tradeAssetB, sellAmount, 10)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetToAssetPurchase') { //ExtrinsicFailed
+                        if (event.event.method === 'AssetPurchase') { //ExtrinsicFailed
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
