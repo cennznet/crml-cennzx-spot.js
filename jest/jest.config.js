@@ -23,5 +23,5 @@ module.exports = {
         },
     },
     testEnvironment: '../../jest/env.js',
-    setupTestFrameworkScriptFile: '../../jest/jest.setup.js'
+    setupFilesAfterEnv: ['../../jest/jest.setup.js']
 };

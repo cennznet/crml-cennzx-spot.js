@@ -1,19 +1,20 @@
 import {ApiInterface$Rx, QueryableStorageFunction} from '@cennznet/api/polkadot.types';
-import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
+import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash} from '@cennznet/types/polkadot';
 import BN from 'bn.js';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {getExchangeKey} from '../utils/utils';
-import {getSpotXQuery} from './index';
 
 export function totalLiquidity(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<BN> => {
-        const spotXQuery = getSpotXQuery(api);
-        return spotXQuery.coreAssetId().pipe(
+        return api.query.cennzxSpot.coreAssetId().pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (spotXQuery.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<Observable<BN>, {}>;
+                return (api.query.cennzxSpot.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
+                    Observable<BN>,
+                    {}
+                >;
             })
         );
     };
@@ -21,11 +22,10 @@ export function totalLiquidity(api: ApiInterface$Rx) {
 
 export function totalLiquidityAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<BN> => {
-        const spotXQuery = getSpotXQuery(api);
-        return spotXQuery.coreAssetId.at(hash).pipe(
+        return api.query.cennzxSpot.coreAssetId.at(hash).pipe(
             switchMap(coreAssetId => {
                 const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (spotXQuery.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
+                return (api.query.cennzxSpot.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
                     Observable<BN>,
                     {}
                 >;

@@ -1,7 +1,7 @@
 import {Api} from '@cennznet/api';
 import {QueryableStorageFunction, SubmittableExtrinsic} from '@cennznet/api/polkadot.types';
-import {GenericAsset} from '@cennznet/generic-asset';
-import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
+import {GenericAsset} from '@cennznet/crml-generic-asset';
+import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import * as derives from './derives';
@@ -13,10 +13,15 @@ import {
     QueryableTotalLiquidityBalance,
 } from './types';
 
-export class SpotX {
-    static async create(api: Api): Promise<SpotX> {
-        const ga = await GenericAsset.create(api);
-        const cennzxSpot = new SpotX(api, ga);
+export class CennzxSpot {
+    static async create(api: Api): Promise<CennzxSpot> {
+        let ga: GenericAsset;
+        if (api.genericAsset) {
+            ga = api.genericAsset;
+        } else {
+            ga = await GenericAsset.create(api);
+        }
+        const cennzxSpot = new CennzxSpot(api, ga);
         (api as any)._options.derives = {...(api as any)._options.derives, cennzxSpot: derives};
         await (api as any).loadMeta();
         return cennzxSpot;
@@ -25,9 +30,15 @@ export class SpotX {
     private _api: Api;
     private _ga: GenericAsset;
 
-    protected constructor(api: Api, ga: GenericAsset) {
+    protected constructor(api: Api, ga?: GenericAsset) {
         this._api = api;
-        this._ga = ga;
+        if (api.genericAsset) {
+            this._ga = api.genericAsset;
+        } else if (ga) {
+            this._ga = ga;
+        } else {
+            throw new Error('genericAsset is not found');
+        }
     }
 
     get api(): Api {
@@ -38,9 +49,8 @@ export class SpotX {
         return this._ga;
     }
 
-    // TODO: This code can be removed once the rename (cennzX ~ cennzxSpot) is applied on all blockchain networks.
-    private get spotXTx(): any {
-        return this.api.tx.cennzX ? this.api.tx.cennzX : this.api.tx.cennzxSpot;
+    set ga(ga: GenericAsset) {
+        this._ga = ga;
     }
 
     /**
@@ -56,7 +66,7 @@ export class SpotX {
         maxAssetAmount: AnyNumber,
         coreAmount: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
+        return this.api.tx.cennzxSpot.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount);
     }
 
     /**
@@ -98,7 +108,7 @@ export class SpotX {
         minAssetWithdraw: AnyNumber,
         minCoreAssetWithdraw: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
+        return this.api.tx.cennzxSpot.removeLiquidity(assetId, assetAmount, minAssetWithdraw, minCoreAssetWithdraw);
     }
 
     /**
@@ -114,7 +124,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.assetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold);
+        return this.api.tx.cennzxSpot.assetSwapOutput(null, assetSold, assetBought, amountBought, maxAmountSold);
     }
 
     /**
@@ -132,7 +142,7 @@ export class SpotX {
         amountBought: AnyNumber,
         maxAmountSold: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.assetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold);
+        return this.api.tx.cennzxSpot.assetSwapOutput(recipient, assetSold, assetBought, amountBought, maxAmountSold);
     }
 
     /**
@@ -148,7 +158,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.assetSwapInput(null, assetSold, assetBought, sellAmount, minSale);
+        return this.api.tx.cennzxSpot.assetSwapInput(null, assetSold, assetBought, sellAmount, minSale);
     }
 
     /**
@@ -166,7 +176,7 @@ export class SpotX {
         sellAmount: AnyNumber,
         minSale: AnyNumber
     ): SubmittableExtrinsic<Promise<IHash>, Promise<() => any>> {
-        return this.spotXTx.assetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale);
+        return this.api.tx.cennzxSpot.assetSwapInput(recipient, assetSold, assetBought, sellAmount, minSale);
     }
 
     /**

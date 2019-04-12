@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "target": "es2017",
+        "module": "none",
+        "target": "esnext",
         "noImplicitAny": false,
         "moduleResolution": "node",
-        "outDir": "dist",
+        "outDir": "build",
         "baseUrl": ".",
         "types": ["node", "jest"],
         "experimentalDecorators": true,
@@ -13,12 +13,9 @@
         "lib": ["ES2017"],
         "emitDecoratorMetadata": true,
         "declaration": true,
-        "declarationDir": "dist",
+        "declarationDir": "build",
         "sourceMap": true,
-        "inlineSources": true,
-        "paths": {
-            "*": ["node_modules/*"]
-        }
+        "inlineSources": true
     },
     "include": ["src/**/*"]
 }

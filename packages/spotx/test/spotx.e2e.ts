@@ -5,10 +5,10 @@ import {EventRecord, getTypeRegistry, Vector} from '@cennznet/types/polkadot';
 import {stringToU8a} from '@cennznet/util';
 import {Api} from '@cennznet/api';
 import {SimpleKeyring, Wallet} from '@cennznet/wallet';
-import {GenericAsset} from '@cennznet/generic-asset';
 import {WsProvider} from '@cennznet/api/polkadot';
+import {GenericAsset} from '@cennznet/crml-generic-asset';
 import BN from 'bn.js';
-import {SpotX} from '../src/SpotX';
+import {CennzxSpot} from '../src/CennzxSpot';
 
 const investor = {
     address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
@@ -37,7 +37,7 @@ const tradeAssetB = 16002;
 
 describe('SpotX APIs', () => {
     let api: Api;
-    let cennzxSpot: SpotX;
+    let cennzxSpot: CennzxSpot;
     let ga: GenericAsset;
     beforeAll(async () => {
         const websocket = new WsProvider(url);
@@ -48,7 +48,7 @@ describe('SpotX APIs', () => {
         await wallet.createNewVault(passphrase);
         await wallet.addKeyring(simpleKeyring);
         api.setSigner(wallet);
-        cennzxSpot = await SpotX.create(api);
+        cennzxSpot = await CennzxSpot.create(api);
         ga = cennzxSpot.ga;
     });
 
@@ -131,23 +131,25 @@ describe('SpotX APIs', () => {
 
         it("Remove liquidity and receive 'RemoveLiquidity' event", async done => {
             const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-            await cennzxSpot.removeLiquidity(tradeAssetA, liquidity, 1, 1).signAndSend(investor.address, async status => {
-                if (status.type === 'Finalised' && status.events !== undefined) {
-                    let isRemoved = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
-                        if (event.event.method === 'RemoveLiquidity') {
-                            isRemoved = true;
-                            const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-                            expect(balance.eqn(0)).toBeTruthy();
-                            // TODO: check balance change of exchange account
+            await cennzxSpot
+                .removeLiquidity(tradeAssetA, liquidity, 1, 1)
+                .signAndSend(investor.address, async status => {
+                    if (status.type === 'Finalised' && status.events !== undefined) {
+                        let isRemoved = false;
+                        for (let i = 0; i < status.events.length; i += 1) {
+                            const event = status.events[i];
+                            if (event.event.method === 'RemoveLiquidity') {
+                                isRemoved = true;
+                                const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+                                expect(balance.eqn(0)).toBeTruthy();
+                                // TODO: check balance change of exchange account
+                            }
                         }
+                        // return isCreated event
+                        expect(isRemoved).toEqual(true);
+                        done();
                     }
-                    // return isCreated event
-                    expect(isRemoved).toEqual(true);
-                    done();
-                }
-            });
+                });
         });
         it.skip('query', async done => {
             const typeRegistry = getTypeRegistry();
@@ -191,13 +193,14 @@ describe('SpotX APIs', () => {
         const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, amountBought);
         console.log(expectPay);
         await cennzxSpot
-            .assetSwapOutput(tradeAssetA, coreAssetId,  amountBought, 50000)
+            .assetSwapOutput(tradeAssetA, coreAssetId, amountBought, 50000)
             .signAndSend(trader.address, async status => {
                 if (status.type === 'Finalised') {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -226,7 +229,8 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -255,7 +259,8 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -284,9 +289,13 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
-                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, recipient.address)) as BN;
+                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                recipient.address
+                            )) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
                             const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
@@ -315,7 +324,8 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
@@ -344,10 +354,14 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
+                            const coreAssetBalanceAfter = (await ga.getFreeBalance(
+                                coreAssetId,
+                                recipient.address
+                            )) as BN;
 
                             const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
                             const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
@@ -374,10 +388,14 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
+                            const coreAssetBalanceAfter = (await ga.getFreeBalance(
+                                coreAssetId,
+                                recipient.address
+                            )) as BN;
                             const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
                             const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
                             const blockHash = status.status.asFinalised;
@@ -403,10 +421,14 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
+                            const coreAssetBalanceAfter = (await ga.getFreeBalance(
+                                coreAssetId,
+                                recipient.address
+                            )) as BN;
                             const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
                             const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
                             const blockHash = status.status.asFinalised;
@@ -432,10 +454,17 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
-                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                trader.address
+                            )) as BN;
+                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetB,
+                                trader.address
+                            )) as BN;
                             const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
                             const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
                             const blockHash = status.status.asFinalised;
@@ -461,10 +490,17 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { // check if ExtrinsicFailed or successful
+                        if (event.event.method === 'AssetPurchase') {
+                            // check if ExtrinsicFailed or successful
                             trade = true;
-                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                trader.address
+                            )) as BN;
+                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetB,
+                                trader.address
+                            )) as BN;
                             const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
                             const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
                             const blockHash = status.status.asFinalised;
@@ -490,10 +526,17 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { //ExtrinsicFailed
+                        if (event.event.method === 'AssetPurchase') {
+                            //ExtrinsicFailed
                             trade = true;
-                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                trader.address
+                            )) as BN;
+                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetB,
+                                trader.address
+                            )) as BN;
                             const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
                             const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
                             const blockHash = status.status.asFinalised;
@@ -519,10 +562,17 @@ describe('SpotX APIs', () => {
                     let trade = false;
                     for (let i = 0; i < status.events.length; i += 1) {
                         const event = status.events[i];
-                        if (event.event.method === 'AssetPurchase') { //ExtrinsicFailed
+                        if (event.event.method === 'AssetPurchase') {
+                            //ExtrinsicFailed
                             trade = true;
-                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+                            const tradeAssetABalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                trader.address
+                            )) as BN;
+                            const tradeAssetBBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetB,
+                                trader.address
+                            )) as BN;
                             const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
                             const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
                             const blockHash = status.status.asFinalised;

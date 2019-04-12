@@ -1,6 +1,6 @@
-import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
+import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
-import {Address, u64, Tuple, Permill} from '@cennznet/types/polkadot';
+import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
 import {blake2AsU8a, stringToU8a, u8aConcat} from '@cennznet/util';
 import BN from 'bn.js';

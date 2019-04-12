@@ -11,18 +11,21 @@
     "scripts": {},
     "devDependencies": {
         "@types/jest": "^23.3.10",
+        "cpx": "^1.5.0",
         "cz-lerna-changelog": "^2.0.2",
         "husky": "^1.1.1",
         "jest": "24.1.0",
         "jest-environment-node": "^24.0.0",
-        "lerna": "^3.6.0",
+        "lerna": "^3.13.2",
         "prettier": "^1.13.5",
         "ts-jest": "^24.0.0",
         "tslint": "^5.11.0",
         "tslint-microsoft-contrib": "^5.2.1"
     },
     "resolutions": {
-        "js-yaml": "^3.13.0"
+        "js-yaml": "^3.13.0",
+        "braces": "^2.3.2",
+        "tar": "^4.4.8"
     },
     "config": {
         "commitizen": {

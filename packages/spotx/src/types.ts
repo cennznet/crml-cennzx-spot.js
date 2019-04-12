@@ -1,4 +1,4 @@
-import {AnyAssetId} from '@cennznet/generic-asset/dist/types';
+import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AccountId, AccountIndex, Address} from '@cennznet/types/polkadot';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
