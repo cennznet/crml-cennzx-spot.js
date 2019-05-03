@@ -2,7 +2,8 @@ import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
 import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
-import {blake2AsU8a, stringToU8a, u8aConcat} from '@cennznet/util';
+import {blake2AsHex, blake2AsU8a, stringToU8a, u8aConcat, xxhashAsHex} from '@cennznet/util';
+import {Compact} from '@plugnet/types';
 import BN from 'bn.js';
 import {PERMILL_BASE} from '../constants';
 
@@ -43,4 +44,19 @@ export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve
         .mul(output)
         .divn(PERMILL_BASE)
         .add(output);
+}
+
+export function generateStorageDoubleMapKey(prefixString: string, key1: Codec, key2: Codec): string {
+    // key1 encoded
+    const prefixU8a: Uint8Array = stringToU8a(prefixString);
+    const key1U8a: Uint8Array = key1.toU8a(true);
+    const key1Encoded: Uint8Array = new Uint8Array(prefixU8a.length + key1U8a.length);
+    key1Encoded.set(prefixU8a);
+    key1Encoded.set(key1U8a, prefixU8a.length);
+    // key2 encoded
+    const length = 2;
+    const bitLength: number = 128;
+    const key2Encoded: string = xxhashAsHex(key2.toU8a(true), bitLength).substr(length);
+
+    return blake2AsHex(Compact.addLengthPrefix(key1Encoded), 256) + key2Encoded;
 }

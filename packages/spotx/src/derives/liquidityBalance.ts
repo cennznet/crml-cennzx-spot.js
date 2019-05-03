@@ -1,15 +1,14 @@
 import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Address, Balance, Data, Hash, Option, Vector} from '@cennznet/types/polkadot';
-import {generateStorageDoubleMapKey} from '@cennznet/util';
-import {drr} from '@polkadot/api-derive/util/drr';
+import {drr} from '@plugnet/api-derive/util/drr';
 import BN from 'bn.js';
 import {Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {AnyAddress} from '../types';
-import {getExchangeKey} from '../utils/utils';
+import {getExchangeKey, generateStorageDoubleMapKey} from '../utils/utils';
 
-const PREFIX = 'cennz-x-spot:liquidity';
+const PREFIX = 'CennzxSpot LiquidityBalance';
 
 export function liquidityBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, address: AnyAddress): Observable<BN> => {

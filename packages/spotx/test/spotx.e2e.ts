@@ -5,26 +5,26 @@ import {EventRecord, getTypeRegistry, Vector} from '@cennznet/types/polkadot';
 import {stringToU8a} from '@cennznet/util';
 import {Api} from '@cennznet/api';
 import {SimpleKeyring, Wallet} from '@cennznet/wallet';
-import {WsProvider} from '@cennznet/api/polkadot';
+import {WsProvider, SubmittableResult} from '@cennznet/api/polkadot';
 import {GenericAsset} from '@cennznet/crml-generic-asset';
 import BN from 'bn.js';
 import {CennzxSpot} from '../src/CennzxSpot';
 
 const investor = {
-    address: '5H6dGC3TbdyKFagoCEXGaNtsovTtpYYtMTXnsbtVYcn2T1VY',
-    seed: stringToU8a(('cennznet-js-test' as any).padEnd(32, ' ')),
+    address: '5DXUeE5N5LtkW97F2PzqYPyqNkxqSWESdGSPTX6AvkUAhwKP',
+    uri: '//cennznet-js-test',
 };
 
-// const investorForLocal = {
-//     address: '5Gw3s7q4QLkSWwknsiPtjujPv3XM4Trxi5d4PgKMMk3gfGTE',
-//     seed: stringToU8a('Bob'.padEnd(32, ' '))
-// }
+const investorOnLocal = {
+    address: '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
+    uri: '//Bob',
+ }
 
 const trader = investor;
 
 const recipient = {
-    address: '5FPCjwLUkeg48EDYcW5i4b45HLzmCn4aUbx5rsCsdtPbTsKT',
-    seed: stringToU8a(('cennznetjstest' as any).padEnd(32, ' ')),
+    //addressOnLocal: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
+    address: '5ESNjjzmZnnCdrrpUo9TBKhDV1sakTjkspw2ZGg84LAK1e1Y'
 };
 
 const passphrase = '';
@@ -43,7 +43,7 @@ describe('SpotX APIs', () => {
         const websocket = new WsProvider(url);
         api = await Api.create({provider: websocket});
         const simpleKeyring: SimpleKeyring = new SimpleKeyring();
-        simpleKeyring.addFromSeed(investor.seed);
+        simpleKeyring.addFromUri(investor.uri);
         const wallet = new Wallet();
         await wallet.createNewVault(passphrase);
         await wallet.addKeyring(simpleKeyring);
@@ -68,11 +68,12 @@ describe('SpotX APIs', () => {
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
                 .addLiquidity(tradeAssetA, 0, maxAssetAmount, investAmount)
-                .signAndSend(investor.address, async status => {
-                    if (status.type === 'Finalised' && status.events !== undefined) {
+                .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+                    const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+                    if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
-                        for (let i = 0; i < status.events.length; i += 1) {
-                            const event = status.events[i];
+                        for (let i = 0; i < events.length; i += 1) {
+                            const event = events[i];
                             if (event.event.method === 'AddLiquidity') {
                                 isCreated = true;
                                 const [account, coreInvestAmount, assetId, targetInvestAmount] = event.event.data;
@@ -104,11 +105,11 @@ describe('SpotX APIs', () => {
             expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
                 .addLiquidity(tradeAssetB, 0, maxAssetAmount, investAmount)
-                .signAndSend(investor.address, async status => {
-                    if (status.type === 'Finalised' && status.events !== undefined) {
+                .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+                    if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
-                        for (let i = 0; i < status.events.length; i += 1) {
-                            const event = status.events[i];
+                        for (let i = 0; i < events.length; i += 1) {
+                            const event = events[i];
                             if (event.event.method === 'AddLiquidity') {
                                 isCreated = true;
                                 const [account, coreInvestAmount, assetId, targetInvestAmount] = event.event.data;
@@ -129,88 +130,39 @@ describe('SpotX APIs', () => {
                 });
         });
 
-        it("Remove liquidity and receive 'RemoveLiquidity' event", async done => {
-            const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-            await cennzxSpot
-                .removeLiquidity(tradeAssetA, liquidity, 1, 1)
-                .signAndSend(investor.address, async status => {
-                    if (status.type === 'Finalised' && status.events !== undefined) {
-                        let isRemoved = false;
-                        for (let i = 0; i < status.events.length; i += 1) {
-                            const event = status.events[i];
-                            if (event.event.method === 'RemoveLiquidity') {
-                                isRemoved = true;
-                                const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-                                expect(balance.eqn(0)).toBeTruthy();
-                                // TODO: check balance change of exchange account
-                            }
-                        }
-                        // return isCreated event
-                        expect(isRemoved).toEqual(true);
-                        done();
-                    }
-                });
-        });
         it.skip('query', async done => {
             const typeRegistry = getTypeRegistry();
             const totalAmount: number = 200;
             const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
             const coreAssetId = await cennzxSpot.getCoreAssetId();
             const exchangeAddress = await cennzxSpot.getExchangeAddress(tradeAssetA);
-            console.log('Exchange address:' + exchangeAddress);
             const total = await cennzxSpot.getTotalLiquidity(tradeAssetA);
             const coreBalance = await ga.getFreeBalance(coreAssetId, exchangeAddress);
-            console.log('Core bal ' + coreBalance);
             const assetBalance = await ga.getFreeBalance(tradeAssetA, exchangeAddress);
-            console.log('Trade bal ' + assetBalance);
             const feeRate = await cennzxSpot.getFeeRate();
             const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, 50);
             done();
         });
     });
-    it('can transfer ', async done => {
-        const amountBought = 200;
-        const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-        const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-        await ga.transfer(tradeAssetA, investor.address, amountBought).signAndSend(trader.address, async status => {
-            if (status.type === 'Finalised') {
-                const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
-                const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                const gas = coreAssetBalanceBefore.sub(coreAssetBalanceAfter);
-                const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                const blockHash = status.status.asFinalised;
-                const events = await api.query.system.events.at(blockHash);
-                console.log('Events:' + events);
 
-                done();
-            }
-        });
-    });
     it('can trade from asset to core for exact core asset amount', async done => {
         const amountBought = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-        const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, amountBought);
-        console.log(expectPay);
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, coreAssetId, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                            const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
-                            console.log(expectPay);
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -224,22 +176,18 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetSwapOutput(coreAssetId, tradeAssetA, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                            const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -254,22 +202,19 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetSwapInput(coreAssetId, tradeAssetA, sellAmount, 30)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                            const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
+                            done();
                         }
                     }
                     expect(trade).toEqual(true);
@@ -284,11 +229,11 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetTransferInput(recipient.address, coreAssetId, tradeAssetA, sellAmount, 30)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
@@ -297,12 +242,8 @@ describe('SpotX APIs', () => {
                                 recipient.address
                             )) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                            const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -318,23 +259,20 @@ describe('SpotX APIs', () => {
         const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, sellAmount);
         console.log(expectPay);
         await cennzxSpot
-            .assetSwapInput(tradeAssetA, coreAssetId, sellAmount, 30)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .assetSwapInput(tradeAssetA, coreAssetId, sellAmount, 20)
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-                            const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
+                            done();
                         }
                     }
                     expect(trade).toEqual(true);
@@ -348,12 +286,12 @@ describe('SpotX APIs', () => {
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
-            .assetTransferInput(recipient.address, tradeAssetA, coreAssetId, sellAmount, 30)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .assetTransferInput(recipient.address, tradeAssetA, coreAssetId, sellAmount, 20)
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
@@ -362,13 +300,8 @@ describe('SpotX APIs', () => {
                                 coreAssetId,
                                 recipient.address
                             )) as BN;
-
-                            const pay = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const gain = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -383,11 +316,11 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, tradeAssetA, coreAssetId, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
@@ -396,12 +329,8 @@ describe('SpotX APIs', () => {
                                 coreAssetId,
                                 recipient.address
                             )) as BN;
-                            const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -416,25 +345,21 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, coreAssetId, tradeAssetA, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
-                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
+                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, recipient.address)) as BN;
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(
                                 coreAssetId,
-                                recipient.address
+                                trader.address
                             )) as BN;
-                            const gain = coreAssetBalanceAfter.sub(coreAssetBalanceBefore);
-                            const pay = tradeAssetBalanceBefore.sub(tradeAssetBalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetBalanceAfter).toBeDefined;
+                            expect(coreAssetBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -449,11 +374,11 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, tradeAssetB, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
@@ -465,12 +390,8 @@ describe('SpotX APIs', () => {
                                 tradeAssetB,
                                 trader.address
                             )) as BN;
-                            const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
-                            const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetABalanceAfter).toBeDefined;
+                            expect(tradeAssetBBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -485,11 +406,11 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, tradeAssetA, tradeAssetB, amountBought, 50000)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
@@ -501,12 +422,8 @@ describe('SpotX APIs', () => {
                                 tradeAssetB,
                                 trader.address
                             )) as BN;
-                            const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
-                            const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetABalanceAfter).toBeDefined;
+                            expect(tradeAssetBBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
@@ -520,14 +437,14 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 10)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .assetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 1)
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
-                            //ExtrinsicFailed
+                            //check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(
                                 tradeAssetA,
@@ -537,12 +454,9 @@ describe('SpotX APIs', () => {
                                 tradeAssetB,
                                 trader.address
                             )) as BN;
-                            const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
-                            const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetABalanceAfter).toBeDefined;
+                            expect(tradeAssetBBalanceAfter).toBeDefined;
+                            done();
                         }
                     }
                     expect(trade).toEqual(true);
@@ -556,14 +470,14 @@ describe('SpotX APIs', () => {
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
-            .assetTransferInput(recipient.address, tradeAssetA, tradeAssetB, sellAmount, 10)
-            .signAndSend(trader.address, async status => {
-                if (status.type === 'Finalised') {
+            .assetTransferInput(recipient.address, tradeAssetA, tradeAssetB, sellAmount, 1)
+            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
                     let trade = false;
-                    for (let i = 0; i < status.events.length; i += 1) {
-                        const event = status.events[i];
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
                         if (event.event.method === 'AssetPurchase') {
-                            //ExtrinsicFailed
+                            //check if ExtrinsicFailed or successful
                             trade = true;
                             const tradeAssetABalanceAfter = (await ga.getFreeBalance(
                                 tradeAssetA,
@@ -571,17 +485,35 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             const tradeAssetBBalanceAfter = (await ga.getFreeBalance(
                                 tradeAssetB,
-                                trader.address
+                                recipient.address
                             )) as BN;
-                            const gain = tradeAssetBBalanceBefore.sub(tradeAssetBBalanceAfter);
-                            const pay = tradeAssetABalanceBefore.sub(tradeAssetABalanceAfter);
-                            const blockHash = status.status.asFinalised;
-                            const events = (await api.query.system.events.at(blockHash)) as Vector<EventRecord>;
-                            const feeChargeEvent = events.find(event => event.event.data.method === 'Charged');
-                            const gas = feeChargeEvent.event.data[1];
+                            expect(tradeAssetABalanceAfter).toBeDefined;
+                            expect(tradeAssetBBalanceAfter).toBeDefined;
                         }
                     }
                     expect(trade).toEqual(true);
+                    done();
+                }
+            });
+    });
+    it("Remove liquidity and receive 'RemoveLiquidity' event", async done => {
+        const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+        await cennzxSpot
+            .removeLiquidity(tradeAssetA, liquidity, 1, 1)
+            .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+                if (status.isFinalized && events !== undefined) {
+                    let isRemoved = false;
+                    for (let i = 0; i < events.length; i += 1) {
+                        const event = events[i];
+                        if (event.event.method === 'RemoveLiquidity') {
+                            isRemoved = true;
+                            const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+                            expect(balance.eqn(0)).toBeTruthy();
+                            // TODO: check balance change of exchange account
+                        }
+                    }
+                    // return isCreated event
+                    expect(isRemoved).toEqual(true);
                     done();
                 }
             });
