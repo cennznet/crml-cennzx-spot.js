@@ -1,9 +1,22 @@
+// Copyright 2019 Centrality Investments Limited
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
-import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
+import {Address, Compact, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
 import {blake2AsHex, blake2AsU8a, stringToU8a, u8aConcat, xxhashAsHex} from '@cennznet/util';
-import {Compact} from '@plugnet/types';
 import BN from 'bn.js';
 import {PERMILL_BASE} from '../constants';
 
