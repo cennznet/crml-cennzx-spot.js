@@ -5,7 +5,7 @@ WORKDIR workdir/
 ARG GIT_NAME
 ARG GIT_EMAIL
 ARG RELEASE_SCOPE
-ARG GIT_BRANCH
+
 # add credentials on build
 RUN mkdir /root/.ssh/
 COPY ./git-ssh-key ./git-ssh-key
@@ -16,19 +16,15 @@ RUN echo 'IdentityFile /root/.ssh/id_rsa' > ~/.ssh/config
 # make sure your domain is accepted
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan bitbucket.org >> /root/.ssh/known_hosts
+
 # configure git
 RUN git --version
 RUN git config user.name ${GIT_NAME}
 RUN git config user.email ${GIT_EMAIL}
 
+RUN yarn add @cennznet/conventional-changelog-preset -W
 RUN git status
 RUN git reset --hard
 
-# Version packages and create versioned GIT commit
-RUN npx lerna version ${RELEASE_SCOPE} --yes --no-commit-hooks --force-publish=*
-
-RUN echo "Building change log for ${GIT_BRANCH}"
-
-# TODO add changelog related changes
-# RUN npm install -g conventional-changelog-cli
-# RUN conventional-changelog -p angular -i ../CHANGELOG.md -k ../package.json -s -r 1 && git add ../CHANGELOG.md && git commit -m 'Change log' && git push --set-upstream origin ${GIT_BRANCH}
+# Bump version, tag, generate changelog, commit and push
+RUN npx lerna version ${RELEASE_SCOPE} --yes --conventional-commits --force-publish='*' --changelog-preset @cennznet/conventional-changelog-preset

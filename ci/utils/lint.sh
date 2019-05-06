@@ -7,4 +7,4 @@ set -ex
 docker run -t --rm \
        --entrypoint bash \
        $IMAGE_NAME \
-       -c "npx lerna run test:unit"
+       -c "npx tslint -c tslint.json --project ."
