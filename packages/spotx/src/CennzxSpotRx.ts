@@ -32,6 +32,9 @@ import {
 
 export class CennzxSpotRx {
     static create(api: ApiRx): Observable<CennzxSpotRx> {
+        if (api.cennzxSpot) {
+            return of(api.cennzxSpot);
+        }
         let ga: Observable<GenericAssetRx>;
         if (api.genericAsset) {
             //remove type cast after cennzxnet/js next relase

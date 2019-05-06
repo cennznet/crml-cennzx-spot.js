@@ -138,12 +138,12 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cennznet/api@^0.12.0":
-  version "0.12.0"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.12.0#3b6373d529a60f662a0dada82b51dabb9c5171eb"
-  integrity sha1-O2Nz1SmmD2YqDa2oK1Hau5xRces=
+"@cennznet/api@^0.12.1":
+  version "0.12.1"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.12.1#171587af0fa6284f122bd0ea4f48a0e1221f57eb"
+  integrity sha1-FxWHrw+mKE8SK9DqT0ig4SIfV+s=
   dependencies:
-    "@cennznet/types" "^0.12.0"
+    "@cennznet/types" "^0.12.1"
     "@plugnet/api" "^0.77.101"
     "@plugnet/extrinsics" "^0.77.101"
     "@plugnet/rpc-core" "^0.77.101"
@@ -152,37 +152,35 @@
     "@plugnet/types" "^0.77.101"
     eventemitter3 "^3.1.0"
     plugin-discovery "^1.2.0"
-  optionalDependencies:
-    "@cennznet/crml-generic-asset" ">= 0.6.0"
 
-"@cennznet/crml-generic-asset@>= 0.6.0", "@cennznet/crml-generic-asset@^0.7.0":
-  version "0.7.0"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fcrml-generic-asset/%40cennznet%2Fcrml-generic-asset-0.7.0#42ccc25a6cbc51f2647a99bf1fc6060096a2ac2a"
-  integrity sha1-QszCWmy8UfJkepm/H8YGAJairCo=
+"@cennznet/crml-generic-asset@^0.7.2":
+  version "0.7.2"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fcrml-generic-asset/%40cennznet%2Fcrml-generic-asset-0.7.2#4cd67f81bdc22de8ae8e1773b7739cd7ccb4b67e"
+  integrity sha1-TNZ/gb3CLeiujhdzt3Oc18y0tn4=
 
-"@cennznet/types@^0.12.0":
-  version "0.12.0"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.12.0#aea5e7dcd604be3a46cff51530d15bec90dd30e7"
-  integrity sha1-rqXn3NYEvjpGz/UVMNFb7JDdMOc=
+"@cennznet/types@^0.12.1":
+  version "0.12.1"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.12.1#0943b7845c6766acc8c53e5bc26f71c85c166aab"
+  integrity sha1-CUO3hFxnZqzIxT5bwm9xyFwWaqs=
   dependencies:
     "@plugnet/types" "^0.77.101"
     "@plugnet/util" "^0.76.2-beta.0"
 
-"@cennznet/util@^0.12.0":
-  version "0.12.0"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.12.0#2e521ced6ee00c550ebf0ad09f781203b7a81cc0"
-  integrity sha1-LlIc7W7gDFUOvwrQn3gSA7eoHMA=
+"@cennznet/util@^0.12.1":
+  version "0.12.1"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.12.1#e7a717d23386122c08e7862040b6b9263f1065c3"
+  integrity sha1-56cX0jOGEiwI54YgQLa5Jj8QZcM=
   dependencies:
     "@plugnet/keyring" "^0.76.2-beta.0"
     "@plugnet/util" "^0.76.2-beta.0"
     "@plugnet/util-crypto" "^0.76.2-beta.0"
 
-"@cennznet/wallet@^0.12.0":
-  version "0.12.0"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.12.0#cbe9198dc478b93eab30d4e397e4d203a8bde797"
-  integrity sha1-y+kZjcR4uT6rMNTjl+TSA6i955c=
+"@cennznet/wallet@^0.12.1":
+  version "0.12.1"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.12.1#54fe77cffceeeebd3411552738ec7cb7e16b6057"
+  integrity sha1-VP53z/zu7r00EVUnOOx8t+FrYFc=
   dependencies:
-    "@cennznet/util" "^0.12.0"
+    "@cennznet/util" "^0.12.1"
     bip39 "^2.5.0"
     hdkey "^1.1.0"
     reflect-metadata "^0.1.12"
@@ -7058,10 +7056,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.4.1:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.3.tgz#0eb320e4ace9b10eadf5bc6103286b0f8b7c224f"
-  integrity sha512-FFgHdPt4T/duxx6Ndf7hwgMZZjZpB+U0nMNGVCYPq0rEzWKjEDobm4J6yb3CS7naZ0yURFqdw9Gwc7UOh/P9oQ==
+typescript@^3.4.5:
+  version "3.4.5"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.4.5.tgz#2d2618d10bb566572b8d7aad5180d84257d70a99"
+  integrity sha512-YycBxUb49UUhdNMU5aJ7z5Ej2XGmaIBL0x34vZ82fn3hGvD+bgrMrVDpatgz2f7YxUMJxMkbWxJZeAvDxVe7Vw==
 
 uglify-js@^3.1.4:
   version "3.4.9"

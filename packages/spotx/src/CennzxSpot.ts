@@ -29,6 +29,9 @@ import {
 
 export class CennzxSpot {
     static async create(api: Api): Promise<CennzxSpot> {
+        if (api.cennzxSpot) {
+            return api.cennzxSpot;
+        }
         let ga: GenericAsset;
         if (api.genericAsset) {
             ga = api.genericAsset;
