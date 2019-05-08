@@ -15,8 +15,7 @@
 /**
  * Get more fund from https://cennznet-faucet-ui.centrality.me/ if the sender account does not have enough fund
  */
-import {EventRecord, getTypeRegistry, Vector} from '@cennznet/types/polkadot';
-import {stringToU8a} from '@cennznet/util';
+import {getTypeRegistry} from '@cennznet/types/polkadot';
 import {Api} from '@cennznet/api';
 import {SimpleKeyring, Wallet} from '@cennznet/wallet';
 import {WsProvider, SubmittableResult} from '@cennznet/api/polkadot';
@@ -32,13 +31,13 @@ const investor = {
 const investorOnLocal = {
     address: '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
     uri: '//Bob',
- }
+};
 
 const trader = investor;
 
 const recipient = {
     //addressOnLocal: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
-    address: '5ESNjjzmZnnCdrrpUo9TBKhDV1sakTjkspw2ZGg84LAK1e1Y'
+    address: '5ESNjjzmZnnCdrrpUo9TBKhDV1sakTjkspw2ZGg84LAK1e1Y',
 };
 
 const passphrase = '';
@@ -82,7 +81,7 @@ describe('SpotX APIs', () => {
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
                 .addLiquidity(tradeAssetA, 0, maxAssetAmount, investAmount)
-                .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+                .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
                     if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
@@ -119,7 +118,7 @@ describe('SpotX APIs', () => {
             expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
                 .addLiquidity(tradeAssetB, 0, maxAssetAmount, investAmount)
-                .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+                .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
                         for (let i = 0; i < events.length; i += 1) {
@@ -165,7 +164,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, coreAssetId, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -190,7 +189,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetSwapOutput(coreAssetId, tradeAssetA, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -216,7 +215,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetSwapInput(coreAssetId, tradeAssetA, sellAmount, 30)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -243,7 +242,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
         await cennzxSpot
             .assetTransferInput(recipient.address, coreAssetId, tradeAssetA, sellAmount, 30)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -274,7 +273,7 @@ describe('SpotX APIs', () => {
         console.log(expectPay);
         await cennzxSpot
             .assetSwapInput(tradeAssetA, coreAssetId, sellAmount, 20)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -301,7 +300,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
             .assetTransferInput(recipient.address, tradeAssetA, coreAssetId, sellAmount, 20)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -330,7 +329,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, tradeAssetA, coreAssetId, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -359,7 +358,7 @@ describe('SpotX APIs', () => {
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, recipient.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, coreAssetId, tradeAssetA, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -367,11 +366,11 @@ describe('SpotX APIs', () => {
                         if (event.event.method === 'AssetPurchase') {
                             // check if ExtrinsicFailed or successful
                             trade = true;
-                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(tradeAssetA, recipient.address)) as BN;
-                            const coreAssetBalanceAfter = (await ga.getFreeBalance(
-                                coreAssetId,
-                                trader.address
+                            const tradeAssetBalanceAfter = (await ga.getFreeBalance(
+                                tradeAssetA,
+                                recipient.address
                             )) as BN;
+                            const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
                         }
@@ -388,7 +387,7 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, tradeAssetB, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -420,7 +419,7 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetTransferOutput(recipient.address, tradeAssetA, tradeAssetB, amountBought, 50000)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -452,7 +451,7 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 1)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -485,7 +484,7 @@ describe('SpotX APIs', () => {
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
         await cennzxSpot
             .assetTransferInput(recipient.address, tradeAssetA, tradeAssetB, sellAmount, 1)
-            .signAndSend(trader.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let trade = false;
                     for (let i = 0; i < events.length; i += 1) {
@@ -514,7 +513,7 @@ describe('SpotX APIs', () => {
         const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
         await cennzxSpot
             .removeLiquidity(tradeAssetA, liquidity, 1, 1)
-            .signAndSend(investor.address, async  ({events, status}: SubmittableResult) => {
+            .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                 if (status.isFinalized && events !== undefined) {
                     let isRemoved = false;
                     for (let i = 0; i < events.length; i += 1) {

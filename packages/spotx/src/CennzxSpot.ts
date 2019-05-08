@@ -18,6 +18,7 @@ import {GenericAsset} from '@cennznet/crml-generic-asset';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
+import {assert} from '@cennznet/util';
 import * as derives from './derives';
 import {
     AnyAddress,
@@ -32,22 +33,17 @@ export class CennzxSpot {
         if (api.cennzxSpot) {
             return api.cennzxSpot;
         }
-        let ga: GenericAsset;
-        if (api.genericAsset) {
-            ga = api.genericAsset;
-        } else {
-            ga = await GenericAsset.create(api);
-        }
-        const cennzxSpot = new CennzxSpot(api, ga);
+        const ga = api.genericAsset ? api.genericAsset : await GenericAsset.create(api);
         (api as any)._options.derives = {...(api as any)._options.derives, cennzxSpot: derives};
         await (api as any).loadMeta();
-        return cennzxSpot;
+        return new CennzxSpot(api, ga);
     }
 
     private _api: Api;
     private _ga: GenericAsset;
 
-    protected constructor(api: Api, ga?: GenericAsset) {
+    constructor(api: Api, ga?: GenericAsset) {
+        assert(api.derive.cennzxSpot, "init cennzx spot's derives first");
         this._api = api;
         if (api.genericAsset) {
             this._ga = api.genericAsset;

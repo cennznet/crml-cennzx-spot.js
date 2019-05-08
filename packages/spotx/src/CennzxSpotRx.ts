@@ -19,6 +19,7 @@ import {GenericAssetRx} from '@cennznet/crml-generic-asset';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
 import {AnyNumber} from '@cennznet/types/polkadot.types';
+import {assert} from '@cennznet/util';
 import {from, Observable, of} from 'rxjs';
 import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
@@ -35,13 +36,7 @@ export class CennzxSpotRx {
         if (api.cennzxSpot) {
             return of(api.cennzxSpot);
         }
-        let ga: Observable<GenericAssetRx>;
-        if (api.genericAsset) {
-            //remove type cast after cennzxnet/js next relase
-            ga = of((api.genericAsset as unknown) as GenericAssetRx);
-        } else {
-            ga = GenericAssetRx.create(api);
-        }
+        const ga = api.genericAsset ? of(api.genericAsset) : GenericAssetRx.create(api);
         return ga.pipe(
             switchMap(ga => {
                 const cennzxSpot = new CennzxSpotRx(api, ga);
@@ -55,10 +50,10 @@ export class CennzxSpotRx {
     private readonly _ga: GenericAssetRx;
 
     protected constructor(api: ApiRx, ga: GenericAssetRx) {
+        assert(api.derive.cennzxSpot, "init cennzx spot's derives first");
         this._api = api;
         if (api.genericAsset) {
-            //remove type cast after cennzxnet/js next relase
-            this._ga = (api.genericAsset as unknown) as GenericAssetRx;
+            this._ga = api.genericAsset;
         } else if (ga) {
             this._ga = ga;
         }

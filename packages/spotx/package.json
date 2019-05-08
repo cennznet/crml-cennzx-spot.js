@@ -11,7 +11,7 @@
     "Centrality Development Team"
   ],
   "homepage": "https://github.com/cennznet/crml-cennzx-spot.js/tree/master/packages/spotx",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "main": "index.js",
   "types": "index.d.ts",
   "repository": {
@@ -26,15 +26,15 @@
     "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
   },
   "peerDependencies": {
-    "@cennznet/api": ">= 0.12.1",
-    "@cennznet/types": ">= 0.12.1",
-    "@cennznet/util": ">= 0.12.1"
+    "@cennznet/api": ">= 0.12.3",
+    "@cennznet/types": ">= 0.12.3",
+    "@cennznet/util": ">= 0.12.3"
   },
   "devDependencies": {
-    "@cennznet/api": "^0.12.1",
-    "@cennznet/types": "^0.12.1",
-    "@cennznet/util": "^0.12.1",
-    "@cennznet/wallet": "^0.12.1",
+    "@cennznet/api": "^0.12.3",
+    "@cennznet/types": "^0.12.3",
+    "@cennznet/util": "^0.12.3",
+    "@cennznet/wallet": "^0.12.3",
     "@types/jest": "^23.3.10",
     "bn.js": "4.11.8",
     "jest": "24.1.0",

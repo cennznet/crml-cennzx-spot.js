@@ -15,7 +15,11 @@
         "declaration": true,
         "declarationDir": "build",
         "sourceMap": true,
-        "inlineSources": true
+        "inlineSources": true,
+        "paths": {
+            "@cennznet/crml-cennzx-spot/*": ["src/*"],
+            "@cennznet/crml-cennzx-spot": ["src/index"]
+        }
     },
     "include": ["src/**/*"]
 }

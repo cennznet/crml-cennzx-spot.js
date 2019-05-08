@@ -138,12 +138,12 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cennznet/api@^0.12.1":
-  version "0.12.1"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.12.1#171587af0fa6284f122bd0ea4f48a0e1221f57eb"
-  integrity sha1-FxWHrw+mKE8SK9DqT0ig4SIfV+s=
+"@cennznet/api@^0.12.3":
+  version "0.12.3"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.12.3#9aad60c139038fcb79b0462adbc56b2a08afc5d8"
+  integrity sha1-mq1gwTkDj8t5sEYq28VrKgivxdg=
   dependencies:
-    "@cennznet/types" "^0.12.1"
+    "@cennznet/types" "^0.12.3"
     "@plugnet/api" "^0.77.101"
     "@plugnet/extrinsics" "^0.77.101"
     "@plugnet/rpc-core" "^0.77.101"
@@ -151,36 +151,35 @@
     "@plugnet/storage" "^0.77.101"
     "@plugnet/types" "^0.77.101"
     eventemitter3 "^3.1.0"
-    plugin-discovery "^1.2.0"
 
 "@cennznet/crml-generic-asset@^0.7.2":
   version "0.7.2"
   resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fcrml-generic-asset/%40cennznet%2Fcrml-generic-asset-0.7.2#4cd67f81bdc22de8ae8e1773b7739cd7ccb4b67e"
   integrity sha1-TNZ/gb3CLeiujhdzt3Oc18y0tn4=
 
-"@cennznet/types@^0.12.1":
-  version "0.12.1"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.12.1#0943b7845c6766acc8c53e5bc26f71c85c166aab"
-  integrity sha1-CUO3hFxnZqzIxT5bwm9xyFwWaqs=
+"@cennznet/types@^0.12.3":
+  version "0.12.3"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.12.3#9cb165672f9ab8465fb4a1bb4de6d06ab8997199"
+  integrity sha1-nLFlZy+auEZftKG7TebQariZcZk=
   dependencies:
     "@plugnet/types" "^0.77.101"
     "@plugnet/util" "^0.76.2-beta.0"
 
-"@cennznet/util@^0.12.1":
-  version "0.12.1"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.12.1#e7a717d23386122c08e7862040b6b9263f1065c3"
-  integrity sha1-56cX0jOGEiwI54YgQLa5Jj8QZcM=
+"@cennznet/util@^0.12.3":
+  version "0.12.3"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.12.3#24bb4d905e506f28683552de3e083355085e100e"
+  integrity sha1-JLtNkF5QbyhoNVLePggzVQheEA4=
   dependencies:
     "@plugnet/keyring" "^0.76.2-beta.0"
     "@plugnet/util" "^0.76.2-beta.0"
     "@plugnet/util-crypto" "^0.76.2-beta.0"
 
-"@cennznet/wallet@^0.12.1":
-  version "0.12.1"
-  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.12.1#54fe77cffceeeebd3411552738ec7cb7e16b6057"
-  integrity sha1-VP53z/zu7r00EVUnOOx8t+FrYFc=
+"@cennznet/wallet@^0.12.3":
+  version "0.12.3"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.12.3#ea7af211afd1d7bc99de7aa36cd0dece2ae8f702"
+  integrity sha1-6nryEa/R17yZ3nqjbNDeziro9wI=
   dependencies:
-    "@cennznet/util" "^0.12.1"
+    "@cennznet/util" "^0.12.3"
     bip39 "^2.5.0"
     hdkey "^1.1.0"
     reflect-metadata "^0.1.12"
@@ -2842,7 +2841,7 @@ extend-shallow@^3.0.0, extend-shallow@^3.0.2:
     assign-symbols "^1.0.0"
     is-extendable "^1.0.1"
 
-extend@^3.0.0, extend@~3.0.2:
+extend@~3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/extend/-/extend-3.0.2.tgz#f8b1136b4071fbd8eb140aff858b1019ec2915fa"
   integrity sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==
@@ -3427,13 +3426,6 @@ hmac-drbg@^1.0.0:
     hash.js "^1.0.3"
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.1"
-
-homefront@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/homefront/-/homefront-2.0.0.tgz#5bcfd3326a5c5bb348f609352b1134c20d3a7106"
-  integrity sha1-W8/TMmpcW7NI9gk1KxE0wg06cQY=
-  dependencies:
-    extend "^3.0.0"
 
 hosted-git-info@^2.1.4, hosted-git-info@^2.6.0:
   version "2.7.1"
@@ -5763,15 +5755,6 @@ please-upgrade-node@^3.1.1:
   dependencies:
     semver-compare "^1.0.0"
 
-plugin-discovery@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/plugin-discovery/-/plugin-discovery-1.2.0.tgz#79c9858cd09e796e1dc02dac1a93b0578b644568"
-  integrity sha512-XW635P9IXiPy5Ur5tVnrsPX0498BLrDVnrkcup4fRehPcXoPqfy6th3/IwWK4qhFH4HuVXWztgb1mcIPDZIVHA==
-  dependencies:
-    glob "^7.1.2"
-    homefront "^2.0.0"
-    shelljs "^0.8.1"
-
 pn@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
@@ -6423,15 +6406,6 @@ shelljs@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.0.tgz#3f6f2e4965cec565f65ff3861d644f879281a576"
   integrity sha1-P28uSWXOxWX2X/OGHWRPh5KBpXY=
-  dependencies:
-    glob "^7.0.0"
-    interpret "^1.0.0"
-    rechoir "^0.6.2"
-
-shelljs@^0.8.1:
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.8.3.tgz#a7f3319520ebf09ee81275b2368adb286659b097"
-  integrity sha512-fc0BKlAWiLpwZljmOvAOTE/gXawtCoNrP5oaY7KIaQbbyHeQVg01pSEuEGvGh3HEdBU4baCD7wQBwADmM/7f7A==
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"
