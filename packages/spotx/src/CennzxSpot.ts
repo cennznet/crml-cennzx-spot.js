@@ -43,7 +43,10 @@ export class CennzxSpot {
     private _ga: GenericAsset;
 
     constructor(api: Api, ga?: GenericAsset) {
-        assert(api.derive.cennzxSpot, "init cennzx spot's derives first");
+        assert(
+            (api as any)._options.derives.cennzxSpot || ((api as any)._derive || {}).cennzxSpot,
+            "init cennzx spot's derives first"
+        );
         this._api = api;
         if (api.genericAsset) {
             this._ga = api.genericAsset;

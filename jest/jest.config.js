@@ -12,6 +12,12 @@ module.exports = {
     testMatch: ['/**/?(*.)+(spec|e2e).[jt]s?(x)'],
     testEnvironment: 'node',
     preset: 'ts-jest',
+    moduleNameMapper: {
+        '@cennznet/crml-cennzx-spot(.*)$': '<rootDir>/src/$1',
+    },
+    modulePathIgnorePatterns: [
+        '<rootDir>/build',
+    ],
     collectCoverageFrom: ['src/**/*.[jt]s?(x)', '!**/node_modules/**'],
     coverageReporters: ['json', 'html'],
     coverageThreshold: {
