@@ -71,5 +71,5 @@ export function generateStorageDoubleMapKey(prefixString: string, key1: Codec, k
     const bitLength: number = 128;
     const key2Encoded: string = xxhashAsHex(key2.toU8a(true), bitLength).substr(length);
 
-    return blake2AsHex(Compact.addLengthPrefix(key1Encoded), 256) + key2Encoded;
+    return blake2AsHex(key1Encoded, 256) + key2Encoded;
 }
