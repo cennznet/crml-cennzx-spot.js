@@ -73,3 +73,16 @@ export function generateStorageDoubleMapKey(prefixString: string, key1: Codec, k
 
     return blake2AsHex(key1Encoded, 256) + key2Encoded;
 }
+
+export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
+    if (inputReserve.isZero() || outputReserve.isZero()) {
+        return new BN(0);
+    }
+    const divRate = feeRate.addn(PERMILL_BASE);
+    const numerator = inputAmount.mul(outputReserve);
+    const denominator = inputAmount
+        .muln(PERMILL_BASE)
+        .div(divRate)
+        .add(inputReserve);
+    return numerator.div(denominator);
+}

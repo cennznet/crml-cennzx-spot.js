@@ -75,8 +75,8 @@ describe('SpotX APIs', () => {
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
 
-            const investAmount: number = 800;
-            const maxAssetAmount = '800';
+            const investAmount: number = 1000;
+            const maxAssetAmount = '1000';
             expect((await ga.getFreeBalance(tradeAssetA, investor.address)).gtn(1000)).toBeTruthy();
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
@@ -112,8 +112,8 @@ describe('SpotX APIs', () => {
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
 
-            const investAmount: number = 800;
-            const maxAssetAmount = '800';
+            const investAmount: number = 1000;
+            const maxAssetAmount = '1000';
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
             expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
@@ -153,7 +153,6 @@ describe('SpotX APIs', () => {
             const coreBalance = await ga.getFreeBalance(coreAssetId, exchangeAddress);
             const assetBalance = await ga.getFreeBalance(tradeAssetA, exchangeAddress);
             const feeRate = await cennzxSpot.getFeeRate();
-            const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, 50);
             done();
         });
     });
@@ -162,6 +161,7 @@ describe('SpotX APIs', () => {
         const amountBought = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+        const expectedCorePrice = await cennzxSpot.getOutputPrice(tradeAssetA, coreAssetId, amountBought);
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, coreAssetId, amountBought, 50000)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -176,6 +176,9 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
+                            //console.log('Balance price '+expectedCorePrice.toNumber());
+                            expect((coreAssetBalanceAfter.sub(coreAssetBalanceBefore)).eq(expectedCorePrice));
+                            //console.log("Amount transfered"+coreAssetBalanceAfter.sub(coreAssetBalanceBefore).toNumber())
                         }
                     }
                     expect(trade).toEqual(true);
@@ -187,6 +190,7 @@ describe('SpotX APIs', () => {
         const amountBought = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+        const expectedAssetPrice = await cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, amountBought);
         await cennzxSpot
             .assetSwapOutput(coreAssetId, tradeAssetA, amountBought, 50000)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -201,6 +205,9 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
+                            expect((tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore)).eq(expectedAssetPrice));
+                            // console.log('Balance price '+expectedAssetPrice.toNumber());
+                            // console.log("Amount transfered"+tradeAssetBalanceAfter.sub(coreAssetBalanceAfter).toNumber());
                         }
                     }
                     expect(trade).toEqual(true);
@@ -213,6 +220,7 @@ describe('SpotX APIs', () => {
         const sellAmount = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
+        const expectedAssetPrice = await cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, sellAmount);
         await cennzxSpot
             .assetSwapInput(coreAssetId, tradeAssetA, sellAmount, 30)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -227,6 +235,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
+                            expect((tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore)).eq(expectedAssetPrice));
                             done();
                         }
                     }
@@ -269,8 +278,7 @@ describe('SpotX APIs', () => {
         const sellAmount = 50;
         const tradeAssetBalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const coreAssetBalanceBefore = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
-        const expectPay = await cennzxSpot.getAssetToCoreOutputPrice(tradeAssetA, sellAmount);
-        console.log(expectPay);
+        const expectedCorePrice = await cennzxSpot.getInputPrice(tradeAssetA, coreAssetId, sellAmount);
         await cennzxSpot
             .assetSwapInput(tradeAssetA, coreAssetId, sellAmount, 20)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -285,6 +293,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
+                            expect((coreAssetBalanceAfter.sub(coreAssetBalanceBefore)).eq(expectedCorePrice));
                             done();
                         }
                     }
@@ -385,6 +394,7 @@ describe('SpotX APIs', () => {
         const amountBought = 50;
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+        const expectedPrice = await cennzxSpot.getOutputPrice(tradeAssetA, tradeAssetB, amountBought);
         await cennzxSpot
             .assetSwapOutput(tradeAssetA, tradeAssetB, amountBought, 50000)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -405,6 +415,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
+                            expect((tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore)).eq(expectedPrice));
                         }
                     }
                     expect(trade).toEqual(true);
@@ -449,6 +460,7 @@ describe('SpotX APIs', () => {
         const sellAmount = 50;
         const tradeAssetABalanceBefore = (await ga.getFreeBalance(tradeAssetA, trader.address)) as BN;
         const tradeAssetBBalanceBefore = (await ga.getFreeBalance(tradeAssetB, trader.address)) as BN;
+        const expectedPrice = await cennzxSpot.getInputPrice(tradeAssetA, tradeAssetB, sellAmount);
         await cennzxSpot
             .assetSwapInput(tradeAssetA, tradeAssetB, sellAmount, 1)
             .signAndSend(trader.address, async ({events, status}: SubmittableResult) => {
@@ -469,6 +481,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
+                            expect((tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore)).eq(expectedPrice));
                             done();
                         }
                     }

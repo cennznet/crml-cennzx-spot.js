@@ -25,9 +25,9 @@ import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
 import {
     AnyAddress,
-    QueryableAssetToCoreOutputPriceRx,
     QueryableExchangeAddressRx,
     QueryableGetLiquidityBalanceRx,
+    QueryablePriceRx,
     QueryableTotalLiquidityBalanceRx,
 } from './types';
 
@@ -85,18 +85,6 @@ export class CennzxSpotRx {
         expire: AnyNumber
     ): SubmittableExtrinsic<Observable<SubmittableResult>, {}> {
         return this.api.tx.cennzxSpot.addLiquidity(assetId, minLiquidity, maxAssetAmount, coreAmount) as any;
-    }
-
-    /**
-     * query the cost of target asset to buy amountBought core asset
-     * @param assetId assetId of target exchange pool
-     * @param amountBought amount of core asset to buy
-     */
-    get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPriceRx {
-        const _fn = this.api.derive.cennzxSpot.assetToCoreOutputPrice as any;
-        _fn.at = this.api.derive.cennzxSpot.assetToCoreOutputPriceAt as any;
-
-        return _fn;
     }
 
     /**
@@ -231,6 +219,34 @@ export class CennzxSpotRx {
     get getLiquidityBalance(): QueryableGetLiquidityBalanceRx {
         const _fn = this.api.derive.cennzxSpot.liquidityBalance as any;
         _fn.at = this.api.derive.cennzxSpot.liquidityBalanceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * query the price to buy amountBought asset
+     * @param assetId assetId of target exchange pool
+     * @param coreAssetId core assetId of target exchange pool
+     * @param amountBought amount of core asset to buy
+     * @param feeRate - The % of exchange fees for the trade
+     */
+    get getOutputPrice(): QueryablePriceRx {
+        const _fn = this.api.derive.cennzxSpot.outputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.outputPriceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * query the price to sell asset of #amount
+     * @param assetId assetId of target exchange pool
+     * @param coreAssetId core assetId of target exchange pool
+     * @param amountBought amount of core asset to buy
+     * @param feeRate - The % of exchange fees for the trade
+     */
+    get getInputPrice(): QueryablePriceRx {
+        const _fn = this.api.derive.cennzxSpot.inputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.inputPriceAt as any;
 
         return _fn;
     }

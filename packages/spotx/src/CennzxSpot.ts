@@ -22,9 +22,9 @@ import {assert} from '@cennznet/util';
 import * as derives from './derives';
 import {
     AnyAddress,
-    QueryableAssetToCoreOutputPrice,
     QueryableExchangeAddress,
     QueryableGetLiquidityBalance,
+    QueryablePrice,
     QueryableTotalLiquidityBalance,
 } from './types';
 
@@ -86,27 +86,29 @@ export class CennzxSpot {
     }
 
     /**
-     * query the cost of target asset to buy amountBought core asset
+     * query the price to buy amountBought asset
      * @param assetId assetId of target exchange pool
+     * @param coreAssetId core assetId of target exchange pool
      * @param amountBought amount of core asset to buy
      * @param feeRate - The % of exchange fees for the trade
      */
-    get getAssetToCoreOutputPrice(): QueryableAssetToCoreOutputPrice {
-        const _fn = this.api.derive.cennzxSpot.assetToCoreOutputPrice as any;
-        _fn.at = this.api.derive.cennzxSpot.assetToCoreOutputPriceAt as any;
+    get getOutputPrice(): QueryablePrice {
+        const _fn = this.api.derive.cennzxSpot.outputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.outputPriceAt as any;
 
         return _fn;
     }
 
     /**
-     * query the cost of core asset to buy amountBought target asset
+     * query the price to sell asset of #amount
      * @param assetId assetId of target exchange pool
-     * @param amountBought amount of target asset to buy
+     * @param coreAssetId core assetId of target exchange pool
+     * @param amountBought amount of core asset to buy
      * @param feeRate - The % of exchange fees for the trade
      */
-    get getCoreToAssetOutputPrice(): QueryableAssetToCoreOutputPrice {
-        const _fn = this.api.derive.cennzxSpot.coreToAssetOutputPrice as any;
-        _fn.at = this.api.derive.cennzxSpot.coreToAssetOutputPriceAt as any;
+    get getInputPrice(): QueryablePrice {
+        const _fn = this.api.derive.cennzxSpot.inputPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.inputPriceAt as any;
 
         return _fn;
     }
