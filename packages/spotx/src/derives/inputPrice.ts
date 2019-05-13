@@ -40,7 +40,6 @@ export function inputPrice(api: ApiInterface$Rx) {
 
 export function inputPriceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetA: AnyAssetId, assetB: AnyAssetId, sellAmount: AnyNumber): Observable<BN> => {
-        const coreAssetId = api.query.cennzxSpot.coreAssetId.at(hash);
         return api.query.cennzxSpot.coreAssetId.at(hash).pipe(
             switchMap((coreAssetId: EnhancedAssetId) => {
                 if (new EnhancedAssetId(assetA).eq(coreAssetId)) {

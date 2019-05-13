@@ -13,16 +13,12 @@ pipeline {
         LAST_COMMIT_AUTHOR = sh(script: "git log -1 --pretty=format:'%an'", returnStdout: true).trim()
         AWS_ACCESS_KEY = credentials('TF_AWS_ACCESS_KEY')
         AWS_SECRET_KEY = credentials('TF_AWS_SECRET_KEY')
-        GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
     }
 
     stages {
         stage('Build') {
             environment {
-                SSH_RSA_FILE_PATH = credentials('jenkins-ssh-key')
-            }
-            when {
-                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+                GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
             }
             steps {
                 sh './ci/deployment/build.sh'
@@ -30,42 +26,93 @@ pipeline {
         }
 
         stage('Unit Test') {
+            steps {
+                sh './ci/utils/unit-test.sh'
+            }
+        }
+
+        stage('Yarn Audit') {
+          steps {
+            script {
+              AUDIT_RES = sh (
+                script: './ci/utils/yarn-audit.sh',
+                returnStatus: true
+              ) == 0
+              if (!AUDIT_RES) {
+                timeout(time: 30, unit: 'MINUTES') {
+                  input "yarn audit fails. Confirm publish?"
+                }
+              }
+              env.AUDIT_PASS = AUDIT_RES == 0 ;
+            }
+          }
+        }
+
+        stage('Confirm Publish') {
+           steps {
+               timeout(time: 30, unit: 'MINUTES') {
+                   input "Confirm publish?"
+               }
+           }
+        }
+
+        stage('Publish to Gemfury') {
+            environment {
+                GEMFURY_TOKEN = credentials('GEMFURY_TOKEN')
+                GEMFURY_EXTERNAL_TOKEN = credentials('GEMFURY_EXTERNAL_TOKEN')
+            }
+            steps {
+                sh './ci/deployment/publish.sh'
+            }
+        }
+
+/*
+        stage('Make docs') {
             when {
                 expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
             }
             steps {
-                sh './ci/deployment/unit-test.sh'
+                sh './ci/deployment/make_docs.sh'
             }
         }
 
-        stage('Integration testing') {
-          when {
-            expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
-          }
-          steps {
-            script {
-                timeout(time: 30, unit: 'MINUTES') {
-                  input "Please confirm integration testing completed on all blockchain version?"
-              }
+        stage('Publish Docs to Dev') {
+            when {
+                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
             }
-          }
+            environment {
+                ENV = 'dev'
+                DISTRIBUTION_ID = 'E7FDFJLSKZ40L'
+                SUBDOMAIN = 'cennznet-js-docs'
+            }
+            steps {
+                sh 'SCRIPT="deploy-website" ./centrality.deploy/static-website/static-website-apply.sh'
+                sh 'SCRIPT="cf-invalidate" ./centrality.deploy/aws/exec-awscli.sh'
+            }
         }
-        stage('Bump version and commit change log') {
-           environment {
-              SSH_RSA_FILE_PATH = credentials('jenkins-ssh-key')
-           }
-           when {
-             expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
-           }
-           steps {
-              script {
-                  timeout(time: 30, unit: 'MINUTES') {
-                        env.RELEASE_SCOPE = input message: 'User input required',
-                        parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
-                  }
-              }
-              sh './ci/deployment/bumpVersion.sh'
-           }
+
+        stage('Publish Docs to Prod') {
+            when {
+                expression { env.GIT_NAME != env.LAST_COMMIT_AUTHOR }
+            }
+            environment {
+                ENV = 'prod'
+                DISTRIBUTION_ID = 'E85ZH5OCBXPL'
+                SUBDOMAIN = 'cennznet-js-docs'
+            }
+            steps {
+                sh './centrality.deploy/static-website/static-website-apply.sh' // copy artifacts to shared bucket
+                sh 'SCRIPT="deploy-website" ./centrality.deploy/static-website/static-website-apply.sh'
+                sh 'SCRIPT="cf-invalidate" ./centrality.deploy/aws/exec-awscli.sh'
+            }
+        }
+*/
+    }
+
+    post {
+        always {
+            echo "pipeline post always"
+            sh 'bash /mnt/jenkins/script/cleanup.sh'
         }
     }
 }

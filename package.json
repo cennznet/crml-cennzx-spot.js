@@ -8,7 +8,9 @@
     "workspaces": [
         "packages/*"
     ],
-    "scripts": {},
+    "scripts": {
+        "tslint": "tslint -c tslint.json --project ./packages/spotx"
+    },
     "devDependencies": {
         "@types/jest": "^23.3.10",
         "cpx": "^1.5.0",

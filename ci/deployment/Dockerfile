@@ -26,8 +26,13 @@ RUN git config user.email ${GIT_EMAIL}
 RUN git status
 RUN git reset --hard
 
+RUN npx lerna exec -- 'cpx package.json build/'
+RUN npx lerna exec -- 'cpx ../../LICENSE build/'
+RUN npx lerna exec -- 'cpx README.md build/'
+
 # pack packages for uploading
-RUN npx lerna exec -- "npm pack"
+RUN npx lerna exec -- "cd build && npm pack"
+
 
 # push all packages to Gemfury centrality
 RUN \
@@ -35,6 +40,7 @@ RUN \
   npx lerna exec \
     -- \
       "\
+        cd build && \
         PUSH_URL=\"https://${GEMFURY_TOKEN}@push.fury.io/centrality/\" && \
         PACKAGE_NAME=\$(ls *.tgz) && \
         TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}\" && \
@@ -56,6 +62,7 @@ RUN \
   npx lerna exec \
     -- \
       "\
+        cd build && \
         PUSH_URL=\"https://${GEMFURY_EXTERNAL_TOKEN}@push.fury.io/centralityexternals/\" && \
         PACKAGE_NAME=\$(ls *.tgz) && \
         TAR_PATH=\"\$(pwd)/\${PACKAGE_NAME}\" && \
