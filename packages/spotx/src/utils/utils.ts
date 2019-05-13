@@ -14,7 +14,7 @@
 
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
-import {Address, Compact, Permill, Tuple, u64} from '@cennznet/types/polkadot';
+import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
 import {blake2AsHex, blake2AsU8a, stringToU8a, u8aConcat, xxhashAsHex} from '@cennznet/util';
 import BN from 'bn.js';
@@ -71,6 +71,7 @@ export function generateStorageDoubleMapKey(prefixString: string, key1: Codec, k
     const bitLength: number = 128;
     const key2Encoded: string = xxhashAsHex(key2.toU8a(true), bitLength).substr(length);
 
+    // tslint:disable-next-line:no-magic-numbers
     return blake2AsHex(key1Encoded, 256) + key2Encoded;
 }
 
