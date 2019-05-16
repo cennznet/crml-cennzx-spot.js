@@ -201,14 +201,14 @@ export class CennzxSpot {
      * Query the total liquidity of an exchange pool
      */
     get getTotalLiquidity(): QueryableTotalLiquidityBalance {
-        const _fn = this.api.derive.spotX.totalLiquidity as any;
-        _fn.at = this.api.derive.spotX.totalLiquidityAt as any;
+        const _fn = this.api.derive.cennzxSpot.totalLiquidity as any;
+        _fn.at = this.api.derive.cennzxSpot.totalLiquidityAt as any;
 
         return _fn;
     }
 
     get getExchangeAddress(): QueryableExchangeAddress {
-        return this.api.derive.spotX.exchangeAddress as any;
+        return this.api.derive.cennzxSpot.exchangeAddress as any;
     }
 
     /**

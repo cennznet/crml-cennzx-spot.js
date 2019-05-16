@@ -22,19 +22,19 @@
     "build": "rimraf build && tsc -b",
     "test:unitBackup": "jest --coverage -c ../../jest/jest.config.js spec",
     "test:unitDebug": "node --inspect-brk ./node_modules/.bin/jest -c ../../jest/jest.config.js spec",
-    "test:e2e": "jest --silent --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e",
+    "test:e2e": "jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e",
     "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
   },
   "peerDependencies": {
-    "@cennznet/api": ">= 0.12.3",
-    "@cennznet/types": ">= 0.12.3",
-    "@cennznet/util": ">= 0.12.3"
+    "@cennznet/api": ">= 0.13.1",
+    "@cennznet/types": ">= 0.13.1",
+    "@cennznet/util": ">= 0.13.1"
   },
   "devDependencies": {
-    "@cennznet/api": "^0.12.3",
-    "@cennznet/types": "^0.12.3",
-    "@cennznet/util": "^0.12.3",
-    "@cennznet/wallet": "^0.12.3",
+    "@cennznet/api": "^0.13.1",
+    "@cennznet/types": "^0.13.1",
+    "@cennznet/util": "^0.13.1",
+    "@cennznet/wallet": "^0.13.1",
     "@types/jest": "^23.3.10",
     "bn.js": "4.11.8",
     "jest": "24.1.0",
@@ -42,6 +42,6 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "@cennznet/crml-generic-asset": "^0.7.2"
+    "@cennznet/crml-generic-asset": "^0.8.0"
   }
 }
