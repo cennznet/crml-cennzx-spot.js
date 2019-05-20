@@ -42,25 +42,6 @@ export interface QueryableTotalLiquidityBalanceRx {
     at(hash: IHash, assetId: AnyAssetId): Observable<BN>;
 }
 
-export interface QueryableExchangeAddress {
-    (assetId: AnyAssetId): Promise<string>;
-}
-
-export interface QueryableExchangeAddressRx {
-    (assetId: AnyAssetId): Promise<string>;
-}
-
-export interface QueryableAssetToCoreOutputPrice {
-    (assetId: AnyNumber, amountBought: AnyNumber): Promise<BN>;
-    (assetId: AnyNumber, amountBought: AnyNumber, cb: (res: BN) => void): Promise<() => any>;
-    at(hash: IHash, assetId: AnyNumber, amountBought: AnyNumber): Promise<BN>;
-}
-
-export interface QueryableAssetToCoreOutputPriceRx {
-    (assetId: AnyNumber, amountBought: AnyNumber): Observable<BN>;
-    at(hash: IHash, assetId: AnyNumber, amountBought: AnyNumber): Observable<BN>;
-}
-
 export interface QueryablePrice {
     (assetA: AnyNumber, assetB: AnyNumber, amountBought: AnyNumber): Promise<BN>;
     (assetA: AnyNumber, assetB: AnyNumber, amountBought: AnyNumber, cb: (res: BN) => void): Promise<() => any>;

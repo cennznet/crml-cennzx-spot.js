@@ -15,7 +15,6 @@
 /**
  * Get more fund from https://cennznet-faucet-ui.centrality.me/ if the sender account does not have enough fund
  */
-import {getTypeRegistry} from '@cennznet/types/polkadot';
 import {Api} from '@cennznet/api';
 import {SimpleKeyring, Wallet} from '@cennznet/wallet';
 import {WsProvider, SubmittableResult} from '@cennznet/api/polkadot';
@@ -26,11 +25,6 @@ import {CennzxSpot} from '../src/CennzxSpot';
 const investor = {
     address: '5DXUeE5N5LtkW97F2PzqYPyqNkxqSWESdGSPTX6AvkUAhwKP',
     uri: '//cennznet-js-test',
-};
-
-const investorOnLocal = {
-    address: '5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty',
-    uri: '//Bob',
 };
 
 const trader = investor;
@@ -142,19 +136,6 @@ describe('SpotX APIs', () => {
                     }
                 });
         });
-
-        it.skip('query', async done => {
-            const typeRegistry = getTypeRegistry();
-            const totalAmount: number = 200;
-            const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-            const coreAssetId = await cennzxSpot.getCoreAssetId();
-            const exchangeAddress = await cennzxSpot.getExchangeAddress(tradeAssetA);
-            const total = await cennzxSpot.getTotalLiquidity(tradeAssetA);
-            const coreBalance = await ga.getFreeBalance(coreAssetId, exchangeAddress);
-            const assetBalance = await ga.getFreeBalance(tradeAssetA, exchangeAddress);
-            const feeRate = await cennzxSpot.getFeeRate();
-            done();
-        });
     });
 
     it('can trade from asset to core for exact core asset amount', async done => {
@@ -177,7 +158,7 @@ describe('SpotX APIs', () => {
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
                             //console.log('Balance price '+expectedCorePrice.toNumber());
-                            expect((coreAssetBalanceAfter.sub(coreAssetBalanceBefore)).eq(expectedCorePrice));
+                            expect(coreAssetBalanceAfter.sub(coreAssetBalanceBefore).eq(expectedCorePrice));
                             //console.log("Amount transfered"+coreAssetBalanceAfter.sub(coreAssetBalanceBefore).toNumber())
                         }
                     }
@@ -205,7 +186,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            expect((tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore)).eq(expectedAssetPrice));
+                            expect(tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore).eq(expectedAssetPrice));
                             // console.log('Balance price '+expectedAssetPrice.toNumber());
                             // console.log("Amount transfered"+tradeAssetBalanceAfter.sub(coreAssetBalanceAfter).toNumber());
                         }
@@ -235,7 +216,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            expect((tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore)).eq(expectedAssetPrice));
+                            expect(tradeAssetBalanceAfter.sub(tradeAssetBalanceBefore).eq(expectedAssetPrice));
                             done();
                         }
                     }
@@ -293,7 +274,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            expect((coreAssetBalanceAfter.sub(coreAssetBalanceBefore)).eq(expectedCorePrice));
+                            expect(coreAssetBalanceAfter.sub(coreAssetBalanceBefore).eq(expectedCorePrice));
                             done();
                         }
                     }
@@ -415,7 +396,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            expect((tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore)).eq(expectedPrice));
+                            expect(tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore).eq(expectedPrice));
                         }
                     }
                     expect(trade).toEqual(true);
@@ -481,7 +462,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            expect((tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore)).eq(expectedPrice));
+                            expect(tradeAssetBBalanceAfter.sub(tradeAssetBBalanceBefore).eq(expectedPrice));
                             done();
                         }
                     }
