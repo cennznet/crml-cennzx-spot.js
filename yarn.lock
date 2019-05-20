@@ -138,12 +138,12 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cennznet/api@^0.13.1":
-  version "0.13.1"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.13.1#865d2dac6184dc7421c51e0c0a1a9d4ae16549d3"
-  integrity sha1-hl0trGGE3HQhxR4MChqdSuFlSdM=
+"@cennznet/api@^0.13.2":
+  version "0.13.2"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fapi/%40cennznet%2Fapi-0.13.2#811167c3cb94c1778550f8b00ceacdf1ddf2888d"
+  integrity sha1-gRFnw8uUwXeFUPiwDOrN8d3yiI0=
   dependencies:
-    "@cennznet/types" "^0.13.1"
+    "@cennznet/types" "^0.13.2"
     "@plugnet/api" "^0.78.100"
     "@plugnet/extrinsics" "^0.78.100"
     "@plugnet/rpc-core" "^0.78.100"
@@ -157,29 +157,29 @@
   resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/%40cennznet%2Fcrml-generic-asset/%40cennznet%2Fcrml-generic-asset-0.8.0#dac1920de8526b3685d57b7c19191d9e9ea92f0a"
   integrity sha1-2sGSDehSazaF1Xt8GRkdnp6pLwo=
 
-"@cennznet/types@^0.13.1":
-  version "0.13.1"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.13.1#e87251c193a2029c338990a88078953ec9c3b507"
-  integrity sha1-6HJRwZOiApwziZCogHiVPsnDtQc=
+"@cennznet/types@^0.13.2":
+  version "0.13.2"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Ftypes/%40cennznet%2Ftypes-0.13.2#4f69b54f8242482d00f74b37d9256813667ed5ca"
+  integrity sha1-T2m1T4JCSC0A90s32SVoE2Z+1co=
   dependencies:
     "@plugnet/types" "^0.78.100"
     "@plugnet/util" "^0.76.2-beta.0"
 
-"@cennznet/util@^0.13.1":
-  version "0.13.1"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.13.1#3dfbcec06b660b741a6631818bad055d1cc8bb89"
-  integrity sha1-PfvOwGtmC3QaZjGBi60FXRzIu4k=
+"@cennznet/util@^0.13.2":
+  version "0.13.2"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Futil/%40cennznet%2Futil-0.13.2#bbc77dd28fdc984b8761ca18599275d0875f7203"
+  integrity sha1-u8d90o/cmEuHYcoYWZJ10IdfcgM=
   dependencies:
     "@plugnet/keyring" "^0.76.2-beta.0"
     "@plugnet/util" "^0.76.2-beta.0"
     "@plugnet/util-crypto" "^0.76.2-beta.0"
 
-"@cennznet/wallet@^0.13.1":
-  version "0.13.1"
-  resolved "https://npm-proxy.fury.io/w23zbsVzKQmWRLyFVix9/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.13.1#648c92f40d94b9bde9de14fc92514b6ddf1c408c"
-  integrity sha1-ZIyS9A2Uub3p3hT8klFLbd8cQIw=
+"@cennznet/wallet@^0.13.2":
+  version "0.13.2"
+  resolved "https://npm-proxy.fury.io/Rh43z_yWUvh855iguFjy/centrality/~/d/%40cennznet%2Fwallet/%40cennznet%2Fwallet-0.13.2#940e01888e9dbef233bf42c07e0c98cda10dde73"
+  integrity sha1-lA4BiI6dvvIzv0LAfgyYzaEN3nM=
   dependencies:
-    "@cennznet/util" "^0.13.1"
+    "@cennznet/util" "^0.13.2"
     bip39 "^2.5.0"
     hdkey "^1.1.0"
     reflect-metadata "^0.1.12"
