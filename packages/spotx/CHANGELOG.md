@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.4](http://bgithub.com/cennznet/crml-cennzx-spot.js/compare/v0.5.0...v0.5.4) (2019-05-20)
+
+
+### Bug Fixes
+
+* assert error in constructor ([1234657](http://bgithub.com/cennznet/crml-cennzx-spot.js/commit/1234657))
+
+
+### Features
+
+* constructor of CennzxSpot(Rx) are now public, and throw Error if used in wrong order ([ed8fa50](http://bgithub.com/cennznet/crml-cennzx-spot.js/commit/ed8fa50)), closes [#23](http://bgithub.com/cennznet/crml-cennzx-spot.js/issues/23)
+* query of Input/OutputPrice ([e2ea9cc](http://bgithub.com/cennznet/crml-cennzx-spot.js/commit/e2ea9cc)), closes [#20](http://bgithub.com/cennznet/crml-cennzx-spot.js/issues/20)
+
+
+
+
+
 ## [0.5.3](https://bitbucket.org/centralitydev/cennznet-js-spotx/compare/v0.5.0...v0.5.3) (2019-05-06)
 
 **Note:** Version bump only for package @cennznet/crml-cennzx-spot
