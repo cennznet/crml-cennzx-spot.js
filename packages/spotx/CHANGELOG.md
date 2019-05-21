@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](http://bgithub.com/cennznet/crml-cennzx-spot.js/compare/v0.5.4...v0.5.5) (2019-05-21)
+
+**Note:** Version bump only for package @cennznet/crml-cennzx-spot
+
+
+
+
+
 ## [0.5.4](http://bgithub.com/cennznet/crml-cennzx-spot.js/compare/v0.5.0...v0.5.4) (2019-05-20)
 
 

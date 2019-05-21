@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.5.5](https://bitbucket.org/centralitydev/cennznet-js-spotx/compare/v0.5.4...v0.5.5) (2019-05-21)
+
+**Note:** Version bump only for package root
+
+
+
+
+
 ## [0.5.4](https://bitbucket.org/centralitydev/cennznet-js-spotx/compare/v0.5.0...v0.5.4) (2019-05-20)
 
 
