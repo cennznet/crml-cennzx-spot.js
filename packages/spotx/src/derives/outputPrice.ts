@@ -54,6 +54,7 @@ export function outputPriceAt(api: ApiInterface$Rx) {
     };
 }
 
+// Returns the amount of trade assets needed to buy `amountBought` core assets.
 function assetToCoreOutputPrice(
     assetId: AnyAssetId,
     coreAssetId: AnyAssetId,
@@ -79,6 +80,7 @@ function assetToCoreOutputPrice(
     );
 }
 
+// Returns the amount of trade assets needed to buy `amountBought` core assets.
 function assetToCoreOutputPriceAt(
     hash: Hash,
     assetId: AnyAssetId,
@@ -105,6 +107,7 @@ function assetToCoreOutputPriceAt(
     );
 }
 
+// Returns the amount of core asset needed to purchase `amountBought` of trade asset.
 function coreToAssetOutputPrice(
     assetId: AnyAssetId,
     coreAssetId: AnyAssetId,
@@ -131,6 +134,7 @@ function coreToAssetOutputPrice(
     );
 }
 
+// Returns the amount of core asset needed to purchase `amountBought` of trade asset.
 function coreToAssetOutputPriceAt(
     hash: Hash,
     assetId: AnyAssetId,
@@ -185,14 +189,14 @@ function assetToAssetOutputPrice(
         map(([tradeAssetReserveA, coreAssetReserveA, tradeAssetReserveB, coreAssetReserveB, feeRate]) => {
             const coreForB = getOutputPrice(
                 new u128(amountBought),
-                tradeAssetReserveB as any,
                 coreAssetReserveB as any,
+                tradeAssetReserveB as any,
                 (feeRate as unknown) as Permill
             );
             return getOutputPrice(
                 new u128(coreForB),
-                coreAssetReserveA as any,
                 tradeAssetReserveA as any,
+                coreAssetReserveA as any,
                 (feeRate as unknown) as Permill
             );
         })
@@ -228,14 +232,14 @@ function assetToAssetOutputPriceAt(
         map(([tradeAssetReserveA, coreAssetReserveA, tradeAssetReserveB, coreAssetReserveB, feeRate]) => {
             const coreForB = getOutputPrice(
                 new u128(amountBought),
-                tradeAssetReserveB as any,
                 coreAssetReserveB as any,
+                tradeAssetReserveB as any,
                 (feeRate as unknown) as Permill
             );
             return getOutputPrice(
                 new u128(coreForB),
-                coreAssetReserveA as any,
                 tradeAssetReserveA as any,
+                coreAssetReserveA as any,
                 (feeRate as unknown) as Permill
             );
         })

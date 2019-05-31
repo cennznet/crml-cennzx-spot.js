@@ -54,6 +54,7 @@ export function inputPriceAt(api: ApiInterface$Rx) {
     };
 }
 
+// Returns amount of core that can be bought with input assets.
 function assetToCoreInputPrice(
     assetId: AnyAssetId,
     coreAssetId: AnyAssetId,
@@ -79,6 +80,7 @@ function assetToCoreInputPrice(
     );
 }
 
+/// Returns amount of core that can be bought with input assets.
 function assetToCoreInputPriceAt(
     hash: Hash,
     assetId: AnyAssetId,
@@ -105,6 +107,7 @@ function assetToCoreInputPriceAt(
     );
 }
 
+// Returns the amount of trade asset to pay for `sellAmount` of core sold.
 function coreToAssetInputPrice(
     assetId: AnyAssetId,
     coreAssetId: AnyAssetId,
@@ -131,6 +134,7 @@ function coreToAssetInputPrice(
     );
 }
 
+// Returns the amount of trade asset to pay for `sellAmount` of core sold.
 function coreToAssetInputPriceAt(
     hash: Hash,
     assetId: AnyAssetId,
