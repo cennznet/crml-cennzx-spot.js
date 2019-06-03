@@ -80,10 +80,14 @@ export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: 
         return new BN(0);
     }
     const divRate = feeRate.addn(PERMILL_BASE);
-    const numerator = inputAmount.mul(outputReserve);
+    const inputAmountLessFeeScaled = inputAmount
+        .muln(PERMILL_BASE)
+        .muln(PERMILL_BASE)
+        .div(divRate);
+    const numerator = inputAmountLessFeeScaled.mul(outputReserve);
     const denominator = inputAmount
         .muln(PERMILL_BASE)
         .div(divRate)
         .add(inputReserve);
-    return numerator.div(denominator);
+    return numerator.div(denominator).divn(PERMILL_BASE);
 }
