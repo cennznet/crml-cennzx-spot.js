@@ -14,7 +14,7 @@
         "build": "plugnet-dev-build-ts",
         "test": "jest -c ./jest/jest.config.js --passWithNoTests --coverage spec",
         "test:e2e": "jest --runInBand --detectOpenHandles -c ./jest/jest.config.js e2e",
-        "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
+        "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ./jest/jest.config.js e2e"
     },
     "devDependencies": {
         "@plugnet/dev": "^0.30.4",
