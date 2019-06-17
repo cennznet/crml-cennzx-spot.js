@@ -13,10 +13,11 @@ module.exports = {
     testEnvironment: 'node',
     preset: 'ts-jest',
     moduleNameMapper: {
-        '@cennznet/crml-cennzx-spot(.*)$': '<rootDir>/src/$1',
+        '@cennznet/crml-cennzx-spot(.*)$': '<rootDir>/packages/spotx/src/$1',
     },
     modulePathIgnorePatterns: [
         '<rootDir>/build',
+        '<rootDir>/packages/spotx/build'
     ],
     collectCoverageFrom: ['src/**/*.[jt]s?(x)', '!**/node_modules/**'],
     coverageReporters: ['json', 'html'],
@@ -28,6 +29,6 @@ module.exports = {
             statements: -10,
         },
     },
-    testEnvironment: '../../jest/env.js',
-    setupFilesAfterEnv: ['../../jest/jest.setup.js']
+    testEnvironment: './jest/env.js',
+    setupFilesAfterEnv: ['./jest/jest.setup.js']
 };

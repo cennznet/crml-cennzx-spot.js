@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "module": "none",
-        "target": "esnext",
+        "module": "commonjs",
+        "target": "es2017",
         "noImplicitAny": false,
         "moduleResolution": "node",
         "outDir": "build",
@@ -13,13 +13,13 @@
         "lib": ["ES2017"],
         "emitDecoratorMetadata": true,
         "declaration": true,
-        "declarationDir": "build",
         "sourceMap": true,
         "inlineSources": true,
         "paths": {
-            "@cennznet/crml-cennzx-spot/*": ["src/*"],
-            "@cennznet/crml-cennzx-spot": ["src/index"]
+            "@cennznet/crml-cennzx-spot/*": ["packages/spotx/src/*"],
+            "@cennznet/crml-cennzx-spot": ["packages/spotx/src/index"]
         }
     },
-    "include": ["src/**/*"]
+    "include": ["packages/**/*"],
+    "exclude": ["**/node_modules/**"]
 }

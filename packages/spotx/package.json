@@ -21,9 +21,7 @@
   "scripts": {
     "build": "rimraf build && tsc -b",
     "test:unitBackup": "jest --coverage -c ../../jest/jest.config.js spec",
-    "test:unitDebug": "node --inspect-brk ./node_modules/.bin/jest -c ../../jest/jest.config.js spec",
-    "test:e2e": "jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e",
-    "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
+    "test:unitDebug": "node --inspect-brk ./node_modules/.bin/jest -c ../../jest/jest.config.js spec"
   },
   "peerDependencies": {
     "@cennznet/api": ">= 0.13.2",

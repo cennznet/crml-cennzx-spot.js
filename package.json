@@ -9,9 +9,15 @@
         "packages/*"
     ],
     "scripts": {
-        "tslint": "tslint -c tslint.json --project ./packages/spotx"
+        "tslint": "tslint -c tslint.json --project ./packages/spotx",
+        "lint": "npx tslint -c tslint.json --project . && npx prettier --list-different './packages/**/src/*.ts'",
+        "build": "plugnet-dev-build-ts",
+        "test": "jest -c ./jest/jest.config.js --passWithNoTests --coverage spec",
+        "test:e2e": "jest --runInBand --detectOpenHandles -c ./jest/jest.config.js e2e",
+        "test:e2eDebug": "node --inspect-brk ./node_modules/.bin/jest --runInBand --detectOpenHandles -c ../../jest/jest.config.js e2e"
     },
     "devDependencies": {
+        "@plugnet/dev": "^0.30.4",
         "@types/jest": "^23.3.10",
         "cpx": "^1.5.0",
         "cz-lerna-changelog": "^2.0.2",
