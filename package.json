@@ -9,25 +9,24 @@
         "packages/*"
     ],
     "scripts": {
-        "tslint": "tslint -c tslint.json --project ./packages/spotx",
-        "lint": "npx tslint -c tslint.json --project . && npx prettier --list-different './packages/**/src/*.ts'",
+        "lint": "tslint -c tslint.json --project . && prettier --list-different './packages/**/src/*.ts'",
         "build": "plugnet-dev-build-ts",
         "test": "jest -c ./jest/jest.config.js --passWithNoTests --coverage spec",
         "test:e2e": "jest --runInBand --detectOpenHandles -c ./jest/jest.config.js e2e"
     },
     "devDependencies": {
         "@plugnet/dev": "^0.30.6",
-        "@types/jest": "^23.3.10",
+        "@types/jest": "^24.0.15",
         "cpx": "^1.5.0",
         "cz-lerna-changelog": "^2.0.2",
-        "husky": "^1.1.1",
-        "jest": "24.1.0",
+        "husky": "^2.7.0",
+        "jest": "24.8.0",
         "jest-environment-node": "^24.0.0",
         "lerna": "^3.13.2",
         "prettier": "^1.13.5",
         "ts-jest": "^24.0.0",
         "tslint": "^5.11.0",
-        "tslint-microsoft-contrib": "^5.2.1"
+        "tslint-microsoft-contrib": "^6.2.0"
     },
     "resolutions": {
         "braces": "^2.3.2",

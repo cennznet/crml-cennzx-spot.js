@@ -25,7 +25,6 @@
     "no-return-await": true,
     "no-string-literal": true,
     "no-unnecessary-initializer": true,
-    "no-unused-variable": true,
     "ordered-imports": true,
     "prefer-const": true,
     "prefer-template": true,
