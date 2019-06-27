@@ -17,7 +17,7 @@
  */
 import {Api} from '@cennznet/api';
 import {SimpleKeyring, Wallet} from '@cennznet/wallet';
-import {WsProvider, SubmittableResult} from '@cennznet/api/polkadot';
+import {SubmittableResult} from '@cennznet/api/polkadot';
 import {GenericAsset} from '@cennznet/crml-generic-asset';
 import BN from 'bn.js';
 import {CennzxSpot} from '../src/CennzxSpot';
@@ -36,12 +36,10 @@ const trader = investor;
 
 const recipient = {
     //addressOnLocal: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY'
-    address: '5ESNjjzmZnnCdrrpUo9TBKhDV1sakTjkspw2ZGg84LAK1e1Y'
+    address: '5ESNjjzmZnnCdrrpUo9TBKhDV1sakTjkspw2ZGg84LAK1e1Y',
 };
 
 const passphrase = '';
-const url = 'wss://cennznet-node-0.centrality.me:9944';
-//const url = undefined;
 
 const coreAssetId = 16001;
 const tradeAssetA = 16000;
@@ -52,8 +50,7 @@ describe('SpotX APIs', () => {
     let cennzxSpot: CennzxSpot;
     let ga: GenericAsset;
     beforeAll(async () => {
-        const websocket = new WsProvider(url);
-        api = await Api.create({provider: websocket});
+        api = await Api.create({provider: 'wss://rimu.unfrastructure.io/public/ws'});
         const simpleKeyring: SimpleKeyring = new SimpleKeyring();
         simpleKeyring.addFromUri(investor.uri);
         const wallet = new Wallet();
@@ -65,8 +62,7 @@ describe('SpotX APIs', () => {
     });
 
     afterAll(async () => {
-        ((api as any)._rpc._provider as any).websocket.onclose = null;
-        ((api as any)._rpc._provider as any).websocket.close();
+        api.disconnect();
     });
     describe('Liquidity Operations', () => {
         it("Add liquidity and receive 'AddLiquidity' event", async done => {
@@ -81,7 +77,6 @@ describe('SpotX APIs', () => {
             await cennzxSpot
                 .addLiquidity(tradeAssetA, 0, maxAssetAmount, investAmount)
                 .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
-                    const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
                     if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
                         for (let i = 0; i < events.length; i += 1) {
@@ -104,7 +99,7 @@ describe('SpotX APIs', () => {
                         done();
                     }
                 });
-         });
+        });
 
         it("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
@@ -112,7 +107,7 @@ describe('SpotX APIs', () => {
             /************************************************************/
 
             const investAmount: number = 400601;
-            const maxAssetAmount = '50000';
+            const maxAssetAmount = '50000000000';
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
             expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gtn(1000)).toBeTruthy();
             await cennzxSpot
@@ -162,7 +157,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedCorePrice)).toBeTruthy();
                         }
                     }
@@ -190,7 +185,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedAssetPrice)).toBeTruthy();
                         }
                     }
@@ -219,7 +214,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedAssetPrice)).toBeTruthy();
                             done();
                         }
@@ -252,7 +247,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -281,7 +276,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedCorePrice)).toBeTruthy();
                             done();
                         }
@@ -314,7 +309,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -346,7 +341,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -378,7 +373,7 @@ describe('SpotX APIs', () => {
                             const coreAssetBalanceAfter = (await ga.getFreeBalance(coreAssetId, trader.address)) as BN;
                             expect(tradeAssetBalanceAfter).toBeDefined;
                             expect(coreAssetBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -413,7 +408,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -448,7 +443,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, price, amountBought] =  event.event.data;
+                            const [assetA, assetB, seller, price, amountBought] = event.event.data;
                             expect(price.eq(expectedPrice)).toBeTruthy();
                         }
                     }
@@ -483,7 +478,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedPrice)).toBeTruthy();
                             done();
                         }
@@ -519,7 +514,7 @@ describe('SpotX APIs', () => {
                             )) as BN;
                             expect(tradeAssetABalanceAfter).toBeDefined;
                             expect(tradeAssetBBalanceAfter).toBeDefined;
-                            const [assetA,assetB, seller, sellAmount, sellValue] =  event.event.data;
+                            const [assetA, assetB, seller, sellAmount, sellValue] = event.event.data;
                             expect(sellValue.eq(expectedPrice)).toBeTruthy();
                         }
                     }
