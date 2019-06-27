@@ -43,7 +43,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "prettier --write 'packages/**/src/**/*'"
+            "pre-commit": "prettier --write 'packages/**/src/**/*' && tslint -c tslint.json --project ."
         }
     }
 }
