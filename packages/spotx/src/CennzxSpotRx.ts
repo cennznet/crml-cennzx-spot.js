@@ -23,7 +23,13 @@ import {assert} from '@cennznet/util';
 import {from, Observable, of} from 'rxjs';
 import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
-import {AnyAddress, QueryableGetLiquidityBalanceRx, QueryablePriceRx, QueryableTotalLiquidityBalanceRx} from './types';
+import {
+    AnyAddress,
+    QueryableGetLiquidityBalanceRx,
+    QueryableGetPoolBalanceRx,
+    QueryablePriceRx,
+    QueryableTotalLiquidityBalanceRx,
+} from './types';
 
 export class CennzxSpotRx {
     static create(api: ApiRx): Observable<CennzxSpotRx> {
@@ -229,6 +235,30 @@ export class CennzxSpotRx {
     get getInputPrice(): QueryablePriceRx {
         const _fn = this.api.derive.cennzxSpot.inputPrice as any;
         _fn.at = this.api.derive.cennzxSpot.inputPriceAt as any;
+
+        return _fn;
+    }
+
+    // tslint:disable:member-ordering
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolAssetBalance(): QueryableGetPoolBalanceRx {
+        const _fn = this.api.derive.cennzxSpot.poolAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolAssetBalanceAt as any;
+
+        return _fn;
+    }
+
+    // tslint:disable:member-ordering
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolCoreAssetBalance(): QueryableGetPoolBalanceRx {
+        const _fn = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolCoreAssetBalanceAt as any;
 
         return _fn;
     }

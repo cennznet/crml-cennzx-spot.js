@@ -46,8 +46,9 @@ export function getExchangeKey(coreAssetId: AnyAssetId, assetId: AssetId | AnyNu
 }
 
 export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-    if (inputReserve.isZero() || outputReserve.isZero()) {
-        return new BN(0);
+    if (inputReserve.isZero() || outputReserve.isZero() || outputAmount.gte(outputReserve)) {
+        //return new BN(0);
+        throw new Error('Pool balance is low');
     }
     const output = inputReserve
         .mul(outputAmount)
@@ -60,8 +61,9 @@ export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve
 }
 
 export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-    if (inputReserve.isZero() || outputReserve.isZero()) {
-        return new BN(0);
+    if (inputReserve.isZero() || outputReserve.isZero() || inputAmount.gt(inputReserve)) {
+        //return new BN(0);
+        throw new Error('Pool balance is low');
     }
     const divRate = feeRate.addn(PERMILL_BASE);
     const inputAmountLessFeeScaled = inputAmount

@@ -20,8 +20,15 @@ import {AssetId} from '@cennznet/types';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import {assert} from '@cennznet/util';
 import * as derives from './derives';
-import {AnyAddress, QueryableGetLiquidityBalance, QueryablePrice, QueryableTotalLiquidityBalance} from './types';
+import {
+    AnyAddress,
+    QueryableGetLiquidityBalance,
+    QueryableGetPoolBalance,
+    QueryablePrice,
+    QueryableTotalLiquidityBalance,
+} from './types';
 
+// tslint:disable:member-ordering
 export class CennzxSpot {
     static async create(api: Api): Promise<CennzxSpot> {
         if (api.cennzxSpot) {
@@ -207,7 +214,6 @@ export class CennzxSpot {
         return this.api.query.cennzxSpot.coreAssetId as any;
     }
 
-    // tslint:disable:member-ordering
     /**
      * Query liquidity balance for an account
      * @param assetId The id of the asset
@@ -216,6 +222,28 @@ export class CennzxSpot {
     get getLiquidityBalance(): QueryableGetLiquidityBalance {
         const _fn = this.api.derive.cennzxSpot.liquidityBalance as any;
         _fn.at = this.api.derive.cennzxSpot.liquidityBalanceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolAssetBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolAssetBalance as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolCoreAssetBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
 
         return _fn;
     }
