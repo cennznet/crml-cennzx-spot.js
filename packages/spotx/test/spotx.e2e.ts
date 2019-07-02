@@ -107,7 +107,7 @@ describe('SpotX APIs', () => {
             // console.log('Balance:'+poolCoreBalance);
             // console.log('Asset Balance:'+poolAssetBalance);
             try {
-                const expectedAssetPrice = await cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance.toString());
+                const expectedAssetPrice = await cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance);
             } catch (e) {
                 expect(e).toEqual(new Error('Pool balance is low'));
             }

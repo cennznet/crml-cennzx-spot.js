@@ -23,9 +23,7 @@ import {exchangeAddress} from './exchangeAddress';
 export function poolAssetBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
-            switchMap(exchangeAddress =>
-                api.derive.genericAsset.freeBalance(assetId, exchangeAddress)
-            ),
+            switchMap(exchangeAddress => api.derive.genericAsset.freeBalance(assetId, exchangeAddress)),
             drr()
         );
     };
@@ -45,9 +43,7 @@ export function poolCoreAssetBalance(api: ApiInterface$Rx) {
 export function poolAssetBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
-            switchMap(exchangeAddress =>
-                api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress)
-            ),
+            switchMap(exchangeAddress => api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress)),
             drr()
         );
     };
