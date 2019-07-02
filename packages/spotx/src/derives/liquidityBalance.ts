@@ -25,12 +25,12 @@ import {getExchangeKey} from '../utils/utils';
 export function liquidityBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, address: AnyAddress): Observable<BN> => {
         return api.query.cennzxSpot.coreAssetId().pipe(
-            switchMap(coreAssetId => {
-                return api.query.cennzxSpot.liquidityBalance(
+            switchMap(coreAssetId => 
+                api.query.cennzxSpot.liquidityBalance(
                     getExchangeKey(coreAssetId as any, assetId),
                     address
-                ) as Observable<Balance>;
-            }),
+                ) as Observable<Balance>
+            ),
             drr()
         );
     };
