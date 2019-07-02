@@ -28,7 +28,7 @@ export function liquidityBalance(api: ApiInterface$Rx) {
             switchMap(coreAssetId => {
                 return api.query.cennzxSpot.liquidityBalance(
                     getExchangeKey(coreAssetId as any, assetId),
-                    new AccountId(address)
+                    address
                 ) as Observable<Balance>;
             }),
             drr()
@@ -44,7 +44,7 @@ export function liquidityBalanceAt(api: ApiInterface$Rx) {
                     api.query.cennzxSpot.liquidityBalance.at(
                         hash,
                         getExchangeKey(coreAssetId as any, assetId),
-                        new Address(address)
+                        address
                     ) as Observable<Balance>
             ),
             drr()
