@@ -20,7 +20,13 @@ import {AssetId} from '@cennznet/types';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import {assert} from '@cennznet/util';
 import * as derives from './derives';
-import {AnyAddress, QueryableGetLiquidityBalance, QueryableGetPoolBalance, QueryablePrice, QueryableTotalLiquidityBalance} from './types';
+import {
+    AnyAddress,
+    QueryableGetLiquidityBalance,
+    QueryableGetPoolBalance,
+    QueryablePrice,
+    QueryableTotalLiquidityBalance,
+} from './types';
 
 export class CennzxSpot {
     static async create(api: Api): Promise<CennzxSpot> {
