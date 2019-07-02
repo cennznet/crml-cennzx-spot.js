@@ -13,12 +13,12 @@
 // limitations under the License.
 
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
-import {AccountId, AccountIndex, Address} from '@cennznet/types/polkadot';
+import {AccountId} from '@cennznet/types/polkadot';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
 import {Observable} from 'rxjs';
 
-export type AnyAddress = BN | Address | AccountId | AccountIndex | Array<number> | Uint8Array | number | string;
+export type AnyAddress = AccountId | Array<number> | Uint8Array | string;
 
 export interface QueryableGetLiquidityBalance {
     (assetId: AnyAssetId, address: AnyAddress): Promise<BN>;

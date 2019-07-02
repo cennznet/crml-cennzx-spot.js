@@ -24,6 +24,7 @@
         "jest-environment-node": "^24.0.0",
         "lerna": "^3.13.2",
         "prettier": "^1.13.5",
+        "pretty-quick": "^1.11.1",
         "ts-jest": "^24.0.0",
         "tslint": "^5.11.0",
         "tslint-microsoft-contrib": "^6.2.0"
@@ -43,7 +44,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "prettier --write 'packages/**/src/**/*' && tslint -c tslint.json --project ."
+            "pre-commit": "pretty-quick --staged --pattern 'packages/**/src/**/*' && npx tslint -c tslint.json --project ."
         }
     }
 }
