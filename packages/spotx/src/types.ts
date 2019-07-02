@@ -56,10 +56,10 @@ export interface QueryablePriceRx {
 export interface QueryableGetPoolBalance {
     (assetId: AnyAssetId): Promise<object>;
     (assetId: AnyAssetId, cb: (res: object) => void): Promise<() => any>;
-    at(hash: IHash, assetId: AnyAssetId, address: AnyAddress): Promise<object>;
+    at(hash: IHash, assetId: AnyAssetId): Promise<object>;
 }
 
 export interface QueryableGetPoolBalanceRx {
     (assetId: AnyAssetId): Observable<object>;
-    at(hash: IHash, assetId: AnyAssetId, address: AnyAddress): Observable<object>;
+    at(hash: IHash, assetId: AnyAssetId): Observable<object>;
 }

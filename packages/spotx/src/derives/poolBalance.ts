@@ -17,16 +17,19 @@ import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash} from '@cennznet/types/polkadot';
 import {drr} from '@plugnet/api-derive/util/drr';
 import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, switchMap} from 'rxjs/operators';
 import {exchangeAddress} from './exchangeAddress';
+
 
 export function poolBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
-        return combineLatest(exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()).pipe(
-            map(([exchangeAddress, coreAssetId]) => [
-                {assetId: api.derive.genericAsset.freeBalance(assetId, exchangeAddress)},
-                {coreAssetId: api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)},
-            ]),
+        return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()]).pipe(
+            switchMap(([exchangeAddress, coreAssetId]) =>
+                combineLatest([
+                    api.derive.genericAsset.freeBalance(assetId, exchangeAddress),
+                    api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)],
+                ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [{assetId: tradeAssetReserve.toString(), coreAssetId: coreAssetReserve.toString()}])),
+            ),
             drr()
         );
     };
@@ -34,12 +37,14 @@ export function poolBalance(api: ApiInterface$Rx) {
 
 export function poolBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
-        return combineLatest(exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId.at(hash)).pipe(
-            map(([exchangeAddress, coreAssetId]) => [
-                {assetId: api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress)},
-                {coreAssetId: api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)},
-            ]),
-            drr()
+        return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId.at(hash)]).pipe(
+            switchMap(([exchangeAddress, coreAssetId]) =>
+                combineLatest([
+                    api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress),
+                    api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)],
+                ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [{assetId: tradeAssetReserve.toString(), coreAssetId: coreAssetReserve.toString()}])),
+            ),
+           drr()
         );
     };
 }
