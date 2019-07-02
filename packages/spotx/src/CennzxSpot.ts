@@ -231,9 +231,21 @@ export class CennzxSpot {
      * Query balance for an exchange pool
      * @param assetId The id of the asset
      */
-    get getPoolBalance(): QueryableGetPoolBalance {
-        const _fn = this.api.derive.cennzxSpot.poolBalance as any;
-        _fn.at = this.api.derive.cennzxSpot.poolBalanceAt as any;
+    get getPoolTradeAssetBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolTradeAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolTradeAssetBalance as any;
+
+        return _fn;
+    }
+
+    // tslint:disable:member-ordering
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolCoreAssetBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
 
         return _fn;
     }

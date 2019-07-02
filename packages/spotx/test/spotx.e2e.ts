@@ -101,11 +101,12 @@ describe('SpotX APIs', () => {
                 });
         });
 
-        it('Get Pool balance and try to get input price', async done => {
-            const poolBalance = await cennzxSpot.getPoolBalance(tradeAssetA);
-            const sellAmount=String((poolBalance[0] as any).assetId);
+        it('Get Pool trade asset balance and try to get input price', async done => {
+            const poolAssetBalance = await cennzxSpot.getPoolTradeAssetBalance(tradeAssetA);
+            const poolCoreBalance = await cennzxSpot.getPoolCoreAssetBalance(tradeAssetA);
+           // console.log('Balance:'+poolCoreBalance);
             try {
-                const expectedAssetPrice = await cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, sellAmount);
+                const expectedAssetPrice = await cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance.toString());
             } catch (e) {
                 expect(e).toEqual(new Error('Pool balance is low'));
             }
