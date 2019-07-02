@@ -64,14 +64,14 @@ describe('SpotX APIs', () => {
     afterAll(async () => {
         api.disconnect();
     });
-    describe.skip('Liquidity Operations', () => {
+    describe('Liquidity Operations', () => {
         it("Add liquidity and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
 
             const investAmount: number = 200000;
-            const maxAssetAmount = '100000';
+            const maxAssetAmount = '1000000';
             expect((await ga.getFreeBalance(tradeAssetA, investor.address)).gt(new BN(maxAssetAmount))).toBeTruthy();
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(investAmount)).toBeTruthy();
             await cennzxSpot
@@ -101,13 +101,13 @@ describe('SpotX APIs', () => {
                 });
         });
 
-        it("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
+        it.only("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
 
             const investAmount: number = 400601;
-            const maxAssetAmount = '50000000000';
+            const maxAssetAmount = '500000000000';
             expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(investAmount)).toBeTruthy();
             expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gt(new BN(maxAssetAmount))).toBeTruthy();
             await cennzxSpot
