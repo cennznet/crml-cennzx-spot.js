@@ -20,13 +20,11 @@ import {combineLatest, Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {exchangeAddress} from './exchangeAddress';
 
-export function poolTradeAssetBalance(api: ApiInterface$Rx) {
+export function poolAssetBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
             switchMap(exchangeAddress =>
-                combineLatest([api.derive.genericAsset.freeBalance(assetId, exchangeAddress)]).pipe(
-                    map(([tradeAssetReserve]) => [tradeAssetReserve])
-                )
+                api.derive.genericAsset.freeBalance(assetId, exchangeAddress)
             ),
             drr()
         );
@@ -37,22 +35,18 @@ export function poolCoreAssetBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
         return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()]).pipe(
             switchMap(([exchangeAddress, coreAssetId]) =>
-                combineLatest([api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)]).pipe(
-                    map(([coreAssetReserve]) => [coreAssetReserve])
-                )
+                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)
             ),
             drr()
         );
     };
 }
 
-export function poolTradeAssetBalanceAt(api: ApiInterface$Rx) {
+export function poolAssetBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
             switchMap(exchangeAddress =>
-                combineLatest([api.derive.genericAsset.freeBalance(hash, assetId, exchangeAddress)]).pipe(
-                    map(([tradeAssetReserve]) => [tradeAssetReserve])
-                )
+                api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress)
             ),
             drr()
         );
@@ -63,9 +57,7 @@ export function poolCoreAssetBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
         return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()]).pipe(
             switchMap(([exchangeAddress, coreAssetId]) =>
-                combineLatest([api.derive.genericAsset.freeBalance(hash, coreAssetId, exchangeAddress)]).pipe(
-                    map(([coreAssetReserve]) => [coreAssetReserve])
-                )
+                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)
             ),
             drr()
         );

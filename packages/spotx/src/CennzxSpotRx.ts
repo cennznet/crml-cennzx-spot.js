@@ -28,7 +28,7 @@ import {
     QueryableGetLiquidityBalanceRx,
     QueryableGetPoolBalanceRx,
     QueryablePriceRx,
-    QueryableTotalLiquidityBalanceRx
+    QueryableTotalLiquidityBalanceRx,
 } from './types';
 
 export class CennzxSpotRx {
@@ -244,9 +244,9 @@ export class CennzxSpotRx {
      * Query balance for an exchange pool
      * @param assetId The id of the asset
      */
-    get getPoolTradeAssetBalance(): QueryableGetPoolBalanceRx {
-        const _fn = this.api.derive.cennzxSpot.poolTradeAssetBalance as any;
-        _fn.at = this.api.derive.cennzxSpot.poolTradeAssetBalanceAt as any;
+    get getPoolAssetBalance(): QueryableGetPoolBalanceRx {
+        const _fn = this.api.derive.cennzxSpot.poolAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolAssetBalanceAt as any;
 
         return _fn;
     }

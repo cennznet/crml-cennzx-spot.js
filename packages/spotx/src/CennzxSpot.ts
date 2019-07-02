@@ -28,6 +28,7 @@ import {
     QueryableTotalLiquidityBalance,
 } from './types';
 
+// tslint:disable:member-ordering
 export class CennzxSpot {
     static async create(api: Api): Promise<CennzxSpot> {
         if (api.cennzxSpot) {
@@ -213,7 +214,6 @@ export class CennzxSpot {
         return this.api.query.cennzxSpot.coreAssetId as any;
     }
 
-    // tslint:disable:member-ordering
     /**
      * Query liquidity balance for an account
      * @param assetId The id of the asset
@@ -226,19 +226,17 @@ export class CennzxSpot {
         return _fn;
     }
 
-    // tslint:disable:member-ordering
     /**
      * Query balance for an exchange pool
      * @param assetId The id of the asset
      */
-    get getPoolTradeAssetBalance(): QueryableGetPoolBalance {
-        const _fn = this.api.derive.cennzxSpot.poolTradeAssetBalance as any;
-        _fn.at = this.api.derive.cennzxSpot.poolTradeAssetBalance as any;
+    get getPoolAssetBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolAssetBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolAssetBalance as any;
 
         return _fn;
     }
 
-    // tslint:disable:member-ordering
     /**
      * Query balance for an exchange pool
      * @param assetId The id of the asset
