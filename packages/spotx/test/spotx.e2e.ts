@@ -42,8 +42,8 @@ const recipient = {
 const passphrase = '';
 
 const coreAssetId = 16001;
-const tradeAssetA = 16000;
-const tradeAssetB = 16002;
+const tradeAssetA = 17233;
+const tradeAssetB = 17237;
 
 describe('SpotX APIs', () => {
     let api: Api;
@@ -64,7 +64,7 @@ describe('SpotX APIs', () => {
     afterAll(async () => {
         api.disconnect();
     });
-    describe('Liquidity Operations', () => {
+    describe.skip('Liquidity Operations', () => {
         it("Add liquidity and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
@@ -72,10 +72,10 @@ describe('SpotX APIs', () => {
 
             const investAmount: number = 200000;
             const maxAssetAmount = '100000';
-            expect((await ga.getFreeBalance(tradeAssetA, investor.address)).gtn(1000)).toBeTruthy();
-            expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
+            expect((await ga.getFreeBalance(tradeAssetA, investor.address)).gt(new BN(maxAssetAmount))).toBeTruthy();
+            expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(investAmount)).toBeTruthy();
             await cennzxSpot
-                .addLiquidity(tradeAssetA, 0, maxAssetAmount, investAmount)
+                .addLiquidity(tradeAssetA, 1, maxAssetAmount, investAmount)
                 .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
@@ -108,10 +108,10 @@ describe('SpotX APIs', () => {
 
             const investAmount: number = 400601;
             const maxAssetAmount = '50000000000';
-            expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(1000)).toBeTruthy();
-            expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gtn(1000)).toBeTruthy();
+            expect((await ga.getFreeBalance(coreAssetId, investor.address)).gtn(investAmount)).toBeTruthy();
+            expect((await ga.getFreeBalance(tradeAssetB, investor.address)).gt(new BN(maxAssetAmount))).toBeTruthy();
             await cennzxSpot
-                .addLiquidity(tradeAssetB, 0, maxAssetAmount, investAmount)
+                .addLiquidity(tradeAssetB, 1, maxAssetAmount, investAmount)
                 .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     if (status.isFinalized && events !== undefined) {
                         let isCreated = false;
