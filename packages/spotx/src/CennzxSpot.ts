@@ -20,7 +20,7 @@ import {AssetId} from '@cennznet/types';
 import {AnyNumber, IHash} from '@cennznet/types/polkadot.types';
 import {assert} from '@cennznet/util';
 import * as derives from './derives';
-import {AnyAddress, QueryableGetLiquidityBalance, QueryablePrice, QueryableTotalLiquidityBalance} from './types';
+import {AnyAddress, QueryableGetLiquidityBalance, QueryableGetPoolBalance, QueryablePrice, QueryableTotalLiquidityBalance} from './types';
 
 export class CennzxSpot {
     static async create(api: Api): Promise<CennzxSpot> {
@@ -216,6 +216,18 @@ export class CennzxSpot {
     get getLiquidityBalance(): QueryableGetLiquidityBalance {
         const _fn = this.api.derive.cennzxSpot.liquidityBalance as any;
         _fn.at = this.api.derive.cennzxSpot.liquidityBalanceAt as any;
+
+        return _fn;
+    }
+
+    // tslint:disable:member-ordering
+    /**
+     * Query balance for an exchange pool
+     * @param assetId The id of the asset
+     */
+    get getPoolBalance(): QueryableGetPoolBalance {
+        const _fn = this.api.derive.cennzxSpot.poolBalance as any;
+        _fn.at = this.api.derive.cennzxSpot.poolBalanceAt as any;
 
         return _fn;
     }

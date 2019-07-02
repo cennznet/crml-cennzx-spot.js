@@ -16,6 +16,7 @@ import EnhancedAssetId from '@cennznet/crml-generic-asset/registry/EnhancedAsset
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash, Permill, u128} from '@cennznet/types/polkadot';
 import {AnyNumber} from '@cennznet/types/polkadot.types';
+import {drr} from '@plugnet/api-derive/util/drr';
 import BN from 'bn.js';
 import {combineLatest, Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
@@ -33,7 +34,8 @@ export function outputPrice(api: ApiInterface$Rx) {
                 } else {
                     return assetToAssetOutputPrice(assetA, assetB, coreAssetId, amountBought, api);
                 }
-            })
+            }),
+            drr()
         );
     };
 }
