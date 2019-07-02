@@ -101,7 +101,7 @@ describe('SpotX APIs', () => {
                 });
         });
 
-        it.only("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
+        it("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
