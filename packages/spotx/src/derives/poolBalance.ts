@@ -17,13 +17,13 @@ import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash} from '@cennznet/types/polkadot';
 import {drr} from '@plugnet/api-derive/util/drr';
 import {combineLatest, Observable} from 'rxjs';
-import {map, switchMap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 import {exchangeAddress} from './exchangeAddress';
 
 export function poolAssetBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
-            switchMap(exchangeAddress => api.derive.genericAsset.freeBalance(assetId, exchangeAddress)),
+            switchMap(exchangeAddress => api.query.genericAsset.freeBalance(assetId, exchangeAddress)),
             drr()
         );
     };
@@ -33,7 +33,7 @@ export function poolCoreAssetBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<any> => {
         return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()]).pipe(
             switchMap(([exchangeAddress, coreAssetId]) =>
-                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)
+                api.query.genericAsset.freeBalance(coreAssetId, exchangeAddress)
             ),
             drr()
         );
@@ -43,7 +43,7 @@ export function poolCoreAssetBalance(api: ApiInterface$Rx) {
 export function poolAssetBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
         return exchangeAddress(api)(assetId).pipe(
-            switchMap(exchangeAddress => api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress)),
+            switchMap(exchangeAddress => api.query.genericAsset.freeBalance.at(hash, assetId, exchangeAddress)),
             drr()
         );
     };
@@ -53,7 +53,7 @@ export function poolCoreAssetBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<any> => {
         return combineLatest([exchangeAddress(api)(assetId), api.query.cennzxSpot.coreAssetId()]).pipe(
             switchMap(([exchangeAddress, coreAssetId]) =>
-                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)
+                api.query.genericAsset.freeBalance.at(hash, coreAssetId, exchangeAddress)
             ),
             drr()
         );

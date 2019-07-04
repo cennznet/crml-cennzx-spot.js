@@ -22,11 +22,12 @@ import {combineLatest, Observable} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {getInputPrice} from '../utils/utils';
 import {exchangeAddress} from './exchangeAddress';
+import {coreAssetId, coreAssetIdAt} from './shared';
 
 export function inputPrice(api: ApiInterface$Rx) {
     return (assetA: AnyAssetId, assetB: AnyAssetId, sellAmount: AnyNumber): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId().pipe(
-            switchMap((coreAssetId: EnhancedAssetId) => {
+        return coreAssetId(api)().pipe(
+            switchMap(coreAssetId => {
                 if (new EnhancedAssetId(assetA).eq(coreAssetId)) {
                     return coreToAssetInputPrice(assetB, assetA, sellAmount, api);
                 } else if (new EnhancedAssetId(assetB).eq(coreAssetId)) {
@@ -42,8 +43,8 @@ export function inputPrice(api: ApiInterface$Rx) {
 
 export function inputPriceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetA: AnyAssetId, assetB: AnyAssetId, sellAmount: AnyNumber): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId.at(hash).pipe(
-            switchMap((coreAssetId: EnhancedAssetId) => {
+        return coreAssetIdAt(api)(hash).pipe(
+            switchMap(coreAssetId => {
                 if (new EnhancedAssetId(assetA).eq(coreAssetId)) {
                     return coreToAssetInputPriceAt(hash, assetB, assetA, sellAmount, api);
                 } else if (new EnhancedAssetId(assetB).eq(coreAssetId)) {
@@ -51,7 +52,8 @@ export function inputPriceAt(api: ApiInterface$Rx) {
                 } else {
                     return assetToAssetInputPriceAt(hash, assetA, assetB, coreAssetId, sellAmount, api);
                 }
-            })
+            }),
+            drr()
         );
     };
 }
@@ -64,12 +66,12 @@ function assetToCoreInputPrice(
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate();
-    return combineLatest(exchangeAddress(api)(assetId), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetId), defaultFeeRate]).pipe(
         switchMap(([exchangeAddress, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalance(assetId, exchangeAddress),
-                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)
-            ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
+            combineLatest([
+                api.query.genericAsset.freeBalance(assetId, exchangeAddress),
+                api.query.genericAsset.freeBalance(coreAssetId, exchangeAddress),
+            ]).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
         ),
         map(([tradeAssetReserve, coreAssetReserve, feeRate]) =>
             getInputPrice(
@@ -91,12 +93,12 @@ function assetToCoreInputPriceAt(
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate.at(hash);
-    return combineLatest(exchangeAddress(api)(assetId), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetId), defaultFeeRate]).pipe(
         switchMap(([exchangeAddress, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress),
-                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)
-            ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
+            combineLatest([
+                api.query.genericAsset.freeBalance.at(hash, assetId, exchangeAddress),
+                api.query.genericAsset.freeBalance.at(hash, coreAssetId, exchangeAddress),
+            ]).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
         ),
         map(([tradeAssetReserve, coreAssetReserve, feeRate]) =>
             getInputPrice(
@@ -117,12 +119,12 @@ function coreToAssetInputPrice(
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate();
-    return combineLatest(exchangeAddress(api)(assetId), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetId), defaultFeeRate]).pipe(
         switchMap(([exchangeAddress, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalance(assetId, exchangeAddress),
-                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddress)
-            ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
+            combineLatest([
+                api.query.genericAsset.freeBalance(assetId, exchangeAddress),
+                api.query.genericAsset.freeBalance(coreAssetId, exchangeAddress),
+            ]).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
         ),
         map(([tradeAssetReserve, coreAssetReserve, feeRate]) => {
             const price = getInputPrice(
@@ -145,12 +147,12 @@ function coreToAssetInputPriceAt(
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate.at(hash);
-    return combineLatest(exchangeAddress(api)(assetId), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetId), defaultFeeRate]).pipe(
         switchMap(([exchangeAddress, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalanceAt(hash, assetId, exchangeAddress),
-                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddress)
-            ).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
+            combineLatest([
+                api.query.genericAsset.freeBalance.at(hash, assetId, exchangeAddress),
+                api.query.genericAsset.freeBalance.at(hash, coreAssetId, exchangeAddress),
+            ]).pipe(map(([tradeAssetReserve, coreAssetReserve]) => [tradeAssetReserve, coreAssetReserve, feeRate]))
         ),
         map(([tradeAssetReserve, coreAssetReserve, feeRate]) =>
             getInputPrice(
@@ -166,19 +168,19 @@ function coreToAssetInputPriceAt(
 function assetToAssetInputPrice(
     assetA: AnyAssetId,
     assetB: AnyAssetId,
-    coreAssetId: EnhancedAssetId,
+    coreAssetId: AnyAssetId,
     sellAmount: AnyNumber,
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate();
-    return combineLatest(exchangeAddress(api)(assetA), exchangeAddress(api)(assetB), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetA), exchangeAddress(api)(assetB), defaultFeeRate]).pipe(
         switchMap(([exchangeAddressForA, exchangeAddressForB, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalance(assetA, exchangeAddressForA),
-                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddressForA),
-                api.derive.genericAsset.freeBalance(assetB, exchangeAddressForB),
-                api.derive.genericAsset.freeBalance(coreAssetId, exchangeAddressForB)
-            ).pipe(
+            combineLatest([
+                api.query.genericAsset.freeBalance(assetA, exchangeAddressForA),
+                api.query.genericAsset.freeBalance(coreAssetId, exchangeAddressForA),
+                api.query.genericAsset.freeBalance(assetB, exchangeAddressForB),
+                api.query.genericAsset.freeBalance(coreAssetId, exchangeAddressForB),
+            ]).pipe(
                 map(([tradeAssetReserveA, coreAssetReserveA, tradeAssetReserveB, coreAssetReserveB]) => [
                     tradeAssetReserveA,
                     coreAssetReserveA,
@@ -209,19 +211,19 @@ function assetToAssetInputPriceAt(
     hash: Hash,
     assetA: AnyAssetId,
     assetB: AnyAssetId,
-    coreAssetId: EnhancedAssetId,
+    coreAssetId: AnyAssetId,
     sellAmount: AnyNumber,
     api: ApiInterface$Rx
 ) {
     const defaultFeeRate = api.query.cennzxSpot.defaultFeeRate.at(hash);
-    return combineLatest(exchangeAddress(api)(assetA), exchangeAddress(api)(assetB), defaultFeeRate).pipe(
+    return combineLatest([exchangeAddress(api)(assetA), exchangeAddress(api)(assetB), defaultFeeRate]).pipe(
         switchMap(([exchangeAddressForA, exchangeAddressForB, feeRate]) =>
-            combineLatest(
-                api.derive.genericAsset.freeBalanceAt(hash, assetA, exchangeAddressForA),
-                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddressForA),
-                api.derive.genericAsset.freeBalanceAt(hash, assetB, exchangeAddressForB),
-                api.derive.genericAsset.freeBalanceAt(hash, coreAssetId, exchangeAddressForB)
-            ).pipe(
+            combineLatest([
+                api.query.genericAsset.freeBalance.at(hash, assetA, exchangeAddressForA),
+                api.query.genericAsset.freeBalance.at(hash, coreAssetId, exchangeAddressForA),
+                api.query.genericAsset.freeBalance.at(hash, assetB, exchangeAddressForB),
+                api.query.genericAsset.freeBalance.at(hash, coreAssetId, exchangeAddressForB),
+            ]).pipe(
                 map(([tradeAssetReserveA, coreAssetReserveA, tradeAssetReserveB, coreAssetReserveB]) => [
                     tradeAssetReserveA,
                     coreAssetReserveA,

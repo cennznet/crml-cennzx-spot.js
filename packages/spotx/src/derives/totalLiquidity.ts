@@ -12,23 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {ApiInterface$Rx, QueryableStorageFunction} from '@cennznet/api/polkadot.types';
+import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash} from '@cennznet/types/polkadot';
 import BN from 'bn.js';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {getExchangeKey} from '../utils/utils';
+import {coreAssetId, coreAssetIdAt} from './shared';
 
 export function totalLiquidity(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId().pipe(
+        return coreAssetId(api)().pipe(
             switchMap(coreAssetId => {
-                const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzxSpot.totalSupply(exchangeKey) as unknown) as QueryableStorageFunction<
-                    Observable<BN>,
-                    {}
-                >;
+                const exchangeKey = getExchangeKey(coreAssetId, assetId);
+                return (api.query.cennzxSpot.totalSupply(exchangeKey) as unknown) as Observable<BN>;
             })
         );
     };
@@ -36,13 +34,10 @@ export function totalLiquidity(api: ApiInterface$Rx) {
 
 export function totalLiquidityAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId.at(hash).pipe(
+        return coreAssetIdAt(api)(hash).pipe(
             switchMap(coreAssetId => {
-                const exchangeKey = getExchangeKey((coreAssetId as unknown) as BN, assetId);
-                return (api.query.cennzxSpot.totalSupply.at(hash, exchangeKey) as unknown) as QueryableStorageFunction<
-                    Observable<BN>,
-                    {}
-                >;
+                const exchangeKey = getExchangeKey(coreAssetId, assetId);
+                return (api.query.cennzxSpot.totalSupply.at(hash, exchangeKey) as unknown) as Observable<BN>;
             })
         );
     };

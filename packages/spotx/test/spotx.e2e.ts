@@ -65,7 +65,7 @@ describe('SpotX APIs', () => {
         api.disconnect();
     });
     describe('Liquidity Operations', () => {
-        it("Add liquidity and receive 'AddLiquidity' event", async done => {
+        it.skip("Add liquidity and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
             /************************************************************/
@@ -101,14 +101,6 @@ describe('SpotX APIs', () => {
                 });
         });
 
-        it('Get Pool trade asset balance and try to get input price', async () => {
-            const poolAssetBalance = await cennzxSpot.getPoolAssetBalance(tradeAssetA);
-            const poolCoreBalance = await cennzxSpot.getPoolCoreAssetBalance(tradeAssetA);
-            // console.log('Balance:'+poolCoreBalance);
-            // console.log('Asset Balance:'+poolAssetBalance);
-            await expect(cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).rejects.toThrow('Pool balance is low');
-        });
-
         it("Add liquidity for second asset and receive 'AddLiquidity' event", async done => {
             /**************************************************************/
             /*** Prepare test data to ensure balance *********************/
@@ -140,6 +132,29 @@ describe('SpotX APIs', () => {
                         }
                         // return isCreated event
                         expect(isCreated).toEqual(true);
+                        done();
+                    }
+                });
+        });
+
+        it("Remove liquidity and receive 'RemoveLiquidity' event", async done => {
+            const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+            await cennzxSpot
+                .removeLiquidity(tradeAssetA, liquidity, 1, 1)
+                .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
+                    if (status.isFinalized && events !== undefined) {
+                        let isRemoved = false;
+                        for (let i = 0; i < events.length; i += 1) {
+                            const event = events[i];
+                            if (event.event.method === 'RemoveLiquidity') {
+                                isRemoved = true;
+                                const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
+                                expect(balance.eqn(0)).toBeTruthy();
+                                // TODO: check balance change of exchange account
+                            }
+                        }
+                        // return isCreated event
+                        expect(isRemoved).toEqual(true);
                         done();
                     }
                 });
@@ -531,26 +546,19 @@ describe('SpotX APIs', () => {
                 }
             });
     });
-    it("Remove liquidity and receive 'RemoveLiquidity' event", async done => {
-        const liquidity = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-        await cennzxSpot
-            .removeLiquidity(tradeAssetA, liquidity, 1, 1)
-            .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
-                if (status.isFinalized && events !== undefined) {
-                    let isRemoved = false;
-                    for (let i = 0; i < events.length; i += 1) {
-                        const event = events[i];
-                        if (event.event.method === 'RemoveLiquidity') {
-                            isRemoved = true;
-                            const balance = await cennzxSpot.getLiquidityBalance(tradeAssetA, investor.address);
-                            expect(balance.eqn(0)).toBeTruthy();
-                            // TODO: check balance change of exchange account
-                        }
-                    }
-                    // return isCreated event
-                    expect(isRemoved).toEqual(true);
-                    done();
-                }
-            });
+
+    describe('queries', () => {
+        it('Get Pool trade asset balance and try to get input price', async () => {
+            const poolAssetBalance = await cennzxSpot.getPoolAssetBalance(tradeAssetA);
+            const poolCoreBalance = await cennzxSpot.getPoolCoreAssetBalance(tradeAssetA);
+            expect(poolAssetBalance.gtn(0)).toBeTruthy();
+            expect(poolCoreBalance.gtn(0)).toBeTruthy();
+            // console.log('Balance:'+poolCoreBalance);
+            // console.log('Asset Balance:'+poolAssetBalance);
+            await expect(cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).rejects.toThrow(
+                'Pool balance is low'
+            );
+            await expect(cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolAssetBalance.subn(1))).resolves;
+        });
     });
 });
