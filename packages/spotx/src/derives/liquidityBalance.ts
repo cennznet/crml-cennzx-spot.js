@@ -14,17 +14,18 @@
 
 import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
-import {AccountId, Address, Balance, Hash} from '@cennznet/types/polkadot';
+import {Balance, Hash} from '@cennznet/types/polkadot';
 import {drr} from '@plugnet/api-derive/util/drr';
 import BN from 'bn.js';
 import {Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 import {AnyAddress} from '../types';
 import {getExchangeKey} from '../utils/utils';
+import {coreAssetId, coreAssetIdAt} from './shared';
 
 export function liquidityBalance(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, address: AnyAddress): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId().pipe(
+        return coreAssetId(api)().pipe(
             switchMap(
                 coreAssetId =>
                     api.query.cennzxSpot.liquidityBalance(
@@ -39,7 +40,7 @@ export function liquidityBalance(api: ApiInterface$Rx) {
 
 export function liquidityBalanceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId, address: AnyAddress): Observable<BN> => {
-        return api.query.cennzxSpot.coreAssetId.at(hash).pipe(
+        return coreAssetIdAt(api)(hash).pipe(
             switchMap(
                 coreAssetId =>
                     api.query.cennzxSpot.liquidityBalance.at(

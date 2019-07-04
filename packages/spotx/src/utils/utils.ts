@@ -15,7 +15,7 @@
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {AssetId} from '@cennznet/types';
 import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
-import {AnyNumber, Codec} from '@cennznet/types/polkadot.types';
+import {AnyNumber} from '@cennznet/types/polkadot.types';
 import {blake2AsU8a, stringToU8a, u8aConcat} from '@cennznet/util';
 import BN from 'bn.js';
 import {PERMILL_BASE} from '../constants';
@@ -41,7 +41,7 @@ export function generateExchangeAddress(coreAssetId: AnyNumber | AssetId, assetI
  * @param coreAssetId
  * @param assetId
  */
-export function getExchangeKey(coreAssetId: AnyAssetId, assetId: AssetId | AnyNumber): Codec {
+export function getExchangeKey(coreAssetId: AnyAssetId, assetId: AssetId | AnyNumber): Tuple {
     return new Tuple([AssetId, AssetId], [coreAssetId, assetId]);
 }
 

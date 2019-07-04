@@ -13,18 +13,16 @@
 // limitations under the License.
 
 import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
-import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
+import {AssetId} from '@cennznet/types';
+import {Hash} from '@cennznet/types/polkadot';
 import {drr} from '@plugnet/api-derive/util/drr';
 import {Observable} from 'rxjs';
-import {first, map} from 'rxjs/operators';
-import {generateExchangeAddress} from '../utils/utils';
-import {coreAssetId} from './shared';
 
-export function exchangeAddress(api: ApiInterface$Rx) {
-    return (assetId: AnyAssetId): Observable<string> =>
-        coreAssetId(api)().pipe(
-            map(coreAssetId => generateExchangeAddress(coreAssetId, assetId)),
-            first(),
-            drr()
-        );
+export function coreAssetId(api: ApiInterface$Rx) {
+    return (): Observable<AssetId> => api.query.cennzxSpot.coreAssetId().pipe(drr()) as Observable<AssetId>;
+}
+
+export function coreAssetIdAt(api: ApiInterface$Rx) {
+    return (hash: Hash): Observable<AssetId> =>
+        api.query.cennzxSpot.coreAssetId.at(hash).pipe(drr()) as Observable<AssetId>;
 }
