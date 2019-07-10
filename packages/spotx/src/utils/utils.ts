@@ -66,14 +66,8 @@ export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: 
         throw new Error('Pool balance is low');
     }
     const divRate = feeRate.addn(PERMILL_BASE);
-    const inputAmountLessFeeScaled = inputAmount
-        .muln(PERMILL_BASE)
-        .muln(PERMILL_BASE)
-        .div(divRate);
-    const numerator = inputAmountLessFeeScaled.mul(outputReserve);
-    const denominator = inputAmount
-        .muln(PERMILL_BASE)
-        .div(divRate)
-        .add(inputReserve);
-    return numerator.div(denominator).divn(PERMILL_BASE);
+    const inputAmountLessFee = inputAmount.muln(PERMILL_BASE).div(divRate);
+    const numerator = inputAmountLessFee.mul(outputReserve);
+    const denominator = inputAmountLessFee.add(inputReserve);
+    return numerator.div(denominator);
 }
