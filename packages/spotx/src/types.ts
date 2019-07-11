@@ -63,3 +63,14 @@ export interface QueryableGetPoolBalanceRx {
     (assetId: AnyAssetId): Observable<BN>;
     at(hash: IHash, assetId: AnyAssetId): Observable<BN>;
 }
+
+export interface QueryableGetLiquidityBalancePrice {
+    (assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
+    (assetId: AnyAssetId, coreAmount: AnyNumber, cb: (res: BN) => void): Promise<() => any>;
+    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
+}
+
+export interface QueryableGetLiquidityBalancePriceRx {
+    (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
+    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
+}

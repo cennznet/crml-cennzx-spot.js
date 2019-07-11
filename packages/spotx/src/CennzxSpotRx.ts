@@ -25,6 +25,7 @@ import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
 import {
     AnyAddress,
+    QueryableGetLiquidityBalancePriceRx,
     QueryableGetLiquidityBalanceRx,
     QueryableGetPoolBalanceRx,
     QueryablePriceRx,
@@ -259,6 +260,18 @@ export class CennzxSpotRx {
     get getPoolCoreAssetBalance(): QueryableGetPoolBalanceRx {
         const _fn = this.api.derive.cennzxSpot.poolCoreAssetBalance as any;
         _fn.at = this.api.derive.cennzxSpot.poolCoreAssetBalanceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query liquidity price for a core asset amount
+     * @param assetId The id of the asset
+     * @param coreAmount - the amount of core asset
+     */
+    get liquidityPrice(): QueryableGetLiquidityBalancePriceRx {
+        const _fn = this.api.derive.cennzxSpot.liquidityPrice as any;
+        _fn.at = this.api.derive.cennzxSpot.liquidityPriceAt as any;
 
         return _fn;
     }

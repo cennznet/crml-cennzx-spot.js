@@ -18,7 +18,7 @@ import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber} from '@cennznet/types/polkadot.types';
 import {blake2AsU8a, stringToU8a, u8aConcat} from '@cennznet/util';
 import BN from 'bn.js';
-import {PERMILL_BASE} from '../constants';
+import {PERMILL_BASE, ROUND_UP} from '../constants';
 
 /**
  * Generate the key of the balance storage
@@ -70,4 +70,15 @@ export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: 
     const numerator = inputAmountLessFee.mul(outputReserve);
     const denominator = inputAmountLessFee.add(inputReserve);
     return numerator.div(denominator);
+}
+
+export function getLiquidityPrice(coreAmount: BN, coreReserve: BN, assetReserve: BN) {
+    if (coreReserve.isZero() || assetReserve.isZero()) {
+        return coreAmount;
+    } else {
+        return coreAmount
+            .mul(assetReserve)
+            .div(coreReserve)
+            .addn(ROUND_UP);
+    }
 }
