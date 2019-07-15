@@ -13,3 +13,4 @@
 // limitations under the License.
 
 export const PERMILL_BASE = 1000000;
+export const ROUND_UP = 1;

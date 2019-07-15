@@ -18,3 +18,4 @@ export {liquidityBalance, liquidityBalanceAt} from './liquidityBalance';
 export {totalLiquidity, totalLiquidityAt} from './totalLiquidity';
 export {exchangeAddress} from './exchangeAddress';
 export {poolAssetBalance, poolCoreAssetBalance, poolAssetBalanceAt, poolCoreAssetBalanceAt} from './poolBalance';
+export {liquidityPrice, liquidityPriceAt} from './liquidityPrice';
