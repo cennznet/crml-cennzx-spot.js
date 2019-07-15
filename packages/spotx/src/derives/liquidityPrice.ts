@@ -13,25 +13,20 @@
 // limitations under the License.
 
 import {ApiInterface$Rx} from '@cennznet/api/polkadot.types';
-import {
-    poolAssetBalance,
-    poolAssetBalanceAt,
-    poolCoreAssetBalance,
-    poolCoreAssetBalanceAt,
-} from '@cennznet/crml-cennzx-spot/derives/poolBalance';
-import {getLiquidityPrice} from '@cennznet/crml-cennzx-spot/utils/utils';
 import {AnyAssetId} from '@cennznet/crml-generic-asset/types';
 import {Hash, u128} from '@cennznet/types/polkadot';
 import {AnyNumber} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {getLiquidityPrice} from '../utils/utils';
+import {poolAssetBalance, poolAssetBalanceAt, poolCoreAssetBalance, poolCoreAssetBalanceAt} from './poolBalance';
 
 export function liquidityPrice(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN> => {
         return combineLatest([poolAssetBalance(api)(assetId), poolCoreAssetBalance(api)(assetId)]).pipe(
             map(([tradeAssetReserve, coreAssetReserve]) =>
-                getLiquidityPrice(new u128(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
+                getLiquidityPrice(new BN(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
             )
         );
     };
@@ -41,7 +36,7 @@ export function liquidityPriceAt(api: ApiInterface$Rx) {
     return (hash: Hash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN> => {
         return combineLatest([poolAssetBalanceAt(api)(hash, assetId), poolCoreAssetBalanceAt(api)(hash, assetId)]).pipe(
             map(([tradeAssetReserve, coreAssetReserve]) =>
-                getLiquidityPrice(new u128(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
+                getLiquidityPrice(new BN(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
             )
         );
     };
