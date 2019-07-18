@@ -61,7 +61,7 @@ export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve
 }
 
 export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-    if (inputReserve.isZero() || outputReserve.isZero() || inputAmount.gt(inputReserve)) {
+    if (inputReserve.isZero() || outputReserve.isZero()) {
         //return new BN(0);
         throw new Error('Pool balance is low');
     }
@@ -69,7 +69,11 @@ export function getInputPrice(inputAmount: BN, inputReserve: BN, outputReserve: 
     const inputAmountLessFee = inputAmount.muln(PERMILL_BASE).div(divRate);
     const numerator = inputAmountLessFee.mul(outputReserve);
     const denominator = inputAmountLessFee.add(inputReserve);
-    return numerator.div(denominator);
+    const price = numerator.div(denominator);
+    if (price.gte(outputReserve)) {
+        throw new Error('Pool balance is low');
+    }
+    return price;
 }
 
 export function getLiquidityPrice(coreAmount: BN, coreReserve: BN, assetReserve: BN) {
