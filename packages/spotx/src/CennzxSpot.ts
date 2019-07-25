@@ -22,8 +22,10 @@ import {assert} from '@cennznet/util';
 import * as derives from './derives';
 import {
     AnyAddress,
+    QueryableGetAssetWithdrawn,
     QueryableGetLiquidityBalance,
     QueryableGetLiquidityBalancePrice,
+    QueryableGetLiquidityWithdrawn,
     QueryableGetPoolBalance,
     QueryablePrice,
     QueryableTotalLiquidityBalance,
@@ -257,6 +259,30 @@ export class CennzxSpot {
     get liquidityPrice(): QueryableGetLiquidityBalancePrice {
         const _fn = this.api.derive.cennzxSpot.liquidityPrice as any;
         _fn.at = this.api.derive.cennzxSpot.liquidityPriceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query liquidity withdrawn for a core asset amount
+     * @param assetId The id of the asset
+     * @param coreAmount - the amount of core asset
+     */
+    get liquidityWithdrawn(): QueryableGetLiquidityWithdrawn {
+        const _fn = this.api.derive.cennzxSpot.liquidityWithdrawn as any;
+        _fn.at = this.api.derive.cennzxSpot.liquidityWithdrawnAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query asset withdrawn for a core asset amount
+     * @param assetId The id of the asset
+     * @param coreAmount - the amount of core asset
+     */
+    get assetWithdrawn(): QueryableGetAssetWithdrawn {
+        const _fn = this.api.derive.cennzxSpot.assetWithdrawn as any;
+        _fn.at = this.api.derive.cennzxSpot.assetWithdrawnAt as any;
 
         return _fn;
     }

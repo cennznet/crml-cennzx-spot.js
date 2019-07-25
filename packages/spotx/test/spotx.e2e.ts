@@ -205,8 +205,11 @@ describe('SpotX APIs', () => {
             const totalLiquidityBefore = await cennzxSpot.getTotalLiquidity(tradeAssetA);
             const amountToRemove = 10;
             expect(totalLiquidityBefore.gtn(amountToRemove)).toBeTruthy();
+            const removeCore = 10;
+            const removeLiquidity = await cennzxSpot.liquidityWithdrawn(tradeAssetA, removeCore);
+            const removeAsset = await cennzxSpot.assetWithdrawn(tradeAssetA, removeCore);
             await cennzxSpot
-                .removeLiquidity(tradeAssetA, amountToRemove, 1, 1)
+                .removeLiquidity(tradeAssetA, removeLiquidity, removeCore, removeAsset)
                 .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     if (status.isFinalized && events !== undefined) {
                         let isRemoved = false;
@@ -214,7 +217,7 @@ describe('SpotX APIs', () => {
                             if (event.method === 'RemoveLiquidity') {
                                 isRemoved = true;
                                 const totalLiquidity = await cennzxSpot.getTotalLiquidity(tradeAssetA);
-                                expect(totalLiquidityBefore.subn(10).eq(totalLiquidity)).toBeTruthy();
+                                expect(totalLiquidityBefore.sub(removeLiquidity)).toBeTruthy();
                                 // TODO: check balance change of exchange account
                             }
                         }
