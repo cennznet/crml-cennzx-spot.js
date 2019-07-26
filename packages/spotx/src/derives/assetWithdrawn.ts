@@ -19,24 +19,49 @@ import {AnyNumber} from '@cennznet/types/polkadot.types';
 import BN from 'bn.js';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {getAssetWithdrawn} from '../utils/utils';
-import {poolAssetBalance, poolAssetBalanceAt, poolCoreAssetBalance, poolCoreAssetBalanceAt} from './poolBalance';
+import {getAssetToWithdraw} from '../utils/utils';
+import {
+    poolAssetBalance,
+    poolAssetBalanceAt,
+    poolCoreAssetBalance,
+    poolCoreAssetBalanceAt,
+    totalLiquidity,
+    totalLiquidityAt,
+} from './index';
 
-export function assetWithdrawn(api: ApiInterface$Rx) {
-    return (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN> => {
-        return combineLatest([poolAssetBalance(api)(assetId), poolCoreAssetBalance(api)(assetId)]).pipe(
-            map(([tradeAssetReserve, coreAssetReserve]) =>
-                getAssetWithdrawn(new BN(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
+export function assetToWithdraw(api: ApiInterface$Rx) {
+    return (assetId: AnyAssetId, liquidity: AnyNumber): Observable<{coreAmount: BN; assetAmount: BN}> => {
+        return combineLatest([
+            poolAssetBalance(api)(assetId),
+            poolCoreAssetBalance(api)(assetId),
+            totalLiquidity(api)(assetId),
+        ]).pipe(
+            map(([tradeAssetReserve, coreAssetReserve, totalLiquidity]) =>
+                getAssetToWithdraw(
+                    new BN(liquidity),
+                    coreAssetReserve as any,
+                    tradeAssetReserve as any,
+                    totalLiquidity as any
+                )
             )
         );
     };
 }
 
-export function assetWithdrawnAt(api: ApiInterface$Rx) {
-    return (hash: Hash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN> => {
-        return combineLatest([poolAssetBalanceAt(api)(hash, assetId), poolCoreAssetBalanceAt(api)(hash, assetId)]).pipe(
-            map(([tradeAssetReserve, coreAssetReserve]) =>
-                getAssetWithdrawn(new BN(coreAmount), coreAssetReserve as any, tradeAssetReserve as any)
+export function assetToWithdrawAt(api: ApiInterface$Rx) {
+    return (hash: Hash, assetId: AnyAssetId, liquidity: AnyNumber): Observable<{coreAmount: BN; assetAmount: BN}> => {
+        return combineLatest([
+            poolAssetBalanceAt(api)(hash, assetId),
+            poolCoreAssetBalanceAt(api)(hash, assetId),
+            totalLiquidityAt(api)(hash, assetId),
+        ]).pipe(
+            map(([tradeAssetReserve, coreAssetReserve, totalLiquidity]) =>
+                getAssetToWithdraw(
+                    new BN(liquidity),
+                    coreAssetReserve as any,
+                    tradeAssetReserve as any,
+                    totalLiquidity as any
+                )
             )
         );
     };

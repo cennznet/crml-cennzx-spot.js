@@ -28,7 +28,6 @@ import {
     QueryableGetAssetWithdrawnRx,
     QueryableGetLiquidityBalancePriceRx,
     QueryableGetLiquidityBalanceRx,
-    QueryableGetLiquidityWithdrawnRx,
     QueryableGetPoolBalanceRx,
     QueryablePriceRx,
     QueryableTotalLiquidityBalanceRx,
@@ -279,25 +278,13 @@ export class CennzxSpotRx {
     }
 
     /**
-     * Query liquidity withdrawn for a core asset amount
-     * @param assetId The id of the asset
-     * @param coreAmount - the amount of core asset
-     */
-    get liquidityWithdrawn(): QueryableGetLiquidityWithdrawnRx {
-        const _fn = this.api.derive.cennzxSpot.liquidityWithdrawn as any;
-        _fn.at = this.api.derive.cennzxSpot.liquidityWithdrawnAt as any;
-
-        return _fn;
-    }
-
-    /**
      * Query asset withdrawn for a core asset amount
      * @param assetId The id of the asset
      * @param coreAmount - the amount of core asset
      */
-    get assetWithdrawn(): QueryableGetAssetWithdrawnRx {
-        const _fn = this.api.derive.cennzxSpot.assetWithdrawn as any;
-        _fn.at = this.api.derive.cennzxSpot.assetWithdrawnAt as any;
+    get assetToWithdraw(): QueryableGetAssetWithdrawnRx {
+        const _fn = this.api.derive.cennzxSpot.assetToWithdraw as any;
+        _fn.at = this.api.derive.cennzxSpot.assetToWithdraw as any;
 
         return _fn;
     }

@@ -97,9 +97,11 @@ export function getLiquidityWithdrawn(coreAmount: BN, coreReserve: BN, totalLiqu
     return coreAmount.mul(totalLiquidity).div(coreReserve);
 }
 
-export function getAssetWithdrawn(coreAmount: BN, coreReserve: BN, assetReserve: BN) {
-    if (coreAmount.isZero()) {
+export function getAssetToWithdraw(liquidity: BN, coreReserve: BN, assetReserve: BN, totalLiquidity: BN) {
+    if (liquidity.isZero()) {
         throw new Error('Assets withdrawn to be greater than zero');
     }
-    return coreAmount.mul(assetReserve).div(coreReserve);
+    const coreAmount = liquidity.mul(coreReserve).div(totalLiquidity);
+    const assetAmount = liquidity.mul(assetReserve).div(totalLiquidity);
+    return {coreAmount, assetAmount};
 }

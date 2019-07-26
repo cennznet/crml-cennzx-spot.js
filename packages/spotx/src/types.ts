@@ -75,24 +75,13 @@ export interface QueryableGetLiquidityBalancePriceRx {
     at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
 }
 
-export interface QueryableGetLiquidityWithdrawn {
-    (assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
-    (assetId: AnyAssetId, coreAmount: AnyNumber, cb: (res: BN) => void): Promise<() => any>;
-    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
-}
-
-export interface QueryableGetLiquidityWithdrawnRx {
-    (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
-    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
-}
-
 export interface QueryableGetAssetWithdrawn {
-    (assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
+    (assetId: AnyAssetId, coreAmount: AnyNumber): Promise<{coreAmount: BN; assetAmount: BN}>;
     (assetId: AnyAssetId, coreAmount: AnyNumber, cb: (res: BN) => void): Promise<() => any>;
-    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Promise<BN>;
+    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Promise<{coreAmount: BN; assetAmount: BN}>;
 }
 
 export interface QueryableGetAssetWithdrawnRx {
-    (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
-    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<BN>;
+    (assetId: AnyAssetId, coreAmount: AnyNumber): Observable<{coreAmount: BN; assetAmount: BN}>;
+    at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Observable<{coreAmount: BN; assetAmount: BN}>;
 }

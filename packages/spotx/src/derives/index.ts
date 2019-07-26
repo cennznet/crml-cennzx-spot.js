@@ -19,5 +19,4 @@ export {totalLiquidity, totalLiquidityAt} from './totalLiquidity';
 export {exchangeAddress} from './exchangeAddress';
 export {poolAssetBalance, poolCoreAssetBalance, poolAssetBalanceAt, poolCoreAssetBalanceAt} from './poolBalance';
 export {liquidityPrice, liquidityPriceAt} from './liquidityPrice';
-export {liquidityWithdrawn, liquidityWithdrawnAt} from './liquidityWithdrawn';
-export {assetWithdrawn, assetWithdrawnAt} from './assetWithdrawn';
+export {assetToWithdraw, assetToWithdrawAt} from './assetWithdrawn';
