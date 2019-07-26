@@ -87,16 +87,6 @@ export function getLiquidityPrice(coreAmount: BN, coreReserve: BN, assetReserve:
     }
 }
 
-export function getLiquidityWithdrawn(coreAmount: BN, coreReserve: BN, totalLiquidity: BN) {
-    if (coreAmount.isZero()) {
-        throw new Error('Assets withdrawn to be greater than zero');
-    }
-    if (coreReserve.isZero() || totalLiquidity.isZero()) {
-        throw new Error('Pool balance is low');
-    }
-    return coreAmount.mul(totalLiquidity).div(coreReserve);
-}
-
 export function getAssetToWithdraw(liquidity: BN, coreReserve: BN, assetReserve: BN, totalLiquidity: BN) {
     if (liquidity.isZero()) {
         throw new Error('Assets withdrawn to be greater than zero');
