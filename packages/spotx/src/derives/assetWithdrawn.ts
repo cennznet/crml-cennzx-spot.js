@@ -20,14 +20,8 @@ import BN from 'bn.js';
 import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {getAssetToWithdraw} from '../utils/utils';
-import {
-    poolAssetBalance,
-    poolAssetBalanceAt,
-    poolCoreAssetBalance,
-    poolCoreAssetBalanceAt,
-    totalLiquidity,
-    totalLiquidityAt,
-} from './index';
+import {poolAssetBalance, poolAssetBalanceAt, poolCoreAssetBalance, poolCoreAssetBalanceAt} from './poolBalance';
+import {totalLiquidity, totalLiquidityAt} from './totalLiquidity';
 
 export function assetToWithdraw(api: ApiInterface$Rx) {
     return (assetId: AnyAssetId, liquidity: AnyNumber): Observable<{coreAmount: BN; assetAmount: BN}> => {

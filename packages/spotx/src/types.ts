@@ -77,7 +77,9 @@ export interface QueryableGetLiquidityBalancePriceRx {
 
 export interface QueryableGetAssetWithdrawn {
     (assetId: AnyAssetId, coreAmount: AnyNumber): Promise<{coreAmount: BN; assetAmount: BN}>;
-    (assetId: AnyAssetId, coreAmount: AnyNumber, cb: (res: BN) => void): Promise<() => any>;
+    (assetId: AnyAssetId, coreAmount: AnyNumber, cb: (res: {coreAmount: BN; assetAmount: BN}) => void): Promise<
+        () => any
+    >;
     at(hash: IHash, assetId: AnyAssetId, coreAmount: AnyNumber): Promise<{coreAmount: BN; assetAmount: BN}>;
 }
 

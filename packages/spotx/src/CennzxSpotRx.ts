@@ -278,9 +278,9 @@ export class CennzxSpotRx {
     }
 
     /**
-     * Query asset withdrawn for a core asset amount
+     * Query asset withdrawn to get the max core and max asset which can we withdrawn with the input liquidity
      * @param assetId The id of the asset
-     * @param coreAmount - the amount of core asset
+     * @param liquidity - user liquidity
      */
     get assetToWithdraw(): QueryableGetAssetWithdrawnRx {
         const _fn = this.api.derive.cennzxSpot.assetToWithdraw as any;
