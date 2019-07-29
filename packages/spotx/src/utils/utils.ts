@@ -88,8 +88,8 @@ export function getLiquidityPrice(coreAmount: BN, coreReserve: BN, assetReserve:
 }
 
 export function getAssetToWithdraw(liquidity: BN, coreReserve: BN, assetReserve: BN, totalLiquidity: BN) {
-    if (liquidity.isZero()) {
-        throw new Error('Assets withdrawn to be greater than zero');
+    if (liquidity.gt(totalLiquidity)) {
+        throw new Error('Tried to overdraw liquidity');
     }
     const coreAmount = liquidity.mul(coreReserve).div(totalLiquidity);
     const assetAmount = liquidity.mul(assetReserve).div(totalLiquidity);

@@ -207,7 +207,7 @@ describe('SpotX APIs', () => {
             expect(totalLiquidityBefore.gtn(removeLiquidity)).toBeTruthy();
             const {coreAmount, assetAmount} = await cennzxSpot.assetToWithdraw(tradeAssetA, removeLiquidity);
             await cennzxSpot
-                .removeLiquidity(tradeAssetA, removeLiquidity, assetAmount, coreAmount)
+                .removeLiquidity(tradeAssetA, removeLiquidity, 1, 1)
                 .signAndSend(investor.address, async ({events, status}: SubmittableResult) => {
                     if (status.isFinalized && events !== undefined) {
                         let isRemoved = false;
@@ -216,7 +216,10 @@ describe('SpotX APIs', () => {
                                 isRemoved = true;
                                 const totalLiquidity = await cennzxSpot.getTotalLiquidity(tradeAssetA);
                                 expect(totalLiquidityBefore.subn(removeLiquidity)).toBeTruthy();
-                                // TODO: check balance change of exchange account
+                                const coreFromEvent = event.data[1];
+                                const assetFromEvent = event.data[3];
+                                expect(assetFromEvent.eq(assetAmount)).toBeTruthy();
+                                expect(coreFromEvent.eq(coreAmount)).toBeTruthy();
                             }
                         }
                         // return isCreated event
