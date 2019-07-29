@@ -86,3 +86,12 @@ export function getLiquidityPrice(coreAmount: BN, coreReserve: BN, assetReserve:
             .addn(ROUND_UP);
     }
 }
+
+export function getAssetToWithdraw(liquidity: BN, coreReserve: BN, assetReserve: BN, totalLiquidity: BN) {
+    if (liquidity.gt(totalLiquidity)) {
+        throw new Error('Tried to overdraw liquidity');
+    }
+    const coreAmount = liquidity.mul(coreReserve).div(totalLiquidity);
+    const assetAmount = liquidity.mul(assetReserve).div(totalLiquidity);
+    return {coreAmount, assetAmount};
+}

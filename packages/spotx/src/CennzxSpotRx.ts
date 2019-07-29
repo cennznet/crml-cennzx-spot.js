@@ -25,6 +25,7 @@ import {mapTo, switchMap} from 'rxjs/operators';
 import * as derives from './derives';
 import {
     AnyAddress,
+    QueryableGetAssetWithdrawnRx,
     QueryableGetLiquidityBalancePriceRx,
     QueryableGetLiquidityBalanceRx,
     QueryableGetPoolBalanceRx,
@@ -272,6 +273,18 @@ export class CennzxSpotRx {
     get liquidityPrice(): QueryableGetLiquidityBalancePriceRx {
         const _fn = this.api.derive.cennzxSpot.liquidityPrice as any;
         _fn.at = this.api.derive.cennzxSpot.liquidityPriceAt as any;
+
+        return _fn;
+    }
+
+    /**
+     * Query asset withdrawn to get the max core and max asset which can we withdrawn with the input liquidity
+     * @param assetId The id of the asset
+     * @param liquidity - user liquidity
+     */
+    get assetToWithdraw(): QueryableGetAssetWithdrawnRx {
+        const _fn = this.api.derive.cennzxSpot.assetToWithdraw as any;
+        _fn.at = this.api.derive.cennzxSpot.assetToWithdraw as any;
 
         return _fn;
     }
