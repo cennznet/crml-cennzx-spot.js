@@ -21,6 +21,7 @@ import {SubmittableResult} from '@cennznet/api/polkadot';
 import {GenericAsset} from '@cennznet/crml-generic-asset';
 import BN from 'bn.js';
 import {CennzxSpot} from '../src/CennzxSpot';
+import {MAX_U128} from '@cennznet/crml-cennzx-spot/constants';
 
 const investor = {
     address: '5DXUeE5N5LtkW97F2PzqYPyqNkxqSWESdGSPTX6AvkUAhwKP',
@@ -515,12 +516,14 @@ describe('SpotX APIs', () => {
             const poolCoreBalance = await cennzxSpot.getPoolCoreAssetBalance(tradeAssetA);
             expect(poolAssetBalance.gtn(0)).toBeTruthy();
             expect(poolCoreBalance.gtn(0)).toBeTruthy();
+            const maxPrice = await cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance);
+            expect(maxPrice).toStrictEqual(new BN(MAX_U128));
             // console.log('Balance:'+poolCoreBalance);
             // console.log('Asset Balance:'+poolAssetBalance);
-            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).rejects.toThrow(
+            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance.addn(1))).rejects.toThrow(
                 'Pool balance is low'
             );
-            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance.subn(1))).resolves;
+            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).resolves;
             await expect(cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolCoreBalance)).resolves;
         });
     });

@@ -18,7 +18,7 @@ import {Address, Permill, Tuple, u64} from '@cennznet/types/polkadot';
 import {AnyNumber} from '@cennznet/types/polkadot.types';
 import {blake2AsU8a, stringToU8a, u8aConcat} from '@cennznet/util';
 import BN from 'bn.js';
-import {PERMILL_BASE, ROUND_UP} from '../constants';
+import {MAX_U128, PERMILL_BASE, ROUND_UP} from '../constants';
 
 /**
  * Generate the key of the balance storage
@@ -46,9 +46,12 @@ export function getExchangeKey(coreAssetId: AnyAssetId, assetId: AssetId | AnyNu
 }
 
 export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-    if (inputReserve.isZero() || outputReserve.isZero() || outputAmount.gte(outputReserve)) {
+    if (inputReserve.isZero() || outputReserve.isZero() || outputAmount.gt(outputReserve)) {
         //return new BN(0);
         throw new Error('Pool balance is low');
+    }
+    if (outputAmount.eq(outputReserve)) {
+        return new BN(MAX_U128);
     }
     const output = inputReserve
         .mul(outputAmount)
