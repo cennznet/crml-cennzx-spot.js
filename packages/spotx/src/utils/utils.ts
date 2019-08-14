@@ -46,9 +46,12 @@ export function getExchangeKey(coreAssetId: AnyAssetId, assetId: AssetId | AnyNu
 }
 
 export function getOutputPrice(outputAmount: BN, inputReserve: BN, outputReserve: BN, feeRate: Permill): BN {
-    if (inputReserve.isZero() || outputReserve.isZero() || outputAmount.gte(outputReserve)) {
+    if (inputReserve.isZero() || outputReserve.isZero() || outputAmount.gt(outputReserve)) {
         //return new BN(0);
         throw new Error('Pool balance is low');
+    }
+    if (outputAmount.eq(outputReserve)) {
+        return new BN('340282366920938463463374607431768211455');
     }
     const output = inputReserve
         .mul(outputAmount)

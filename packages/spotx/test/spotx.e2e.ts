@@ -515,12 +515,14 @@ describe('SpotX APIs', () => {
             const poolCoreBalance = await cennzxSpot.getPoolCoreAssetBalance(tradeAssetA);
             expect(poolAssetBalance.gtn(0)).toBeTruthy();
             expect(poolCoreBalance.gtn(0)).toBeTruthy();
+            // const maxPrice = await cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance);
+            // expect(maxPrice).toStrictEqual(new BN('340282366920938463463374607431768211455'));
             // console.log('Balance:'+poolCoreBalance);
             // console.log('Asset Balance:'+poolAssetBalance);
-            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).rejects.toThrow(
+            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance.addn(1))).rejects.toThrow(
                 'Pool balance is low'
             );
-            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance.subn(1))).resolves;
+            await expect(cennzxSpot.getOutputPrice(coreAssetId, tradeAssetA, poolAssetBalance)).resolves;
             await expect(cennzxSpot.getInputPrice(coreAssetId, tradeAssetA, poolCoreBalance)).resolves;
         });
     });
