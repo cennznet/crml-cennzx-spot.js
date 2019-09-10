@@ -1,3 +1,8 @@
+# Merged into api.js repo
+[https://github.com/cennznet/api.js](https://github.com/cennznet/api.js/tree/master/packages/crml-cennzx-spot)
+
+----
+
 # `cennznet-js/crml-cennzx-spot`
 
 A sdk providing additional features for cennzx spot runtime module
